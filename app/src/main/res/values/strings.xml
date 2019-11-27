@@ -1,10 +1,10 @@
 <resources>
     <string name="app_name">Vote App</string>
-    <string name="login_error">Incorrect username or password</string>
+    <string name="login_error">Incorrect login or password</string>
     <string name="server_error">Server error</string>
     <string name="login">Log in</string>
     <string name="sign_in">Sign in</string>
-    <string name="enter_username_msg">Enter your username</string>
+    <string name="enter_username_msg">Enter your login</string>
     <string name="enter_password_msg">Enter your password</string>
     <string name="enter_repeated_password_msg">Repeated your password</string>
     <string name="log_in_msg">Log in</string>

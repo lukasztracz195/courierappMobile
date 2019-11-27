@@ -18,24 +18,24 @@ import lombok.Setter;
 @Parcel
 public class CredentialsRequest extends BaseObservable {
 
-    @SerializedName("username")
-     String username;
+    @SerializedName("login")
+     String login;
 
     @SerializedName("password")
      String password;
 
     public CredentialsRequest() {
-        username = "";
+        login = "";
         password = "";
     }
 
     @Bindable
-    public String getUsername() {
-        return username;
+    public String getLogin() {
+        return login;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setLogin(String login) {
+        this.login = login;
         notifyPropertyChanged(BR.username);
     }
 

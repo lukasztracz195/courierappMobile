@@ -8,7 +8,7 @@ import com.google.gson.annotations.SerializedName;
 
 public class RegisterCredentialsRequest extends BaseObservable {
 
-    @SerializedName("username")
+    @SerializedName("login")
     String username;
 
     @SerializedName("password")

@@ -23,7 +23,7 @@ public class RetrofitModule {
 //  ON COMMAND nagrok http 8080 COPY URL WITH HTTPS AND PAST URL BELOW
 
 //  BASE URL TO APPLICATION ON HEROKU
-    private static final String BASE_URL = "https://salty-inlet-81516.herokuapp.com";
+    private static final String BASE_URL = "https://ancient-sierra-85534.herokuapp.com";
 
     @Provides
     @Singleton

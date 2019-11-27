@@ -117,8 +117,4 @@ public class LoginFragment extends Fragment {
         }
     }
 
-    @OnClick(R.id.sign_button)
-    void goOnRegisterFragment() {
-        ((MainActivity) Objects.requireNonNull(getActivity())).putFragment(new RegisterFragment());
-    }
 }
