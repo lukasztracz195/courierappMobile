@@ -13,6 +13,6 @@ public interface LoginDao {
     String LOGIN_PATH = "/login";
 
     @POST(LOGIN_PATH)
-    Single<Response<LoginResponse>> login(@Body CredentialsRequest credentialsRequest);
+    Single<Response<Void>> login(@Body CredentialsRequest credentialsRequest);
 
 }

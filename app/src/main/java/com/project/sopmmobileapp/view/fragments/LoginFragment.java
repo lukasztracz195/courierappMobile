@@ -17,6 +17,8 @@ import com.project.sopmmobileapp.R;
 import com.project.sopmmobileapp.applications.VoteApplication;
 import com.project.sopmmobileapp.databinding.LoginFragmentBinding;
 import com.project.sopmmobileapp.model.bundlers.ABundler;
+import com.project.sopmmobileapp.model.constans.Roles;
+import com.project.sopmmobileapp.model.deserializers.JwtDeserializer;
 import com.project.sopmmobileapp.model.di.clients.GpsClient;
 import com.project.sopmmobileapp.model.di.clients.LoginClient;
 import com.project.sopmmobileapp.model.dtos.request.CredentialsRequest;
@@ -26,10 +28,10 @@ import com.project.sopmmobileapp.model.exceptions.LoginException;
 import com.project.sopmmobileapp.model.store.CredentialsStore;
 import com.project.sopmmobileapp.model.store.TokenStore;
 import com.project.sopmmobileapp.model.validators.PasswordValidator;
-import com.project.sopmmobileapp.view.activities.MainActivity;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Map;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -92,14 +94,17 @@ public class LoginFragment extends Fragment {
     void login() {
         if (PasswordValidator.valid(this.credentialsRequest)) {
             Disposable disposable = this.loginClient.login(this.credentialsRequest)
-                    .subscribe((LoginResponse authenticationResponse) -> {
+                    .subscribe(token -> {
                         Log.i(TAG, "Logged in");
-
-
-                        TokenStore.saveToken(authenticationResponse.getToken());
+                        TokenStore.saveToken(token);
                         CredentialsStore.saveCredentials(this.credentialsRequest);
-                        Toast.makeText(this.getContext(), LOGIN_SUCCESSFUL_MESSAGE,
-                                Toast.LENGTH_SHORT).show();
+                        Map<String, String> map = JwtDeserializer.decoded(TokenStore.getToken());
+                        String role = map.get("\"roles\"");
+                        if(role.contains(Roles.MANAGER)){
+                            Log.i("LoginFragment",Roles.MANAGER);
+                        }else{
+                            Log.i("LoginFragment",Roles.WORKER);
+                        }
 //                   ((MainActivity) getActivity()).setBaseForBackStack(new MainViewPagerFragment());
                     }, (Throwable e) -> {
                         if (e instanceof LoginException) {
@@ -116,5 +121,4 @@ public class LoginFragment extends Fragment {
             this.errorMessage.setText(getString(PasswordValidator.getErrorMessageCode()));
         }
     }
-
 }

@@ -1,5 +1,7 @@
 package com.project.sopmmobileapp.model.di.clients;
 
+import android.util.Log;
+
 import com.project.sopmmobileapp.applications.VoteApplication;
 import com.project.sopmmobileapp.model.daos.LoginDao;
 import com.project.sopmmobileapp.model.dtos.request.CredentialsRequest;
@@ -32,11 +34,15 @@ public class LoginClient extends BaseClient {
         this.loginDao = retrofit.create(LoginDao.class);
     }
 
-    public Single<LoginResponse> login(final CredentialsRequest credentialsRequest) {
+    public Single<String> login(final CredentialsRequest credentialsRequest) {
         return async(this.loginDao.login(credentialsRequest)
                 .flatMap(authenticationResponse -> {
+                    Log.i("HEADERS_HTTP", authenticationResponse.headers().get("Authorization"));
                     if (authenticationResponse.isSuccessful()) {
-                        return just(Objects.requireNonNull(authenticationResponse.body()));
+                        Log.i("HEADERS_HTTP", authenticationResponse.headers().toString());
+                        return just(Objects.requireNonNull(Objects.
+                                requireNonNull(authenticationResponse.headers()
+                                        .get("Authorization")).split(" ")[1]));
                     }
                     if (authenticationResponse.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
                         return error((new LoginException()));
