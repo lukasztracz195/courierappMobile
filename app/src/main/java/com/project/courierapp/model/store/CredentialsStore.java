@@ -21,7 +21,7 @@ public class CredentialsStore {
 
     public static void saveCredentials(CredentialsRequest credentialsRequest) {
         SharedPreferences.Editor editor = sharedPreferences.edit();
-        editor.putString(USERNAME_KEY, credentialsRequest.getLogin());
+        editor.putString(USERNAME_KEY, credentialsRequest.getUsername());
         editor.putString(PASSWORD_KEY, credentialsRequest.getPassword());
         editor.apply();
     }
