@@ -24,7 +24,7 @@ public class PasswordValidator {
 
     public static boolean valid(CredentialsRequest credentialsRequest) {
         String password = credentialsRequest.getPassword();
-        String username = credentialsRequest.getLogin();
+        String username = credentialsRequest.getUsername();
         Set<Boolean> validateSet = new HashSet<>();
         validateSet.add(checkIsEmptyFields(username, password));
         return !validateSet.contains(true);
@@ -32,7 +32,7 @@ public class PasswordValidator {
 
     public static CredentialsRequest toCredential(RegisterCredentialsRequest registerCredentialsRequest) {
         CredentialsRequest credential = new CredentialsRequest();
-        credential.setLogin(registerCredentialsRequest.getUsername());
+        credential.setUsername(registerCredentialsRequest.getUsername());
         credential.setPassword(registerCredentialsRequest.getPassword());
         return credential;
     }

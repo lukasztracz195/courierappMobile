@@ -1,16 +1,19 @@
 <resources>
     <string name="app_name">Courier App</string>
-    <string name="login_error">Incorrect login or password</string>
+    <string name="login_error">Incorrect username or password</string>
     <string name="server_error">Server error</string>
-    <string name="login">Log in</string>
+    <string name="username">Log in</string>
     <string name="sign_in">Sign in</string>
-    <string name="enter_username_msg">Enter your login</string>
+    <string name="enter_username_msg">Enter your username</string>
     <string name="enter_password_msg">Enter your password</string>
+    <string name="enter_old_password_msg">Enter your old password</string>
+    <string name="enter_new_password_msg">Enter your new password</string>
     <string name="enter_repeated_password_msg">Repeated your password</string>
+    <string name="change_password">Change password</string>
     <string name="log_in_msg">Log in</string>
     <string name="sign_in_msg">Sign in</string>
     <string name="auth_preferences">auth_preferences</string>
-    <string name="go_to_login">login</string>
+    <string name="go_to_login">username</string>
     <string name="go_to_registration">registration</string>
     <string name="uncorrect_password">passwords is not the same</string>
     <string name="empty_fields">fields must not is blank</string>

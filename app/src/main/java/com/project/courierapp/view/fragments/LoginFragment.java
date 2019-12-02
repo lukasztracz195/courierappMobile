@@ -26,6 +26,7 @@ import com.project.courierapp.model.exceptions.LoginException;
 import com.project.courierapp.model.store.CredentialsStore;
 import com.project.courierapp.model.store.TokenStore;
 import com.project.courierapp.model.validators.PasswordValidator;
+import com.project.courierapp.view.activities.MainActivity;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -54,9 +55,6 @@ public class LoginFragment extends Fragment {
 
     @Inject
     LoginClient loginClient;
-
-    @Inject
-    GpsClient gpsClient;
 
     @State(ABundler.class)
     CredentialsRequest credentialsRequest = new CredentialsRequest();
@@ -104,8 +102,8 @@ public class LoginFragment extends Fragment {
                             Log.i("LoginFragment", Roles.WORKER);
                         } else {
                             Log.i("LoginFragment", Roles.TEMPORARY);
+                            ((MainActivity) getActivity()).putFragment(new ChangePasswordFragment());
                         }
-//                   ((MainActivity) getActivity()).setBaseForBackStack(new MainViewPagerFragment());
                     }, (Throwable e) -> {
                         if (e instanceof LoginException) {
                             Log.i(TAG, "LoginException", e);

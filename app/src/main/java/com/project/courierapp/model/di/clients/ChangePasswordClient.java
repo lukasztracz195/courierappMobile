@@ -1,10 +1,14 @@
 package com.project.courierapp.model.di.clients;
 
+import android.util.Log;
+
 import com.project.courierapp.applications.CourierApplication;
-import com.project.courierapp.model.daos.RegisterDao;
+import com.project.courierapp.model.daos.ChangePasswordDao;
+import com.project.courierapp.model.daos.LoginDao;
+import com.project.courierapp.model.dtos.request.ChangePasswordRequest;
 import com.project.courierapp.model.dtos.request.CredentialsRequest;
-import com.project.courierapp.model.dtos.response.BaseResponse;
-import com.project.courierapp.model.exceptions.UserIsTakenException;
+import com.project.courierapp.model.exceptions.BadRequestException;
+import com.project.courierapp.model.exceptions.LoginException;
 
 import java.net.HttpURLConnection;
 import java.util.Objects;
@@ -18,27 +22,30 @@ import retrofit2.Retrofit;
 import static io.reactivex.Single.error;
 import static io.reactivex.Single.just;
 
-public class RegisterClient extends BaseClient {
+public class ChangePasswordClient extends BaseClient {
 
-    @Named("no_auth")
+    @Named("auth")
     @Inject
     Retrofit retrofit;
 
-    private RegisterDao registerDao;
+    private ChangePasswordDao changePasswordDao;
 
-    public RegisterClient() {
+    public ChangePasswordClient() {
         CourierApplication.getRetrofitComponent().inject(this);
-        this.registerDao = retrofit.create(RegisterDao.class);
+        this.changePasswordDao = retrofit.create(ChangePasswordDao.class);
     }
 
-    public Single<Void> register(final CredentialsRequest credentialsRequest) {
-        return async(this.registerDao.register(credentialsRequest)
+    public Single<Void> changePassword(final String login, final ChangePasswordRequest changePasswordRequest) {
+        return async(this.changePasswordDao.changePassword(login, changePasswordRequest)
                 .flatMap(authenticationResponse -> {
                     if (authenticationResponse.isSuccessful()) {
                         return just(Objects.requireNonNull(authenticationResponse.body()));
                     }
                     if (authenticationResponse.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
-                        return error(new UserIsTakenException());
+                        return error((new LoginException()));
+                    }
+                    if (authenticationResponse.code() == HttpURLConnection.HTTP_NOT_FOUND) {
+                        return error(new BadRequestException());
                     }
                     return error(new RuntimeException(Objects.requireNonNull(authenticationResponse.errorBody()).toString()));
                 }));

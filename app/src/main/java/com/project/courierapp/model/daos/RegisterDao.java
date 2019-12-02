@@ -13,6 +13,6 @@ public interface RegisterDao {
     String REGISTER_PATH = BASE_USER_PATH + "/register";
 
     @POST(REGISTER_PATH)
-    Single<Response<BaseResponse>> register(@Body CredentialsRequest credentialsRequest);
+    Single<Response<Void>> register(@Body CredentialsRequest credentialsRequest);
 
 }
