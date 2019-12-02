@@ -27,7 +27,7 @@ public class JwtDeserializer {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        return null;
+        return "";
     }
 
     private static Map<String, String> createMap(String json) {

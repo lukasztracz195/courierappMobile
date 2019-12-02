@@ -13,7 +13,7 @@ import android.util.Log;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
-import com.project.sopmmobileapp.applications.VoteApplication;
+import com.project.sopmmobileapp.applications.CourierApplication;
 import com.project.sopmmobileapp.model.exceptions.GpsException;
 import com.project.sopmmobileapp.view.activities.MainActivity;
 
@@ -30,7 +30,7 @@ public class GpsListener implements LocationListener {
 
     @Inject
     public GpsListener() {
-        this.context = VoteApplication.getContext();
+        this.context = CourierApplication.getContext();
         this.activity = MainActivity.instance;
         ActivityCompat.requestPermissions(activity, new String[]
                 {Manifest.permission.ACCESS_FINE_LOCATION}, REQUEST_CODE);

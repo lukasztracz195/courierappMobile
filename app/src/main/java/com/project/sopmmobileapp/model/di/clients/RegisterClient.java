@@ -1,6 +1,6 @@
 package com.project.sopmmobileapp.model.di.clients;
 
-import com.project.sopmmobileapp.applications.VoteApplication;
+import com.project.sopmmobileapp.applications.CourierApplication;
 import com.project.sopmmobileapp.model.daos.RegisterDao;
 import com.project.sopmmobileapp.model.dtos.request.CredentialsRequest;
 import com.project.sopmmobileapp.model.dtos.response.BaseResponse;
@@ -27,7 +27,7 @@ public class RegisterClient extends BaseClient {
     private RegisterDao registerDao;
 
     public RegisterClient() {
-        VoteApplication.getRetrofitComponent().inject(this);
+        CourierApplication.getRetrofitComponent().inject(this);
         this.registerDao = retrofit.create(RegisterDao.class);
     }
 

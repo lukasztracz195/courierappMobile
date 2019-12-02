@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 
 import com.project.sopmmobileapp.R;
-import com.project.sopmmobileapp.applications.VoteApplication;
+import com.project.sopmmobileapp.applications.CourierApplication;
 import com.project.sopmmobileapp.model.dtos.request.CredentialsRequest;
 
 public class CredentialsStore {
@@ -15,7 +15,7 @@ public class CredentialsStore {
     private static final SharedPreferences sharedPreferences;
 
     static {
-        Context context = VoteApplication.getContext();
+        Context context = CourierApplication.getContext();
         sharedPreferences = context.getSharedPreferences(context.getString(R.string.credentials_preferences), Context.MODE_PRIVATE);
     }
 

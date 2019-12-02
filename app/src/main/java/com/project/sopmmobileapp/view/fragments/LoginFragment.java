@@ -6,7 +6,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -14,7 +13,7 @@ import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
 import com.project.sopmmobileapp.R;
-import com.project.sopmmobileapp.applications.VoteApplication;
+import com.project.sopmmobileapp.applications.CourierApplication;
 import com.project.sopmmobileapp.databinding.LoginFragmentBinding;
 import com.project.sopmmobileapp.model.bundlers.ABundler;
 import com.project.sopmmobileapp.model.constans.Roles;
@@ -22,7 +21,6 @@ import com.project.sopmmobileapp.model.deserializers.JwtDeserializer;
 import com.project.sopmmobileapp.model.di.clients.GpsClient;
 import com.project.sopmmobileapp.model.di.clients.LoginClient;
 import com.project.sopmmobileapp.model.dtos.request.CredentialsRequest;
-import com.project.sopmmobileapp.model.dtos.response.LoginResponse;
 import com.project.sopmmobileapp.model.exceptions.BadRequestException;
 import com.project.sopmmobileapp.model.exceptions.LoginException;
 import com.project.sopmmobileapp.model.store.CredentialsStore;
@@ -32,7 +30,6 @@ import com.project.sopmmobileapp.model.validators.PasswordValidator;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -79,7 +76,7 @@ public class LoginFragment extends Fragment {
         loginFragmentBinding.setCredentialsRequest(this.credentialsRequest);
         ButterKnife.bind(this, mainView);
 
-        VoteApplication.getClientsComponent().inject(this);
+        CourierApplication.getClientsComponent().inject(this);
         return mainView;
     }
 
@@ -100,10 +97,13 @@ public class LoginFragment extends Fragment {
                         CredentialsStore.saveCredentials(this.credentialsRequest);
                         Map<String, String> map = JwtDeserializer.decoded(TokenStore.getToken());
                         String role = map.get("\"roles\"");
-                        if(role.contains(Roles.MANAGER)){
-                            Log.i("LoginFragment",Roles.MANAGER);
-                        }else{
-                            Log.i("LoginFragment",Roles.WORKER);
+                        if (role.contains(Roles.MANAGER)) {
+                            Log.i("LoginFragment", Roles.MANAGER);
+                        }
+                        if (role.contains(Roles.WORKER)) {
+                            Log.i("LoginFragment", Roles.WORKER);
+                        } else {
+                            Log.i("LoginFragment", Roles.TEMPORARY);
                         }
 //                   ((MainActivity) getActivity()).setBaseForBackStack(new MainViewPagerFragment());
                     }, (Throwable e) -> {

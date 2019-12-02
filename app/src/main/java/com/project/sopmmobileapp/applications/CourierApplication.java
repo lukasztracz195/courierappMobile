@@ -9,7 +9,7 @@ import com.project.sopmmobileapp.model.di.components.DaggerClientsComponent;
 import com.project.sopmmobileapp.model.di.components.DaggerRetrofitComponent;
 import com.project.sopmmobileapp.model.di.components.RetrofitComponent;
 
-public class VoteApplication extends Application {
+public class CourierApplication extends Application {
 
     private static RetrofitComponent retrofitComponent;
 

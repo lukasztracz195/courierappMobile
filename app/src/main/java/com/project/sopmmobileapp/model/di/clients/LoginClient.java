@@ -2,10 +2,9 @@ package com.project.sopmmobileapp.model.di.clients;
 
 import android.util.Log;
 
-import com.project.sopmmobileapp.applications.VoteApplication;
+import com.project.sopmmobileapp.applications.CourierApplication;
 import com.project.sopmmobileapp.model.daos.LoginDao;
 import com.project.sopmmobileapp.model.dtos.request.CredentialsRequest;
-import com.project.sopmmobileapp.model.dtos.response.LoginResponse;
 import com.project.sopmmobileapp.model.exceptions.BadRequestException;
 import com.project.sopmmobileapp.model.exceptions.LoginException;
 
@@ -30,7 +29,7 @@ public class LoginClient extends BaseClient {
     private LoginDao loginDao;
 
     public LoginClient() {
-        VoteApplication.getRetrofitComponent().inject(this);
+        CourierApplication.getRetrofitComponent().inject(this);
         this.loginDao = retrofit.create(LoginDao.class);
     }
 
