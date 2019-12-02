@@ -1,2 +1,2 @@
 include ':app'
-rootProject.name='sopmMobileApp'
+rootProject.name='courierapp'

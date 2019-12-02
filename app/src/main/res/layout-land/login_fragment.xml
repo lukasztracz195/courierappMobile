@@ -6,7 +6,7 @@
 
         <variable
             name="credentialsRequest"
-            type="com.project.sopmmobileapp.model.dtos.request.CredentialsRequest" />
+            type="com.project.courierapp.model.dtos.request.CredentialsRequest" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -79,7 +79,7 @@
 
                     <com.google.android.material.button.MaterialButton
                         android:id="@+id/login_button"
-                        android:layout_width="match_parent"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_margin="8dp"
                         android:layout_weight="1"

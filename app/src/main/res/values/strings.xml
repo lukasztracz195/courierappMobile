@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Vote App</string>
+    <string name="app_name">Courier App</string>
     <string name="login_error">Incorrect login or password</string>
     <string name="server_error">Server error</string>
     <string name="login">Log in</string>
