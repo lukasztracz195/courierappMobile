@@ -19,4 +19,5 @@
     <string name="empty_fields">fields must not is blank</string>
     <string name="credentials_preferences">credentials_preferences</string>
     <string name="user_is_taken">User is taken</string>
+    <string name="toast_change_password">Password was changed</string>
 </resources>

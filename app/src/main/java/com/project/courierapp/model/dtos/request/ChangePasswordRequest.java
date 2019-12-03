@@ -1,25 +1,16 @@
 package com.project.courierapp.model.dtos.request;
 
-import androidx.databinding.BaseObservable;
-import androidx.databinding.Bindable;
-import androidx.databinding.library.baseAdapters.BR;
-
 import com.google.gson.annotations.SerializedName;
 
-import org.parceler.Parcel;
-
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
-@AllArgsConstructor
 @Getter
 @Setter
-@Parcel
-public class ChangePasswordRequest extends BaseObservable {
+@Builder
+public class ChangePasswordRequest {
 
-    @SerializedName("username")
-    private String username;
 
     @SerializedName("oldPassword")
     private String oldPassword;
@@ -27,34 +18,19 @@ public class ChangePasswordRequest extends BaseObservable {
     @SerializedName("newPassword")
     private String newPassword;
 
-
-    @Bindable
-    public String getUsername() {
-        return username;
+    public ChangePasswordRequest(String oldPassword, String newPassword) {
+        this.oldPassword = oldPassword;
+        this.newPassword = newPassword;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
-        notifyPropertyChanged(BR.username);
-    }
-
-    @Bindable
     public String getOldPassword() {
         return oldPassword;
     }
 
-    public void setOldPassword(String oldPassword) {
-        this.oldPassword = oldPassword;
-        notifyPropertyChanged(BR.oldPassword);
-    }
 
-    @Bindable
+
     public String getNewPassword() {
         return newPassword;
     }
 
-    public void setNewPassword(String newPassword) {
-        this.newPassword = newPassword;
-        notifyPropertyChanged(BR.newPassword);
-    }
 }

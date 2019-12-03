@@ -1,5 +1,6 @@
 package com.project.courierapp.model.di.modules;
 
+import com.project.courierapp.model.di.clients.ChangePasswordClient;
 import com.project.courierapp.model.di.clients.GpsClient;
 import com.project.courierapp.model.di.clients.LoginClient;
 import com.project.courierapp.model.di.clients.RegisterClient;
@@ -28,5 +29,11 @@ public class ClientsModule {
     @Provides
     public GpsClient gpsClient() {
         return new GpsClient();
+    }
+
+    @Singleton
+    @Provides
+    public ChangePasswordClient changePasswordClient() {
+        return new ChangePasswordClient();
     }
 }

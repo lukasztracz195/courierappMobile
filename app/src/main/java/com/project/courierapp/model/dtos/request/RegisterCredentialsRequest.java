@@ -6,6 +6,9 @@ import androidx.databinding.library.baseAdapters.BR;
 
 import com.google.gson.annotations.SerializedName;
 
+import lombok.NoArgsConstructor;
+
+@NoArgsConstructor
 public class RegisterCredentialsRequest extends BaseObservable {
 
     @SerializedName("username")
@@ -16,12 +19,6 @@ public class RegisterCredentialsRequest extends BaseObservable {
 
     @SerializedName("repeatPassword")
     String repeatPassword;
-
-    public RegisterCredentialsRequest() {
-        username = "";
-        password = "";
-        repeatPassword = "";
-    }
 
     @Bindable
     public String getUsername() {
