@@ -14,7 +14,7 @@ android {
         dataBinding {
             enabled = true
         }
-        compileOptions.incremental = false
+
         javaCompileOptions {
             annotationProcessorOptions {
                 includeCompileClasspath true
@@ -33,6 +33,10 @@ android {
     compileOptions {
         sourceCompatibility = 1.8
         targetCompatibility = 1.8
+    }
+    packagingOptions {
+        // pickFirst "META-INF/DEPENDENCIES"
+        exclude "META-INF/gradle/incremental.annotation.processors"
     }
 }
 
@@ -56,6 +60,7 @@ dependencies {
     implementation 'androidx.lifecycle:lifecycle-extensions:2.2.0-rc02'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation 'com.google.android.material:material:1.2.0-alpha02'
+    implementation 'android.arch.work:work-runtime:1.0.1'
 
     // ANDROID SUPPORT DESIGN
     implementation 'com.android.support:design:28.0.0'
@@ -111,6 +116,9 @@ dependencies {
 
     implementation 'joda-time:joda-time:2.10.5'
     implementation 'com.github.SherlockGougou:MagicIndicator:1.5.0'
+
+    //DATA BINDING
+    implementation 'com.android.databinding:compiler:3.2.0-alpha10'
 
 
 }

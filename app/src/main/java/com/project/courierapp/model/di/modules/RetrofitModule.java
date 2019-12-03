@@ -1,7 +1,13 @@
 package com.project.courierapp.model.di.modules;
 
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonDeserializer;
 import com.project.courierapp.model.store.TokenStore;
+
+import org.joda.time.LocalDateTime;
+import org.joda.time.format.ISODateTimeFormat;
 
 import javax.inject.Named;
 import javax.inject.Singleton;
@@ -25,8 +31,8 @@ public class RetrofitModule {
     //  BASE URL TO APPLICATION ON HEROKU
     private static final String BASE_URL = "https://ancient-sierra-85534.herokuapp.com";
 
-    @Provides
     @Singleton
+    @Provides
     public HttpLoggingInterceptor loggingInterceptor() {
         HttpLoggingInterceptor interceptor = new HttpLoggingInterceptor();
         interceptor.level(HttpLoggingInterceptor.Level.BODY);
@@ -58,6 +64,23 @@ public class RetrofitModule {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.addInterceptor(loggingInterceptor);
         return builder.build();
+    }
+
+
+    @Named("auth")
+    @Singleton
+    @Provides
+    public Retrofit authRetrofit(@Named("auth") OkHttpClient client) {
+        Gson gson = new GsonBuilder().registerTypeAdapter(LocalDateTime.class,
+                (JsonDeserializer<LocalDateTime>) (json, type, jsonDeserializationContext) ->
+                        LocalDateTime.parse(json.getAsJsonPrimitive().getAsString(),
+                                ISODateTimeFormat.dateTimeParser())).create();
+
+        return new Retrofit.Builder().baseUrl(BASE_URL)
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .client(client)
+                .build();
     }
 
     @Named("no_auth")
