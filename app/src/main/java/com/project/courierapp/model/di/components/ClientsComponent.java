@@ -1,10 +1,9 @@
 package com.project.courierapp.model.di.components;
 
-import com.project.courierapp.model.di.clients.ChangePasswordClient;
 import com.project.courierapp.model.di.clients.GpsClient;
 import com.project.courierapp.model.di.modules.ClientsModule;
-import com.project.courierapp.view.fragments.ChangePasswordFragment;
-import com.project.courierapp.view.fragments.LoginFragment;
+import com.project.courierapp.view.fragments.base_layer.ChangePasswordFragment;
+import com.project.courierapp.view.fragments.base_layer.LoginFragment;
 
 import javax.inject.Singleton;
 

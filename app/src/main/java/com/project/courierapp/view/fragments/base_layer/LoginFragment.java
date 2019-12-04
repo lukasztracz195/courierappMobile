@@ -1,4 +1,4 @@
-package com.project.courierapp.view.fragments;
+package com.project.courierapp.view.fragments.base_layer;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -18,19 +18,22 @@ import com.project.courierapp.databinding.LoginFragmentBinding;
 import com.project.courierapp.model.bundlers.ABundler;
 import com.project.courierapp.model.constans.Roles;
 import com.project.courierapp.model.deserializers.JwtDeserializer;
-import com.project.courierapp.model.di.clients.GpsClient;
 import com.project.courierapp.model.di.clients.LoginClient;
 import com.project.courierapp.model.dtos.request.CredentialsRequest;
 import com.project.courierapp.model.exceptions.BadRequestException;
 import com.project.courierapp.model.exceptions.LoginException;
 import com.project.courierapp.model.store.CredentialsStore;
+import com.project.courierapp.model.store.RolesStore;
 import com.project.courierapp.model.store.TokenStore;
 import com.project.courierapp.model.validators.PasswordValidator;
+import com.project.courierapp.view.Iback.BackWithExitDialog;
 import com.project.courierapp.view.activities.MainActivity;
+import com.project.courierapp.view.fragments.FragmentTags;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
+import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -42,13 +45,9 @@ import icepick.State;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
-public class LoginFragment extends Fragment {
-
-    private final static String TAG = LoginFragment.class.getName();
+public class LoginFragment extends Fragment implements BackWithExitDialog {
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-
-    private static final String LOGIN_SUCCESSFUL_MESSAGE = "Login is successful";
 
     @BindView(R.id.error_message)
     TextView errorMessage;
@@ -90,26 +89,31 @@ public class LoginFragment extends Fragment {
         if (PasswordValidator.valid(this.credentialsRequest)) {
             Disposable disposable = this.loginClient.login(this.credentialsRequest)
                     .subscribe(token -> {
-                        Log.i(TAG, "Logged in");
+                        Log.i(FragmentTags.LoginFragment, "Logged in");
                         TokenStore.saveToken(token);
                         CredentialsStore.saveCredentials(this.credentialsRequest);
                         Map<String, String> map = JwtDeserializer.decoded(TokenStore.getToken());
                         String role = map.get("\"roles\"");
-                        if (role.contains(Roles.MANAGER)) {
-                            Log.i("LoginFragment", Roles.MANAGER);
+                        if (Objects.requireNonNull(role).contains(Roles.MANAGER)) {
+                            Log.i(FragmentTags.LoginFragment, Roles.MANAGER);
+                            RolesStore.saveRole(Roles.MANAGER);
                         }
                         if (role.contains(Roles.WORKER)) {
-                            Log.i("LoginFragment", Roles.WORKER);
+                            Log.i(FragmentTags.LoginFragment, Roles.WORKER);
+                            RolesStore.saveRole(Roles.WORKER);
                         } else {
-                            Log.i("LoginFragment", Roles.TEMPORARY);
-                            ((MainActivity) getActivity()).putFragment(new ChangePasswordFragment());
+                            Log.i(FragmentTags.LoginFragment, Roles.TEMPORARY);
+                            RolesStore.saveRole(Roles.TEMPORARY);
+                            ((MainActivity) Objects.requireNonNull(getActivity()))
+                                    .putFragment(new ChangePasswordFragment(),
+                                            FragmentTags.ChangePasswordFragment);
                         }
                     }, (Throwable e) -> {
                         if (e instanceof LoginException) {
-                            Log.i(TAG, "LoginException", e);
+                            Log.i(FragmentTags.LoginFragment, "LoginException", e);
                             this.errorMessage.setText(getString(R.string.login_error));
                         } else if (e instanceof BadRequestException) {
-                            Log.i(TAG, "Server error", e);
+                            Log.i(FragmentTags.LoginFragment, "Server error", e);
                             this.errorMessage.setText(getString(R.string.server_error));
                         }
                     });

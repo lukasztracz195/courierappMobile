@@ -13,6 +13,7 @@
     <string name="log_in_msg">Log in</string>
     <string name="sign_in_msg">Sign in</string>
     <string name="auth_preferences">auth_preferences</string>
+    <string name="user_mode">user mode</string>
     <string name="go_to_login">username</string>
     <string name="go_to_registration">registration</string>
     <string name="uncorrect_password">passwords is not the same</string>
