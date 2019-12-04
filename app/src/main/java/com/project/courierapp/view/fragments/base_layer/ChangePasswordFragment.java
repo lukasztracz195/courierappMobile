@@ -1,4 +1,4 @@
-package com.project.courierapp.view.fragments;
+package com.project.courierapp.view.fragments.base_layer;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -23,6 +23,7 @@ import com.project.courierapp.model.dtos.transfer.ChangePasswordDto;
 import com.project.courierapp.model.exceptions.BadRequestException;
 import com.project.courierapp.model.exceptions.ChangePasswordException;
 import com.project.courierapp.view.activities.MainActivity;
+import com.project.courierapp.view.fragments.FragmentTags;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -39,7 +40,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 
-public class ChangePasswordFragment extends Fragment {
+public class ChangePasswordFragment extends Fragment{
 
     @BindView(R.id.error_message)
     TextView errorMessage;
@@ -89,7 +90,8 @@ public class ChangePasswordFragment extends Fragment {
                     Log.i(FragmentTags.ChangePasswordFragment, "Changed Password in");
                     Toast.makeText(getContext(), getResources().getText(R.string.toast_change_password),
                             Toast.LENGTH_SHORT).show();
-                    ((MainActivity) Objects.requireNonNull(getActivity())).putFragment(new LoginFragment());
+                    ((MainActivity) Objects.requireNonNull(getActivity()))
+                            .putFragment(new LoginFragment(), FragmentTags.LoginFragment);
                 }, (Throwable e) ->
                 {
                     if (e instanceof ChangePasswordException) {

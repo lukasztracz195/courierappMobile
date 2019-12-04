@@ -6,11 +6,18 @@ import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.project.courierapp.R;
-import com.project.courierapp.view.fragments.LoginFragment;
+import com.project.courierapp.view.Iback.BackWithExitDialog;
+import com.project.courierapp.view.Iback.BackWithLogOutDialog;
+import com.project.courierapp.view.Iback.BackWithRemoveFromStack;
+import com.project.courierapp.view.dialogs.AlertDialogsFactory;
+import com.project.courierapp.view.fragments.base_layer.LoginFragment;
 
 import org.jetbrains.annotations.NotNull;
+
+import java.util.List;
 
 import butterknife.BindView;
 import lombok.Getter;
@@ -38,7 +45,7 @@ public class MainActivity extends AppCompatActivity {
             currentFragment = getSupportFragmentManager().getFragment(savedInstanceState, CURRENT_FRAGMENT_TAG);
         } else {
             this.currentFragment = new LoginFragment();
-            this.changeFragment(this.currentFragment);
+            this.setBaseForBackStack(this.currentFragment,TAG);
         }
         this.setSdkPolicy();
         instance = this;
@@ -58,9 +65,21 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        if (this.canBack()) {
-            super.getSupportFragmentManager().popBackStackImmediate();
+        updateCurrentFragment();
+        if (currentFragment instanceof BackWithLogOutDialog) {
+            AlertDialogsFactory.createLogoutAlertDialog(this).show();
+        } else if (currentFragment instanceof BackWithExitDialog) {
+            AlertDialogsFactory.createExitAlertDialog(this).show();
+        } else if (currentFragment instanceof BackWithRemoveFromStack) {
+            AlertDialogsFactory.createSaveAlertDialog(this).show();
+        } else if (canBack()) {
+            popBackStack();
         }
+    }
+
+    private void popBackStack() {
+        super.getSupportFragmentManager().popBackStack();
+        updateCurrentFragment();
     }
 
     private boolean canBack() {
@@ -77,29 +96,34 @@ public class MainActivity extends AppCompatActivity {
         this.currentFragment = fragment;
     }
 
-    public void setBaseForBackStack(final Fragment fragment) {
+    public void setBaseForBackStack(final Fragment fragment, String TAG) {
         this.clearBackStack();
 
         super.getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.layout_on_fragments, fragment)
-                .addToBackStack(currentFragment.getClass().toString())
+                .addToBackStack(TAG)
                 .commit();
-
         this.currentFragment = fragment;
     }
 
-    private void clearBackStack() {
+    public void clearBackStack() {
         while (super.getSupportFragmentManager().popBackStackImmediate()) ;
     }
 
-    public void putFragment(final Fragment fragment) {
-        super.getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.layout_on_fragments, fragment)
-                .attach(fragment)
-                .commit();
-        this.currentFragment = fragment;
+    public void putFragment(final Fragment fragment, final String TAG) {
+        FragmentTransaction ft = super.getSupportFragmentManager().beginTransaction();
+        if (currentFragment.isVisible() || currentFragment.isAdded()) {
+            ft.detach(currentFragment);
+        }
+        if (fragment.isAdded()) {
+            ft.show(fragment);
+        } else {
+            ft.add(R.id.layout_on_fragments, fragment, TAG);
+            ft.addToBackStack(TAG);
+            ft.commit();
+        }
+        updateCurrentFragment();
     }
 
     @Override
@@ -112,6 +136,11 @@ public class MainActivity extends AppCompatActivity {
     public void onPause() {
         super.onPause();
         instance = null;
+    }
+
+    private void updateCurrentFragment() {
+        List<Fragment> fragments = super.getSupportFragmentManager().getFragments();
+        currentFragment = fragments.get(fragments.size() - 1);
     }
 
 }

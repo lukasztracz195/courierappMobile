@@ -1,9 +1,9 @@
 package com.project.courierapp.view.fragments;
 
-public class FragmentTags {
+public interface FragmentTags {
 
-    public static String LoginFragment = "LoginFragment";
-    public static String ChangePasswordFragment = "ChangePasswordFragment";
-    public static String WorkerFragment = "WorkerFragment";
-    public static String ManagerFragment = "ManagerFragment";
+    String LoginFragment = "LoginFragment";
+    String ChangePasswordFragment = "ChangePasswordFragment";
+    String WorkerFragment = "WorkerFragment";
+    String ManagerFragment = "ManagerFragment";
 }
