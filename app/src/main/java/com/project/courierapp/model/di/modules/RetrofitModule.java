@@ -45,6 +45,9 @@ public class RetrofitModule {
     public OkHttpClient authClient(HttpLoggingInterceptor loggingInterceptor) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.addInterceptor(loggingInterceptor);
+//        builder.connectTimeout(1, TimeUnit.MINUTES) // connect timeout
+//                .writeTimeout(1, TimeUnit.MINUTES) // write timeout
+//                .readTimeout(1, TimeUnit.MINUTES);
         builder.addInterceptor(chain -> {
             okhttp3.Request request = chain.request();
             String authToken = TokenStore.getToken();
@@ -63,6 +66,9 @@ public class RetrofitModule {
     public OkHttpClient client(HttpLoggingInterceptor loggingInterceptor) {
         OkHttpClient.Builder builder = new OkHttpClient.Builder();
         builder.addInterceptor(loggingInterceptor);
+//        builder.connectTimeout(1, TimeUnit.MINUTES) // connect timeout
+//                .writeTimeout(1, TimeUnit.MINUTES) // write timeout
+//                .readTimeout(1, TimeUnit.MINUTES);
         return builder.build();
     }
 

@@ -8,7 +8,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.project.courierapp.model.constans.Roles;
 import com.project.courierapp.model.store.RolesStore;
 import com.project.courierapp.view.activities.MainActivity;
-import com.project.courierapp.view.fragments.FragmentTags;
+import com.project.courierapp.view.fragments.BaseFragmentTags;
 import com.project.courierapp.view.fragments.base_layer.LoginFragment;
 
 import java.util.Objects;
@@ -23,7 +23,7 @@ public class AlertDialogsFactory {
                     ((MainActivity) Objects.requireNonNull(activity)).clearBackStack();
                     ((MainActivity) Objects.
                             requireNonNull(activity)).setBaseForBackStack(new LoginFragment(),
-                            FragmentTags.LoginFragment);
+                            BaseFragmentTags.LoginFragment);
                 })
                 .setNegativeButton("No", (dialog, which) -> {
 

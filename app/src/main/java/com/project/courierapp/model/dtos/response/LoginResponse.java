@@ -11,7 +11,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @ToString
-public class LoginResponse extends BaseObservable {
+public class LoginResponse extends BaseObservable implements Response{
 
 
     @SerializedName("username")

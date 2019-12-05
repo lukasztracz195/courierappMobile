@@ -1,9 +1,9 @@
 package com.project.courierapp.view.fragments;
 
-public interface FragmentTags {
+public interface BaseFragmentTags {
 
     String LoginFragment = "LoginFragment";
     String ChangePasswordFragment = "ChangePasswordFragment";
-    String WorkerFragment = "WorkerFragment";
-    String ManagerFragment = "ManagerFragment";
+    String WorkerBaseFragment = "WorkerBaseFragment";
+    String ManagerBaseFragment = "ManagerBaseFragment";
 }

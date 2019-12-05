@@ -9,7 +9,7 @@ import lombok.ToString;
 @AllArgsConstructor
 @Getter
 @ToString
-public class BaseResponse {
+public class BaseResponse implements Response {
 
     @SerializedName("status")
     private boolean status;

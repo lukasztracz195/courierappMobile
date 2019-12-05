@@ -28,7 +28,7 @@ import com.project.courierapp.model.store.TokenStore;
 import com.project.courierapp.model.validators.PasswordValidator;
 import com.project.courierapp.view.Iback.BackWithExitDialog;
 import com.project.courierapp.view.activities.MainActivity;
-import com.project.courierapp.view.fragments.FragmentTags;
+import com.project.courierapp.view.fragments.BaseFragmentTags;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -54,6 +54,7 @@ public class LoginFragment extends Fragment implements BackWithExitDialog {
 
     @Inject
     LoginClient loginClient;
+
 
     @State(ABundler.class)
     CredentialsRequest credentialsRequest = new CredentialsRequest();
@@ -89,31 +90,34 @@ public class LoginFragment extends Fragment implements BackWithExitDialog {
         if (PasswordValidator.valid(this.credentialsRequest)) {
             Disposable disposable = this.loginClient.login(this.credentialsRequest)
                     .subscribe(token -> {
-                        Log.i(FragmentTags.LoginFragment, "Logged in");
+                        Log.i(BaseFragmentTags.LoginFragment, "Logged in");
                         TokenStore.saveToken(token);
                         CredentialsStore.saveCredentials(this.credentialsRequest);
                         Map<String, String> map = JwtDeserializer.decoded(TokenStore.getToken());
                         String role = map.get("\"roles\"");
                         if (Objects.requireNonNull(role).contains(Roles.MANAGER)) {
-                            Log.i(FragmentTags.LoginFragment, Roles.MANAGER);
+                            Log.i(BaseFragmentTags.LoginFragment, Roles.MANAGER);
                             RolesStore.saveRole(Roles.MANAGER);
-                        }
-                        if (role.contains(Roles.WORKER)) {
-                            Log.i(FragmentTags.LoginFragment, Roles.WORKER);
+                            ((MainActivity) Objects.requireNonNull(getActivity()))
+                                    .putFragment(new ManagerBaseFragment(),
+                                            BaseFragmentTags.ManagerBaseFragment);
+                        } else if (role.contains(Roles.WORKER)) {
+                            Log.i(BaseFragmentTags.LoginFragment, Roles.WORKER);
                             RolesStore.saveRole(Roles.WORKER);
                         } else {
-                            Log.i(FragmentTags.LoginFragment, Roles.TEMPORARY);
+                            Log.i(BaseFragmentTags.LoginFragment, Roles.TEMPORARY);
                             RolesStore.saveRole(Roles.TEMPORARY);
                             ((MainActivity) Objects.requireNonNull(getActivity()))
                                     .putFragment(new ChangePasswordFragment(),
-                                            FragmentTags.ChangePasswordFragment);
+                                            BaseFragmentTags.ChangePasswordFragment);
                         }
+
                     }, (Throwable e) -> {
                         if (e instanceof LoginException) {
-                            Log.i(FragmentTags.LoginFragment, "LoginException", e);
+                            Log.i(BaseFragmentTags.LoginFragment, "LoginException", e);
                             this.errorMessage.setText(getString(R.string.login_error));
                         } else if (e instanceof BadRequestException) {
-                            Log.i(FragmentTags.LoginFragment, "Server error", e);
+                            Log.i(BaseFragmentTags.LoginFragment, "Server error", e);
                             this.errorMessage.setText(getString(R.string.server_error));
                         }
                     });
@@ -122,5 +126,19 @@ public class LoginFragment extends Fragment implements BackWithExitDialog {
         } else {
             this.errorMessage.setText(getString(PasswordValidator.getErrorMessageCode()));
         }
+    }
+
+    @OnClick(R.id.usernameTextInputEditText)
+    public void clearErrorAfterUsernameInputEditTextUsed() {
+        clearErrorMessage();
+    }
+
+    @OnClick(R.id.passwordTextInputEditText)
+    public void clearErrorAfterPasswordInputEditTextUsed() {
+        clearErrorMessage();
+    }
+
+    private void clearErrorMessage() {
+        errorMessage.setText("");
     }
 }
