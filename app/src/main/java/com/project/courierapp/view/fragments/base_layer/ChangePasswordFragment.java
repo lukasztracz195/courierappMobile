@@ -23,7 +23,7 @@ import com.project.courierapp.model.dtos.transfer.ChangePasswordDto;
 import com.project.courierapp.model.exceptions.BadRequestException;
 import com.project.courierapp.model.exceptions.ChangePasswordException;
 import com.project.courierapp.view.activities.MainActivity;
-import com.project.courierapp.view.fragments.FragmentTags;
+import com.project.courierapp.view.fragments.BaseFragmentTags;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -87,18 +87,18 @@ public class ChangePasswordFragment extends Fragment{
                         .newPassword(changePasswordDto.getNewPassword())
                         .build())
                 .subscribe(token -> {
-                    Log.i(FragmentTags.ChangePasswordFragment, "Changed Password in");
+                    Log.i(BaseFragmentTags.ChangePasswordFragment, "Changed Password in");
                     Toast.makeText(getContext(), getResources().getText(R.string.toast_change_password),
                             Toast.LENGTH_SHORT).show();
                     ((MainActivity) Objects.requireNonNull(getActivity()))
-                            .putFragment(new LoginFragment(), FragmentTags.LoginFragment);
+                            .putFragment(new LoginFragment(), BaseFragmentTags.LoginFragment);
                 }, (Throwable e) ->
                 {
                     if (e instanceof ChangePasswordException) {
-                        Log.i(FragmentTags.ChangePasswordFragment, "ChangePasswordException", e);
+                        Log.i(BaseFragmentTags.ChangePasswordFragment, "ChangePasswordException", e);
                         this.errorMessage.setText(getString(R.string.login_error));
                     } else if (e instanceof BadRequestException) {
-                        Log.i(FragmentTags.ChangePasswordFragment, "Server error", e);
+                        Log.i(BaseFragmentTags.ChangePasswordFragment, "Server error", e);
                         this.errorMessage.setText(getString(R.string.server_error));
                     }
                 });

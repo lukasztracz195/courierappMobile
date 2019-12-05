@@ -34,9 +34,9 @@ public class LoginClient extends BaseClient {
     }
 
     public Single<String> login(final CredentialsRequest credentialsRequest) {
+
         return async(this.loginDao.login(credentialsRequest)
                 .flatMap(authenticationResponse -> {
-                    Log.i("HEADERS_HTTP", authenticationResponse.headers().get("Authorization"));
                     if (authenticationResponse.isSuccessful()) {
                         Log.i("HEADERS_HTTP", authenticationResponse.headers().toString());
                         return just(Objects.requireNonNull(Objects.
@@ -44,9 +44,11 @@ public class LoginClient extends BaseClient {
                                         .get("Authorization")).split(" ")[1]));
                     }
                     if (authenticationResponse.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
+                        Log.i("HTTP_UNAUTHORIZED 401", authenticationResponse.message());
                         return error((new LoginException()));
                     }
                     if (authenticationResponse.code() == HttpURLConnection.HTTP_NOT_FOUND) {
+                        Log.i("HTTP_NOT_FOUND 404", authenticationResponse.message());
                         return error(new BadRequestException());
                     }
                     return error(new RuntimeException(Objects.requireNonNull(authenticationResponse.errorBody()).toString()));

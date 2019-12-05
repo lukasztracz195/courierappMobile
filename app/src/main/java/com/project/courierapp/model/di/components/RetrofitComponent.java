@@ -3,6 +3,7 @@ package com.project.courierapp.model.di.components;
 import com.project.courierapp.model.di.clients.ChangePasswordClient;
 import com.project.courierapp.model.di.clients.LoginClient;
 import com.project.courierapp.model.di.clients.RegisterClient;
+import com.project.courierapp.model.di.clients.WorkerClient;
 import com.project.courierapp.model.di.modules.RetrofitModule;
 
 import javax.inject.Singleton;
@@ -18,4 +19,6 @@ public interface RetrofitComponent {
     void inject(RegisterClient registerClient);
 
     void inject(ChangePasswordClient changePasswordClient);
+
+    void inject(WorkerClient workerClient);
 }

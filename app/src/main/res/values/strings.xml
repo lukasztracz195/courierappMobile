@@ -1,24 +1,37 @@
 <resources>
+    //APP CONST
     <string name="app_name">Courier App</string>
-    <string name="login_error">Incorrect username or password</string>
-    <string name="server_error">Server error</string>
-    <string name="username">Log in</string>
-    <string name="sign_in">Sign in</string>
+
+    //TOAST MESSAGES
+    <string name="toast_change_password">Password was changed</string>
+
+    //MESSAGES
     <string name="enter_username_msg">Enter your username</string>
     <string name="enter_password_msg">Enter your password</string>
     <string name="enter_old_password_msg">Enter your old password</string>
     <string name="enter_new_password_msg">Enter your new password</string>
     <string name="enter_repeated_password_msg">Repeated your password</string>
-    <string name="change_password">Change password</string>
-    <string name="log_in_msg">Log in</string>
-    <string name="sign_in_msg">Sign in</string>
-    <string name="auth_preferences">auth_preferences</string>
-    <string name="user_mode">user mode</string>
-    <string name="go_to_login">username</string>
-    <string name="go_to_registration">registration</string>
-    <string name="uncorrect_password">passwords is not the same</string>
-    <string name="empty_fields">fields must not is blank</string>
-    <string name="credentials_preferences">credentials_preferences</string>
+
+    //ERRORS
+    <string name="login_error">Incorrect username or password</string>
+    <string name="server_error">Server error</string>
     <string name="user_is_taken">User is taken</string>
-    <string name="toast_change_password">Password was changed</string>
+    <string name="wrong_password_error">passwords is not the same</string>
+    <string name="empty_fields_error">fields must not is blank</string>
+
+    //LABELS
+    <string name="username_label">Username:</string>
+    <string name="status_label">Status:</string>
+    <string name="finished_roads_label">Finished roads:</string>
+
+    //BUTTONS
+    <string name="change_password_bt">Change password</string>
+    <string name="log_in_bt">Log in</string>
+    <string name="log_out_bt">Log out</string>
+    <string name="sign_in_bt">Sign in</string>
+
+    //KEYS
+    <string name="auth_preferences">auth_preferences</string>
+    <string name="credentials_preferences">credentials_preferences</string>
+    <string name="user_mode">user mode</string>
 </resources>

@@ -52,6 +52,7 @@
                     android:hint="@string/enter_username_msg">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/usernameTextInputEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:text="@={credentialsRequest.username}"
@@ -68,6 +69,7 @@
                     android:textSize="24sp">
 
                     <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/passwordTextInputEditText"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:inputType="textPassword"
@@ -82,7 +84,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
                     android:padding="10dp"
-                    android:text="@string/username"
+                    android:text="@string/log_in_bt"
                     android:textSize="20sp" />
 
             </LinearLayout>

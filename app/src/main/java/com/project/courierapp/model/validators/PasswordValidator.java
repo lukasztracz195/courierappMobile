@@ -40,7 +40,7 @@ public class PasswordValidator {
 
     private static boolean checkIsEmptyFields(String username, String password, String repeatPassword) {
         if (password.isEmpty() || repeatPassword.isEmpty() || username.isEmpty()) {
-            errorMessageCode = R.string.empty_fields;
+            errorMessageCode = R.string.empty_fields_error;
             return true;
         }
         return false;
@@ -48,7 +48,7 @@ public class PasswordValidator {
 
     private static boolean checkIsEmptyFields(String username, String password) {
         if (password.isEmpty() || username.isEmpty()) {
-            errorMessageCode = R.string.empty_fields;
+            errorMessageCode = R.string.empty_fields_error;
             return true;
         }
         return false;
@@ -56,7 +56,7 @@ public class PasswordValidator {
 
     private static boolean checkIsNotTheSamePasswords(String password, String repeatPassword) {
         if (!password.equals(repeatPassword)){
-            errorMessageCode = R.string.uncorrect_password;
+            errorMessageCode = R.string.wrong_password_error;
             return true;
         }
         return false;

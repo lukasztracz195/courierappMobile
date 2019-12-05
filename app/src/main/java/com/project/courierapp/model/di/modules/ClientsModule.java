@@ -4,6 +4,7 @@ import com.project.courierapp.model.di.clients.ChangePasswordClient;
 import com.project.courierapp.model.di.clients.GpsClient;
 import com.project.courierapp.model.di.clients.LoginClient;
 import com.project.courierapp.model.di.clients.RegisterClient;
+import com.project.courierapp.model.di.clients.WorkerClient;
 
 import javax.inject.Singleton;
 
@@ -35,5 +36,11 @@ public class ClientsModule {
     @Provides
     public ChangePasswordClient changePasswordClient() {
         return new ChangePasswordClient();
+    }
+
+    @Singleton
+    @Provides
+    public WorkerClient workerClient() {
+        return new WorkerClient();
     }
 }
