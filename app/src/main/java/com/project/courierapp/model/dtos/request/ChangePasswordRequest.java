@@ -9,7 +9,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Builder
-public class ChangePasswordRequest {
+public class ChangePasswordRequest implements Request{
 
 
     @SerializedName("oldPassword")

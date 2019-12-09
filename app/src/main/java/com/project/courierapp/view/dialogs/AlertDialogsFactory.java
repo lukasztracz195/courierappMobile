@@ -10,6 +10,7 @@ import com.project.courierapp.model.store.RolesStore;
 import com.project.courierapp.view.activities.MainActivity;
 import com.project.courierapp.view.fragments.BaseFragmentTags;
 import com.project.courierapp.view.fragments.base_layer.LoginFragment;
+import com.project.courierapp.view.fragments.base_layer.ManagerBaseFragment;
 
 import java.util.Objects;
 
@@ -52,7 +53,9 @@ public class AlertDialogsFactory {
                 .setPositiveButton("Yes", (arg0, arg1) -> {
                     String role = RolesStore.getRole();
                     if(role.equals(Roles.MANAGER)){
-
+                        Objects.requireNonNull(MainActivity.instance)
+                                .setBaseForBackStack(new ManagerBaseFragment(),
+                                BaseFragmentTags.ManagerBaseFragment);
                     }else if(role.equals(Roles.WORKER)){
 
                     }

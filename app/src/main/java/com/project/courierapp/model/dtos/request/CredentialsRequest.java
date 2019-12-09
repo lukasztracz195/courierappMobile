@@ -16,7 +16,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Parcel
-public class CredentialsRequest extends BaseObservable {
+public class CredentialsRequest extends BaseObservable implements Request {
 
     @SerializedName("login")
      String username;

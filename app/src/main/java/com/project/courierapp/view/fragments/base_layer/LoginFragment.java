@@ -25,7 +25,6 @@ import com.project.courierapp.model.exceptions.LoginException;
 import com.project.courierapp.model.store.CredentialsStore;
 import com.project.courierapp.model.store.RolesStore;
 import com.project.courierapp.model.store.TokenStore;
-import com.project.courierapp.model.validators.PasswordValidator;
 import com.project.courierapp.view.Iback.BackWithExitDialog;
 import com.project.courierapp.view.activities.MainActivity;
 import com.project.courierapp.view.fragments.BaseFragmentTags;
@@ -87,19 +86,18 @@ public class LoginFragment extends Fragment implements BackWithExitDialog {
 
     @OnClick(R.id.login_button)
     void login() {
-        if (PasswordValidator.valid(this.credentialsRequest)) {
-            Disposable disposable = this.loginClient.login(this.credentialsRequest)
+            Disposable disposable = loginClient.login(credentialsRequest)
                     .subscribe(token -> {
                         Log.i(BaseFragmentTags.LoginFragment, "Logged in");
                         TokenStore.saveToken(token);
-                        CredentialsStore.saveCredentials(this.credentialsRequest);
+                        CredentialsStore.saveCredentials(credentialsRequest);
                         Map<String, String> map = JwtDeserializer.decoded(TokenStore.getToken());
                         String role = map.get("\"roles\"");
                         if (Objects.requireNonNull(role).contains(Roles.MANAGER)) {
                             Log.i(BaseFragmentTags.LoginFragment, Roles.MANAGER);
                             RolesStore.saveRole(Roles.MANAGER);
                             ((MainActivity) Objects.requireNonNull(getActivity()))
-                                    .putFragment(new ManagerBaseFragment(),
+                                    .setBaseForBackStack(new ManagerBaseFragment(),
                                             BaseFragmentTags.ManagerBaseFragment);
                         } else if (role.contains(Roles.WORKER)) {
                             Log.i(BaseFragmentTags.LoginFragment, Roles.WORKER);
@@ -115,17 +113,15 @@ public class LoginFragment extends Fragment implements BackWithExitDialog {
                     }, (Throwable e) -> {
                         if (e instanceof LoginException) {
                             Log.i(BaseFragmentTags.LoginFragment, "LoginException", e);
-                            this.errorMessage.setText(getString(R.string.login_error));
+                            errorMessage.setText(getString(R.string.login_error));
                         } else if (e instanceof BadRequestException) {
                             Log.i(BaseFragmentTags.LoginFragment, "Server error", e);
-                            this.errorMessage.setText(getString(R.string.server_error));
+                            errorMessage.setText(getString(R.string.server_error));
                         }
                     });
 
             this.compositeDisposable.add(disposable);
-        } else {
-            this.errorMessage.setText(getString(PasswordValidator.getErrorMessageCode()));
-        }
+
     }
 
     @OnClick(R.id.usernameTextInputEditText)

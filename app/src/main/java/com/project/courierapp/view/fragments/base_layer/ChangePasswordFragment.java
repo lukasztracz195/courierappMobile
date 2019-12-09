@@ -103,5 +103,12 @@ public class ChangePasswordFragment extends Fragment{
                     }
                 });
         this.compositeDisposable.add(disposable);
+        if(errorMessage.getText().toString().isEmpty()){
+            Log.i(BaseFragmentTags.ChangePasswordFragment, "Changed Password in");
+            Toast.makeText(getContext(), getResources().getText(R.string.toast_change_password),
+                    Toast.LENGTH_SHORT).show();
+            ((MainActivity) Objects.requireNonNull(getActivity()))
+                    .setBaseForBackStack(new LoginFragment(), BaseFragmentTags.LoginFragment);
+        }
     }
 }

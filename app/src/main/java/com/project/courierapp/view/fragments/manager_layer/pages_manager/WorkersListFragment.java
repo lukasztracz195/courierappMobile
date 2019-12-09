@@ -50,7 +50,6 @@ public class WorkersListFragment extends Fragment implements BackWithLogOutDialo
     @OnClick(R.id.register_new_worker)
     public void registerNewWorker(){
         ((MainActivity) Objects.requireNonNull(getActivity()))
-                .putFragment(new RegisterWorkerFragment(),
-                ManagerFragmentTags.RegisterWorkerFragment);
+                .putFragment(new RegisterWorkerFragment(), ManagerFragmentTags.RegisterWorkerFragment);
     }
 }
