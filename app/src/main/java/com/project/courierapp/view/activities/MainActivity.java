@@ -98,7 +98,6 @@ public class MainActivity extends AppCompatActivity {
 
     public void setBaseForBackStack(final Fragment fragment, String TAG) {
         this.clearBackStack();
-
         super.getSupportFragmentManager()
                 .beginTransaction()
                 .replace(R.id.layout_on_fragments, fragment)
@@ -108,18 +107,20 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void clearBackStack() {
-        while (super.getSupportFragmentManager().popBackStackImmediate()) ;
+        if(canBack()) {
+            while (super.getSupportFragmentManager().popBackStackImmediate()) ;
+        }
     }
 
     public void putFragment(final Fragment fragment, final String TAG) {
         FragmentTransaction ft = super.getSupportFragmentManager().beginTransaction();
-        if (currentFragment.isVisible() || currentFragment.isAdded()) {
+        if (currentFragment.isVisible() || currentFragment.isAdded() || currentFragment.isInLayout()) {
             ft.detach(currentFragment);
         }
         if (fragment.isAdded()) {
             ft.show(fragment);
         } else {
-            ft.add(R.id.layout_on_fragments, fragment, TAG);
+            ft.replace(R.id.layout_on_fragments, fragment, TAG);
             ft.addToBackStack(TAG);
             ft.commit();
         }

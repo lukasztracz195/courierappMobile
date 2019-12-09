@@ -11,6 +11,8 @@
     <string name="enter_old_password_msg">Enter your old password</string>
     <string name="enter_new_password_msg">Enter your new password</string>
     <string name="enter_repeated_password_msg">Repeated your password</string>
+    <string name="enter_login_new_worker">Enter username new worker</string>
+    <string name="enter_email_new_worker">Enter email new worker</string>
 
     //ERRORS
     <string name="login_error">Incorrect username or password</string>
@@ -29,6 +31,7 @@
     <string name="log_in_bt">Log in</string>
     <string name="log_out_bt">Log out</string>
     <string name="sign_in_bt">Sign in</string>
+    <string name="hire_an_employee_bt">Hire an employee</string>
 
     //KEYS
     <string name="auth_preferences">auth_preferences</string>

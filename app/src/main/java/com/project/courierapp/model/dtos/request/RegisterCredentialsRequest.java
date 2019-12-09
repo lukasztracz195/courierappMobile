@@ -6,47 +6,39 @@ import androidx.databinding.library.baseAdapters.BR;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
 import lombok.NoArgsConstructor;
 
+@Parcel
 @NoArgsConstructor
 public class RegisterCredentialsRequest extends BaseObservable {
 
-    @SerializedName("username")
-    String username;
+    @SerializedName("login")
+    String login;
 
-    @SerializedName("password")
-    String password;
+    @SerializedName("email")
+    String email;
 
-    @SerializedName("repeatPassword")
-    String repeatPassword;
+
 
     @Bindable
-    public String getUsername() {
-        return username;
+    public String getLogin() {
+        return login;
     }
 
-    public void setUsername(String username) {
-        this.username = username;
+    public void setLogin(String login) {
+        this.login = login;
         notifyPropertyChanged(BR.username);
     }
 
     @Bindable
-    public String getPassword() {
-        return password;
+    public String getEmail() {
+        return email;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setEmail(String email) {
+        this.email = email;
         notifyPropertyChanged(BR.password);
-    }
-
-    @Bindable
-    public String getRepeatPassword() {
-        return repeatPassword;
-    }
-
-    public void setRepeatPassword(String repeatPassword) {
-        this.repeatPassword = repeatPassword;
-        notifyPropertyChanged(BR.repeatPassword);
     }
 }

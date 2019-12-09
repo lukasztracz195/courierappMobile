@@ -2,8 +2,7 @@ package com.project.courierapp.model.di.clients;
 
 import com.project.courierapp.applications.CourierApplication;
 import com.project.courierapp.model.daos.RegisterDao;
-import com.project.courierapp.model.dtos.request.CredentialsRequest;
-import com.project.courierapp.model.dtos.response.BaseResponse;
+import com.project.courierapp.model.dtos.request.RegisterCredentialsRequest;
 import com.project.courierapp.model.exceptions.UserIsTakenException;
 
 import java.net.HttpURLConnection;
@@ -20,7 +19,7 @@ import static io.reactivex.Single.just;
 
 public class RegisterClient extends BaseClient {
 
-    @Named("no_auth")
+    @Named("auth")
     @Inject
     Retrofit retrofit;
 
@@ -31,11 +30,11 @@ public class RegisterClient extends BaseClient {
         this.registerDao = retrofit.create(RegisterDao.class);
     }
 
-    public Single<Void> register(final CredentialsRequest credentialsRequest) {
-        return async(this.registerDao.register(credentialsRequest)
+    public Single<Integer> register(final RegisterCredentialsRequest registerCredentialsRequest) {
+        return async(this.registerDao.register(registerCredentialsRequest)
                 .flatMap(authenticationResponse -> {
                     if (authenticationResponse.isSuccessful()) {
-                        return just(Objects.requireNonNull(authenticationResponse.body()));
+                        return just(authenticationResponse.code());
                     }
                     if (authenticationResponse.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
                         return error(new UserIsTakenException());
