@@ -1,7 +1,6 @@
 package com.project.courierapp.model.di.modules;
 
 import com.project.courierapp.model.di.clients.ChangePasswordClient;
-import com.project.courierapp.model.di.clients.GpsClient;
 import com.project.courierapp.model.di.clients.LoginClient;
 import com.project.courierapp.model.di.clients.RegisterClient;
 import com.project.courierapp.model.di.clients.WorkerClient;

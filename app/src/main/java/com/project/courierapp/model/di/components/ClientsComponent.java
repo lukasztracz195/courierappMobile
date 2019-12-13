@@ -1,6 +1,5 @@
 package com.project.courierapp.model.di.components;
 
-import com.project.courierapp.model.di.clients.GpsClient;
 import com.project.courierapp.model.di.modules.ClientsModule;
 import com.project.courierapp.view.adapters.adapters_manager.AdapterWorkersListItem;
 import com.project.courierapp.view.fragments.base_layer.ChangePasswordFragment;
@@ -16,8 +15,6 @@ import dagger.Component;
 public interface ClientsComponent {
 
     void inject(LoginFragment loginFragment);
-
-    void inject(GpsClient gpsClient);
 
     void inject(ChangePasswordFragment changePasswordFragment);
 
