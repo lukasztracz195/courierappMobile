@@ -22,6 +22,7 @@ import com.project.courierapp.model.di.clients.LoginClient;
 import com.project.courierapp.model.dtos.request.CredentialsRequest;
 import com.project.courierapp.model.exceptions.BadRequestException;
 import com.project.courierapp.model.exceptions.LoginException;
+import com.project.courierapp.model.service.LocationService;
 import com.project.courierapp.model.store.CredentialsStore;
 import com.project.courierapp.model.store.RolesStore;
 import com.project.courierapp.model.store.TokenStore;
@@ -48,6 +49,7 @@ public class LoginFragment extends Fragment implements BackWithExitDialog {
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
+    private LocationService locationService;
     @BindView(R.id.error_message)
     TextView errorMessage;
 

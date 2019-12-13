@@ -4,20 +4,20 @@
     package="com.project.courierapp">
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
     <!--Internet Permission-->
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:allowBackup="true"
-        android:usesCleartextTraffic="true"
-        android:icon="@mipmap/ic_launcher"
         android:name=".applications.CourierApplication"
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
+        android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity android:name=".view.activities.MainActivity">
             <intent-filter>
@@ -31,10 +31,13 @@
                 <category android:name="android.intent.category.BROWSABLE" />
 
                 <data
-                    android:scheme="http"
-                    android:host="pl.courierapp.com" />
+                    android:host="pl.courierapp.com"
+                    android:scheme="http" />
             </intent-filter>
         </activity>
+        <service
+            android:name=".model.service.LocationService"
+            android:isolatedProcess="true" />
     </application>
 
 </manifest>
