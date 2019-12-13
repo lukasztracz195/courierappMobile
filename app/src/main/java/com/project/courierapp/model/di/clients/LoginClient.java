@@ -34,7 +34,7 @@ public class LoginClient extends BaseClient {
     }
 
     public Single<String> login(final CredentialsRequest credentialsRequest) {
-
+            credentialsRequest.setPassword(credentialsRequest.getPassword().trim());
         return async(this.loginDao.login(credentialsRequest)
                 .flatMap(authenticationResponse -> {
                     if (authenticationResponse.isSuccessful()) {
