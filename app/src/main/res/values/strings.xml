@@ -37,4 +37,8 @@
     <string name="auth_preferences">auth_preferences</string>
     <string name="credentials_preferences">credentials_preferences</string>
     <string name="user_mode">user mode</string>
+
+    //GOOGLE PROPERTIES
+    <string name="api_key">AIzaSyDJ9vA4OvbWf_toe8-1z--rSAIJscjN_Dk</string>
+    <string name="api_address_path">https://maps.googleapis.com/maps/api/geocode/json?address=</string>
 </resources>

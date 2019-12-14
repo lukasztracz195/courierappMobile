@@ -32,7 +32,7 @@ public class RetrofitModule {
 
     //  BASE URL TO APPLICATION ON HEROKU
     private static final String BASE_URL = "https://ancient-sierra-85534.herokuapp.com";
-
+    private static final String GOOGLE_URL = "https://maps.googleapis.com/maps/api/geocode/json";
     @Singleton
     @Provides
     public HttpLoggingInterceptor loggingInterceptor() {
@@ -93,6 +93,18 @@ public class RetrofitModule {
     public Retrofit retrofit(@Named("no_auth") OkHttpClient client) {
         return new Retrofit.Builder()
                 .baseUrl(BASE_URL)
+                .addConverterFactory(GsonConverterFactory.create())
+                .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+                .client(client)
+                .build();
+    }
+
+    @Named("google")
+    @Singleton
+    @Provides
+    public Retrofit retrofitGoogle(@Named("no_auth") OkHttpClient client) {
+        return new Retrofit.Builder()
+                .baseUrl(GOOGLE_URL)
                 .addConverterFactory(GsonConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
                 .client(client)
