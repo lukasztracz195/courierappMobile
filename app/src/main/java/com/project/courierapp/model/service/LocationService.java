@@ -10,6 +10,8 @@ import androidx.annotation.Nullable;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
+import com.project.courierapp.model.calculator.DistanceCalculator;
+import com.project.courierapp.model.constans.DistanceUnits;
 import com.project.courierapp.view.activities.MainActivity;
 
 import java.util.Timer;
@@ -19,12 +21,13 @@ public class LocationService extends Service {
 
     private static final String TAG = LocationService.class.getSimpleName();
     private FusedLocationProviderClient fusedLocationClient;
-    private Location location;
+    private Location oldLocation;
     private Timer timer;
     private TimerTask timerTask;
     private boolean sendingTrackingPointsIsActivated = false;
     private static final long PERIOD = 1000 * 60 * 5; // 5min
     private static final long DELAY = 1000; // 1s
+    private static final double RANGE_IN_METERS = 50;
 
 
     @Override
@@ -41,6 +44,7 @@ public class LocationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
+        Log.i(TAG, "LocationService Started!");
         startTimer();
         return START_STICKY;
     }
@@ -49,11 +53,11 @@ public class LocationService extends Service {
     public void onDestroy() {
         super.onDestroy();
         stoptimertask();
-        Log.v(TAG, "Service Stopped!");
+        Log.i(TAG, "LocationService Stopped!");
     }
 
     public Location getLocation() {
-        return location;
+        return oldLocation;
     }
 
     public boolean isSendingTrackingPointsIsActivated() {
@@ -80,13 +84,13 @@ public class LocationService extends Service {
         timerTask = new TimerTask() {
             public void run() {
                 fusedLocationClient.getLastLocation()
-                        .addOnSuccessListener(MainActivity.instance, location -> {
-                            if (location != null) {
-                                LocationService.this.location = location;
-
+                        .addOnSuccessListener(MainActivity.instance, newLocation -> {
+                            if (newLocation != null) {
+                                oldLocation = newLocation;
+                                logLocation(oldLocation);
                             }
                         });
-                if(sendingTrackingPointsIsActivated){
+                if (sendingTrackingPointsIsActivated) {
                     //TODO SEND TRACKING POINTS
                 }
             }
@@ -100,5 +104,20 @@ public class LocationService extends Service {
             timer = null;
         }
     }
+
+    private void logLocation(Location location) {
+        Log.i(TAG,
+                "Current location lng: " +
+                        location.getLongitude() +
+                        " lat: " +
+                        location.getLatitude());
+    }
+
+    private static boolean toFar(Location source, Location destination) {
+        double distance = DistanceCalculator
+                .calculateDistance(source, destination, DistanceUnits.METERS);
+        return (distance >= RANGE_IN_METERS);
+    }
+
 
 }
