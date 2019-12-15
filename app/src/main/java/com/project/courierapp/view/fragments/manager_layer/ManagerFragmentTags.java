@@ -5,4 +5,5 @@ public interface ManagerFragmentTags {
     String StateRoadsFragment = "StateRoadsFragment";
     String WorkersListFragment = "WorkersListFragment";
     String RegisterWorkerFragment = "RegisterWorkerFragment";
+    String CreateDeliveryPointsFragment = "CreateDeliveryPointsFragment";
 }

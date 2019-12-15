@@ -17,7 +17,7 @@ import lombok.Getter;
 @Getter
 public class BaseHolder extends RecyclerView.ViewHolder implements Holder{
 
-    protected Map<Integer,TextView> mapTextView = new HashMap<>();
+    protected Map<Integer,? super TextView> mapTextView = new HashMap<>();
     protected View itemView;
     protected Object dataObject;
 

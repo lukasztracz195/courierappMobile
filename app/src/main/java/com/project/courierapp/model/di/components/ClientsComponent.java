@@ -4,6 +4,7 @@ import com.project.courierapp.model.di.modules.ClientsModule;
 import com.project.courierapp.view.adapters.adapters_manager.AdapterWorkersListItem;
 import com.project.courierapp.view.fragments.base_layer.ChangePasswordFragment;
 import com.project.courierapp.view.fragments.base_layer.LoginFragment;
+import com.project.courierapp.view.fragments.manager_layer.functional.CreateDeliveryPointsFragment;
 import com.project.courierapp.view.fragments.manager_layer.functional.RegisterWorkerFragment;
 
 import javax.inject.Singleton;
@@ -21,4 +22,6 @@ public interface ClientsComponent {
     void inject(AdapterWorkersListItem adapterWorkersListItem);
 
     void inject(RegisterWorkerFragment registerWorkerFragment);
+
+    void inject(CreateDeliveryPointsFragment createDeliveryPointsFragment);
 }

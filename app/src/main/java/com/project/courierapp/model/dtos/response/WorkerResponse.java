@@ -20,5 +20,10 @@ public class WorkerResponse implements Response{
 
     @SerializedName("finishedRoad")
     private Long finishedRoad;
+
+    @Override
+    public String toString(){
+        return login;
+    }
 }
 
