@@ -29,6 +29,8 @@ public class CredentialsRequest extends BaseObservable implements Request {
         password = "";
     }
 
+
+
     @Bindable
     public String getUsername() {
         return username;

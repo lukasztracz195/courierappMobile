@@ -1,6 +1,7 @@
 package com.project.courierapp.model.di.modules;
 
 import com.project.courierapp.model.di.clients.ChangePasswordClient;
+import com.project.courierapp.model.di.clients.DeliveryPointsClient;
 import com.project.courierapp.model.di.clients.LoginClient;
 import com.project.courierapp.model.di.clients.RegisterClient;
 import com.project.courierapp.model.di.clients.WorkerClient;
@@ -25,12 +26,6 @@ public class ClientsModule {
         return new RegisterClient();
     }
 
-//    @Singleton
-//    @Provides
-//    public GpsClient gpsClient() {
-//        return new GpsClient();
-//    }
-
     @Singleton
     @Provides
     public ChangePasswordClient changePasswordClient() {
@@ -41,5 +36,12 @@ public class ClientsModule {
     @Provides
     public WorkerClient workerClient() {
         return new WorkerClient();
+    }
+
+
+    @Singleton
+    @Provides
+    public DeliveryPointsClient deliveryPointsClient() {
+        return new DeliveryPointsClient();
     }
 }

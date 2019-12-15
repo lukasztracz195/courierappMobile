@@ -5,6 +5,7 @@ import androidx.databinding.Bindable;
 import androidx.databinding.library.baseAdapters.BR;
 
 import com.project.courierapp.model.dtos.request.Request;
+import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
 import com.project.courierapp.model.watchers.Editabled;
 
 import org.parceler.Parcel;
@@ -13,11 +14,15 @@ import java.io.Serializable;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
 
 
 @AllArgsConstructor
 @Builder
 @Parcel
+@Getter
+@Setter
 public class DeliveryPointDto extends BaseObservable implements Request, Editabled, Serializable {
 
     boolean editabled;
@@ -27,6 +32,7 @@ public class DeliveryPointDto extends BaseObservable implements Request, Editabl
     String city;
     String country;
     Long expendedTime;
+    Long pointId;
 
     public DeliveryPointDto() {
         editabled = false;
@@ -36,6 +42,21 @@ public class DeliveryPointDto extends BaseObservable implements Request, Editabl
         city = "";
         country = "";
         expendedTime = 0L;
+        pointId = null;
+    }
+
+    public DeliveryPointDto(DeliveryPointResponse deliveryPointResponse){
+        String[] fields = deliveryPointResponse.getAddress().split(" ");
+        if(fields.length == 5) {
+            editabled = false;
+            saved = true;
+            address = fields[0];
+            postalCode = fields[1];
+            city = fields[2];
+            country = fields[3];
+            expendedTime = Long.parseLong(fields[4]);
+            pointId = deliveryPointResponse.getPointId();
+        }
     }
 
     @Bindable

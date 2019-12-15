@@ -20,13 +20,15 @@
     <string name="user_is_taken">User is taken</string>
     <string name="wrong_password_error">passwords is not the same</string>
     <string name="empty_fields_error">fields must not is blank</string>
+    <string name="validation_failed">Validation is failed</string>
 
     //LABELS
     <string name="username_label">Username:</string>
     <string name="status_label">Status:</string>
     <string name="finished_roads_label">Finished roads:</string>
     <string name="enter_worker_to_road_label">Below choose you worker from list</string>
-    <string name="input_expected_time">Input expected time in minutes next to</string>
+    <string name="enter_data_to_create_delivery_point">Fill data below to create delivery point</string>
+    <string name="input_expected_time">Input expected time in minutes below</string>
     <string name="not_saved_and_not_yet_validated">Not saved and not yet validated</string>
     <string name="saved_but_not_yet_validated">Saved but not yet validated</string>
     <string name="saved_and_validated">Saved and validated</string>
@@ -56,4 +58,11 @@
     <string name="enter_city_hint">Enter city</string>
     <string name="enter_country_hint">Enter country</string>
     <string name="enter_expected_time_hint">Enter minutes value</string>
+
+    //HELPER_TEXTS
+    <string name="helper_text_address">Example: Radwańska 42</string>
+    <string name="helper_text_postal_code">Example: 93–574</string>
+    <string name="helper_text_city">Example: Lódź</string>
+    <string name="helper_text_country">Example: Polska</string>
+    <string name="helper_text_expended_time">Example: 30</string>
 </resources>
