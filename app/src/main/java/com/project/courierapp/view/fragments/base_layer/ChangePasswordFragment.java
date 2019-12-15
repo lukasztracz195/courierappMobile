@@ -20,7 +20,7 @@ import com.project.courierapp.model.bundlers.ABundler;
 import com.project.courierapp.model.di.clients.ChangePasswordClient;
 import com.project.courierapp.model.dtos.request.ChangePasswordRequest;
 import com.project.courierapp.model.dtos.transfer.ChangePasswordDto;
-import com.project.courierapp.model.exceptions.BadRequestException;
+import com.project.courierapp.model.exceptions.http.BadRequestException;
 import com.project.courierapp.model.exceptions.ChangePasswordException;
 import com.project.courierapp.view.activities.MainActivity;
 import com.project.courierapp.view.fragments.BaseFragmentTags;

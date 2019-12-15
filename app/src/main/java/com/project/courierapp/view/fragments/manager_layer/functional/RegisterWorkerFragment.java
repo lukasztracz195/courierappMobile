@@ -18,7 +18,7 @@ import com.project.courierapp.databinding.RegisterWorkerFragmentBinding;
 import com.project.courierapp.model.bundlers.ABundler;
 import com.project.courierapp.model.di.clients.RegisterClient;
 import com.project.courierapp.model.dtos.request.RegisterCredentialsRequest;
-import com.project.courierapp.model.exceptions.BadRequestException;
+import com.project.courierapp.model.exceptions.http.BadRequestException;
 import com.project.courierapp.model.exceptions.LoginException;
 import com.project.courierapp.model.validators.RegisterValidator;
 import com.project.courierapp.view.Iback.BackWithRemoveFromStack;
@@ -82,8 +82,10 @@ public class RegisterWorkerFragment extends Fragment implements BackWithRemoveFr
 
     @OnClick(R.id.register_button)
     void register() {
-        if (!RegisterValidator.valid(registerCredentialsRequest)) {
-            errorMessage.setText(getResources().getString(RegisterValidator.getErrorMessageCode()));
+        RegisterValidator registerValidator = RegisterValidator.of(registerCredentialsRequest);
+        registerValidator.validate();
+        if (!registerValidator.isValid()) {
+            errorMessage.setText(registerValidator.getErrorMessages().toString());
         } else {
             Disposable disposable = registerClient.register(registerCredentialsRequest)
                     .subscribe(request -> {

@@ -1,5 +1,6 @@
 package com.project.courierapp.view.fragments.manager_layer.functional;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,18 +20,23 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.project.courierapp.R;
 import com.project.courierapp.applications.CourierApplication;
-import com.project.courierapp.databinding.CreateDeliveryPointsFragmentBinding;
+import com.project.courierapp.databinding.CreateRoadFragmentBinding;
 import com.project.courierapp.model.bundlers.ABundler;
+import com.project.courierapp.model.di.clients.DeliveryPointsClient;
 import com.project.courierapp.model.di.clients.WorkerClient;
+import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
 import com.project.courierapp.model.dtos.response.WorkerResponse;
-import com.project.courierapp.model.dtos.transfer.DeliveryPointDto;
+import com.project.courierapp.view.Iback.BackWithRemoveFromStack;
+import com.project.courierapp.view.activities.MainActivity;
 import com.project.courierapp.view.adapters.AdaptersTags;
 import com.project.courierapp.view.adapters.adapters_manager.AdapterDeliveryPoints;
+import com.project.courierapp.view.fragments.manager_layer.ManagerFragmentTags;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 import javax.inject.Inject;
@@ -43,11 +49,10 @@ import icepick.State;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
-public class CreateDeliveryPointsFragment extends Fragment {
+public class CreateRoadFragment extends Fragment implements BackWithRemoveFromStack {
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    private List<WorkerResponse> workerResponseList = new ArrayList<>();
 
     @BindView(R.id.error_message)
     TextView errorMessage;
@@ -61,13 +66,28 @@ public class CreateDeliveryPointsFragment extends Fragment {
     @BindView(R.id.delivery_points_recyclerview)
     RecyclerView deliveryPointsRecyclerView;
 
+
+    private List<WorkerResponse> workerResponseList = new ArrayList<>();
+
     @State(ABundler.class)
-    List<DeliveryPointDto> deliveryPointDtos = new ArrayList<>();
+    List<DeliveryPointResponse> deliveryPointResponseList = new ArrayList<>();
 
     @Inject
     WorkerClient workerClient;
 
+    @Inject
+    DeliveryPointsClient deliveryPointsClient;
+
     private AdapterDeliveryPoints adapterDeliveryPoints;
+
+
+    public CreateRoadFragment() {
+
+    }
+
+    public CreateRoadFragment(List<DeliveryPointResponse> deliveryPointResponseList) {
+        this.deliveryPointResponseList = deliveryPointResponseList;
+    }
 
     @Nullable
     @Override
@@ -76,17 +96,19 @@ public class CreateDeliveryPointsFragment extends Fragment {
         if (savedInstanceState != null) {
             Icepick.restoreInstanceState(this, savedInstanceState);
         }
-        CreateDeliveryPointsFragmentBinding createSurveyFragmentBinding = DataBindingUtil.inflate(inflater,
-                R.layout.create_delivery_points_fragment, container, false);
+        CreateRoadFragmentBinding createSurveyFragmentBinding = DataBindingUtil.inflate(inflater,
+                R.layout.create_road_fragment, container, false);
 
         View mainView = createSurveyFragmentBinding.getRoot();
         ButterKnife.bind(this, mainView);
         CourierApplication.getClientsComponent().inject(this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         deliveryPointsRecyclerView.setLayoutManager(layoutManager);
-        adapterDeliveryPoints = new AdapterDeliveryPoints(getContext(), deliveryPointDtos,savedInstanceState);
+        adapterDeliveryPoints = new AdapterDeliveryPoints(getContext(), deliveryPointResponseList, savedInstanceState);
         deliveryPointsRecyclerView.setAdapter(adapterDeliveryPoints);
-        reloadWorkers();
+        if (workerResponseList == null || workerResponseList.isEmpty()) {
+            reloadWorkers();
+        }
         return mainView;
     }
 
@@ -94,37 +116,54 @@ public class CreateDeliveryPointsFragment extends Fragment {
     public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         adapterDeliveryPoints.onSaveInstanceState(outState);
-        deliveryPointDtos = adapterDeliveryPoints.getDeliveryPointDtoList();
+        deliveryPointResponseList = adapterDeliveryPoints.getDeliveryPointResponseList();
         Icepick.saveInstanceState(this, outState);
     }
 
     @OnClick(R.id.add_point_bt)
     public void add() {
-        adapterDeliveryPoints.addPoint();
-        createRoad.setEnabled(true);
+        ((MainActivity) Objects.requireNonNull(getActivity())).putFragment(
+                new CreateDeliveryPointFragment(deliveryPointResponseList),
+                ManagerFragmentTags.CreateDeliveryPointFragment);
     }
 
 
+    @SuppressLint("CheckResult")
     @OnClick(R.id.remove_point_bt)
     public void removeLast() {
-        adapterDeliveryPoints.removePoint();
-        if(deliveryPointDtos.isEmpty()){
-            createRoad.setEnabled(false);
-        }
+        DeliveryPointResponse deliveryPointToDeleteFromServer = deliveryPointResponseList
+                .get(deliveryPointResponseList.size() - 1);
+        deliveryPointsClient.deleteDeliveryPointById(deliveryPointToDeleteFromServer.getPointId())
+                .subscribe(response -> {
+                    if (response) {
+                        adapterDeliveryPoints.removePoint();
+                        deliveryPointResponseList = adapterDeliveryPoints
+                                .getDeliveryPointResponseList();
+                        if (deliveryPointResponseList.isEmpty()) {
+                            createRoad.setEnabled(false);
+                        }
+                    }
+                }, (Throwable e) -> {
+                    errorMessage.setText(e.getMessage());
+                });
     }
 
     @OnClick(R.id.cancel_bt)
     public void cancel() {
-
+        //TODO THINKING ABOU ALERT DIALOG ON EXIT WITH UNSAVED DELIVERY POINTS
+        while(!deliveryPointResponseList.isEmpty()){
+            removeLast();
+        }
+        Objects.requireNonNull(getActivity()).onBackPressed();
     }
 
     @OnClick(R.id.create_road)
     public void createRoad() {
-
+        //TODO ADD ROADCLIENT AND USE CREATE ROAD
     }
 
     @OnClick(R.id.reload_workers_spinner)
-    public void reloadWorkers() {
+    void reloadWorkers() {
         Disposable disposable = workerClient.getWorkers()
                 .subscribe(this::updateData, e -> Log.e(AdaptersTags.AdapterWorkersListItem, e.getMessage(), e));
         compositeDisposable.add(disposable);
@@ -135,8 +174,8 @@ public class CreateDeliveryPointsFragment extends Fragment {
         String[] workerUsernames = workerResponseList.stream()
                 .map(WorkerResponse::getLogin)
                 .collect(Collectors.toList()).toArray(new String[workerResponseList.size()]);
-        ArrayAdapter<String>adapter = new ArrayAdapter<>(CourierApplication.getContext(),
-                android.R.layout.simple_spinner_item,workerUsernames);
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(CourierApplication.getContext(),
+                android.R.layout.simple_spinner_item, workerUsernames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         workersSpinner.setAdapter(adapter);
     }

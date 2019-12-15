@@ -1,13 +1,9 @@
 package com.project.courierapp.model.di.clients;
 
-import android.util.Log;
-
 import com.project.courierapp.applications.CourierApplication;
 import com.project.courierapp.model.daos.ChangePasswordDao;
-import com.project.courierapp.model.daos.LoginDao;
 import com.project.courierapp.model.dtos.request.ChangePasswordRequest;
-import com.project.courierapp.model.dtos.request.CredentialsRequest;
-import com.project.courierapp.model.exceptions.BadRequestException;
+import com.project.courierapp.model.exceptions.http.BadRequestException;
 import com.project.courierapp.model.exceptions.LoginException;
 
 import java.net.HttpURLConnection;

@@ -2,27 +2,30 @@ package com.project.courierapp.model.dtos.response;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class WorkerResponse implements Response{
+@Parcel
+public class WorkerResponse implements Response {
 
     @SerializedName("workerId")
-    private Long workerId;
+    Long workerId;
 
     @SerializedName("login")
-    private String login;
+    String login;
 
     @SerializedName("status")
-    private String status;
+    String status;
 
     @SerializedName("finishedRoad")
-    private Long finishedRoad;
+    Long finishedRoad;
 
     @Override
-    public String toString(){
+    public String toString() {
         return login;
     }
 }

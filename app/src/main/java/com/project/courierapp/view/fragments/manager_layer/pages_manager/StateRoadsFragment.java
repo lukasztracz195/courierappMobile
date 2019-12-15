@@ -17,7 +17,7 @@ import com.project.courierapp.view.Iback.BackWithLogOutDialog;
 import com.project.courierapp.view.activities.MainActivity;
 import com.project.courierapp.view.adapters.adapters_manager.AdapterWorkersListItem;
 import com.project.courierapp.view.fragments.manager_layer.ManagerFragmentTags;
-import com.project.courierapp.view.fragments.manager_layer.functional.CreateDeliveryPointsFragment;
+import com.project.courierapp.view.fragments.manager_layer.functional.CreateRoadFragment;
 
 import java.util.Objects;
 
@@ -50,6 +50,6 @@ public class StateRoadsFragment extends Fragment implements BackWithLogOutDialog
     @OnClick(R.id.add_new_road)
     public void addNewRoad(){
         ((MainActivity) Objects.requireNonNull(getActivity()))
-                .putFragment(new CreateDeliveryPointsFragment(), ManagerFragmentTags.CreateDeliveryPointsFragment);
+                .putFragment(new CreateRoadFragment(), ManagerFragmentTags.CreateDeliveryPointFragment);
     }
 }
