@@ -15,7 +15,7 @@ import java.util.List;
 
 import io.reactivex.disposables.CompositeDisposable;
 
-public class BaseAdapter extends RecyclerView.Adapter<BaseHolder> implements Adapter{
+public class BaseAdapter<T extends BaseHolder> extends RecyclerView.Adapter<T> implements Adapter{
 
     protected List<? extends Response> responses = new ArrayList<>();
     protected Response response;
@@ -32,12 +32,12 @@ public class BaseAdapter extends RecyclerView.Adapter<BaseHolder> implements Ada
 
     @NonNull
     @Override
-    public BaseHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public T onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return null;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull BaseHolder holder, int position) {
+    public void onBindViewHolder(@NonNull T holder, int position) {
 
     }
 

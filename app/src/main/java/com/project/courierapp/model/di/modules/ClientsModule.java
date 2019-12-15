@@ -25,11 +25,11 @@ public class ClientsModule {
         return new RegisterClient();
     }
 
-    @Singleton
-    @Provides
-    public GpsClient gpsClient() {
-        return new GpsClient();
-    }
+//    @Singleton
+//    @Provides
+//    public GpsClient gpsClient() {
+//        return new GpsClient();
+//    }
 
     @Singleton
     @Provides

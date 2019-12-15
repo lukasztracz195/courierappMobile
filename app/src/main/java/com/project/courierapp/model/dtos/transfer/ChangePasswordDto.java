@@ -9,17 +9,17 @@ import com.google.gson.annotations.SerializedName;
 import org.parceler.Parcel;
 
 @Parcel
-public class ChangePasswordDto extends BaseObservable{
+public class ChangePasswordDto extends BaseObservable {
 
 
     @SerializedName("username")
-    private String username;
+    String username;
 
     @SerializedName("oldPassword")
-    private String oldPassword;
+    String oldPassword;
 
     @SerializedName("newPassword")
-    private String newPassword;
+    String newPassword;
 
     public ChangePasswordDto() {
         this.username = "";

@@ -10,6 +10,7 @@ import androidx.annotation.NonNull;
 import com.project.courierapp.R;
 import com.project.courierapp.applications.CourierApplication;
 import com.project.courierapp.model.di.clients.WorkerClient;
+import com.project.courierapp.model.dtos.response.Response;
 import com.project.courierapp.view.adapters.AdaptersTags;
 import com.project.courierapp.view.adapters.BaseAdapter;
 import com.project.courierapp.view.holders.BaseHolder;
@@ -41,7 +42,7 @@ public class AdapterWorkersListItem extends BaseAdapter {
 
     @Override
     public void onBindViewHolder(@NonNull BaseHolder holder, int position) {
-        holder.setFields(responses.get(position));
+        holder.setFields((Response) responses.get(position));
     }
 
     @Override
