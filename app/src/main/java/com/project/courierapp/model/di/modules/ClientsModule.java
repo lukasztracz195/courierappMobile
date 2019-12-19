@@ -4,6 +4,7 @@ import com.project.courierapp.model.di.clients.ChangePasswordClient;
 import com.project.courierapp.model.di.clients.DeliveryPointsClient;
 import com.project.courierapp.model.di.clients.LoginClient;
 import com.project.courierapp.model.di.clients.RegisterClient;
+import com.project.courierapp.model.di.clients.RoadClient;
 import com.project.courierapp.model.di.clients.WorkerClient;
 
 import javax.inject.Singleton;
@@ -43,5 +44,11 @@ public class ClientsModule {
     @Provides
     public DeliveryPointsClient deliveryPointsClient() {
         return new DeliveryPointsClient();
+    }
+
+    @Singleton
+    @Provides
+    public RoadClient roadClient() {
+        return new RoadClient();
     }
 }

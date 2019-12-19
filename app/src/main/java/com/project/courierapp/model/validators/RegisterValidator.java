@@ -27,8 +27,8 @@ public class RegisterValidator extends BaseValidator implements Validator {
     @Override
     public void validate() {
         validatorBuilder = ValidatorBuilder.builder()
-                .add(new EmptyFieldsValidatorChain(fields))
-                .add(new RegexValidatorChain(registerCredentialsRequest.getEmail(),
+                .add(EmptyFieldsValidatorChain.of(fields))
+                .add(RegexValidatorChain.of(registerCredentialsRequest.getEmail(),
                         EMAIL_REGEX, EMAIL_ERROR_VALIDATION))
                 .validate();
     }

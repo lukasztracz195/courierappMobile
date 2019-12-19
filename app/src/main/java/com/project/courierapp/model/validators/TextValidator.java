@@ -21,6 +21,12 @@ public class TextValidator extends BaseValidator implements Validator{
         }
     }
 
+    public TextValidator(){
+        this.validatorBuilder = ValidatorBuilder.builder()
+                .add(EmptyFieldsValidatorChain.of(Collections.singletonList(textToValidation)));
+
+    }
+
     public static TextValidator of(List<ValidatorChain> validatorChains){
         return new TextValidator((validatorChains));
     }

@@ -21,7 +21,7 @@ import com.project.courierapp.model.deserializers.JwtDeserializer;
 import com.project.courierapp.model.di.clients.LoginClient;
 import com.project.courierapp.model.dtos.request.CredentialsRequest;
 import com.project.courierapp.model.exceptions.http.BadRequestException;
-import com.project.courierapp.model.exceptions.LoginException;
+import com.project.courierapp.model.exceptions.http.UnauthorizedException;
 import com.project.courierapp.model.service.LocationService;
 import com.project.courierapp.model.store.CredentialsStore;
 import com.project.courierapp.model.store.RolesStore;
@@ -113,7 +113,7 @@ public class LoginFragment extends Fragment implements BackWithExitDialog {
                         }
 
                     }, (Throwable e) -> {
-                        if (e instanceof LoginException) {
+                        if (e instanceof UnauthorizedException) {
                             Log.i(BaseFragmentTags.LoginFragment, "LoginException", e);
                             errorMessage.setText(getString(R.string.login_error));
                         } else if (e instanceof BadRequestException) {

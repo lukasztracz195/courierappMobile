@@ -30,8 +30,8 @@ public class DeliveryPointDtoValidator extends BaseValidator implements Validato
     @Override
     public void validate() {
        validatorBuilder = ValidatorBuilder.builder()
-                .add(new EmptyFieldsValidatorChain(fields))
-                .add(new RegexValidatorChain(deliveryPointDto.getPostalCode(),
+                .add(EmptyFieldsValidatorChain.of(fields))
+                .add(RegexValidatorChain.of(deliveryPointDto.getPostalCode(),
                         POSTAL_CODE_REGEX, POSTAL_CODE_ERROR_VALIDATION))
                 .validate();
     }

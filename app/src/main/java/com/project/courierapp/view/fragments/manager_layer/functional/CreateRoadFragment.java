@@ -23,13 +23,16 @@ import com.project.courierapp.applications.CourierApplication;
 import com.project.courierapp.databinding.CreateRoadFragmentBinding;
 import com.project.courierapp.model.bundlers.ABundler;
 import com.project.courierapp.model.di.clients.DeliveryPointsClient;
+import com.project.courierapp.model.di.clients.RoadClient;
 import com.project.courierapp.model.di.clients.WorkerClient;
+import com.project.courierapp.model.dtos.request.AddRoadRequest;
 import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
 import com.project.courierapp.model.dtos.response.WorkerResponse;
 import com.project.courierapp.view.Iback.BackWithRemoveFromStack;
 import com.project.courierapp.view.activities.MainActivity;
 import com.project.courierapp.view.adapters.AdaptersTags;
 import com.project.courierapp.view.adapters.adapters_manager.AdapterDeliveryPoints;
+import com.project.courierapp.view.fragments.base_layer.ManagerBaseFragment;
 import com.project.courierapp.view.fragments.manager_layer.ManagerFragmentTags;
 
 import org.jetbrains.annotations.NotNull;
@@ -77,6 +80,9 @@ public class CreateRoadFragment extends Fragment implements BackWithRemoveFromSt
 
     @Inject
     DeliveryPointsClient deliveryPointsClient;
+
+    @Inject
+    RoadClient roadClient;
 
     private AdapterDeliveryPoints adapterDeliveryPoints;
 
@@ -151,15 +157,31 @@ public class CreateRoadFragment extends Fragment implements BackWithRemoveFromSt
     @OnClick(R.id.cancel_bt)
     public void cancel() {
         //TODO THINKING ABOU ALERT DIALOG ON EXIT WITH UNSAVED DELIVERY POINTS
-        while(!deliveryPointResponseList.isEmpty()){
+        for (DeliveryPointResponse deliveryPointResponse : deliveryPointResponseList) {
+            deliveryPointsClient.deleteDeliveryPointById((deliveryPointResponse).getPointId());
+        }
+        while (!deliveryPointResponseList.isEmpty()) {
             removeLast();
         }
         Objects.requireNonNull(getActivity()).onBackPressed();
     }
 
+    @SuppressLint("CheckResult")
     @OnClick(R.id.create_road)
     public void createRoad() {
-        //TODO ADD ROADCLIENT AND USE CREATE ROAD
+        if (!deliveryPointResponseList.isEmpty()) {
+            roadClient.add(AddRoadRequest.builder().deliveryPointsIds(deliveryPointResponseList.stream()
+                    .map(DeliveryPointResponse::getPointId).collect(Collectors.toList()))
+                    .workerId(findWorkerIdByLogin((String) workersSpinner.getSelectedItem()))
+                    .build()).subscribe(response -> {
+                ((MainActivity) Objects.requireNonNull(getActivity()))
+                        .putFragment(new ManagerBaseFragment(),
+                                ManagerFragmentTags.WorkersListFragment);
+            }, (Throwable e) -> {
+                errorMessage.setText(e.getMessage());
+            });
+
+        }
     }
 
     @OnClick(R.id.reload_workers_spinner)
@@ -178,6 +200,11 @@ public class CreateRoadFragment extends Fragment implements BackWithRemoveFromSt
                 android.R.layout.simple_spinner_item, workerUserNames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         workersSpinner.setAdapter(adapter);
+    }
+
+    private Long findWorkerIdByLogin(String login) {
+        return workerResponseList.stream().filter(f -> f.getLogin().equals(login))
+                .findFirst().get().getWorkerId();
     }
 
     private void updateData(List<WorkerResponse> workerResponseList) {

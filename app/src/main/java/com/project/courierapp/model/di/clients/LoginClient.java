@@ -5,10 +5,7 @@ import android.util.Log;
 import com.project.courierapp.applications.CourierApplication;
 import com.project.courierapp.model.daos.LoginDao;
 import com.project.courierapp.model.dtos.request.CredentialsRequest;
-import com.project.courierapp.model.exceptions.http.BadRequestException;
-import com.project.courierapp.model.exceptions.LoginException;
 
-import java.net.HttpURLConnection;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -34,7 +31,7 @@ public class LoginClient extends BaseClient {
     }
 
     public Single<String> login(final CredentialsRequest credentialsRequest) {
-            credentialsRequest.setPassword(credentialsRequest.getPassword().trim());
+        credentialsRequest.setPassword(credentialsRequest.getPassword().trim());
         return async(this.loginDao.login(credentialsRequest)
                 .flatMap(authenticationResponse -> {
                     if (authenticationResponse.isSuccessful()) {
@@ -43,15 +40,8 @@ public class LoginClient extends BaseClient {
                                 requireNonNull(authenticationResponse.headers()
                                         .get("Authorization")).split(" ")[1]));
                     }
-                    if (authenticationResponse.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
-                        Log.i("HTTP_UNAUTHORIZED 401", authenticationResponse.message());
-                        return error((new LoginException()));
-                    }
-                    if (authenticationResponse.code() == HttpURLConnection.HTTP_NOT_FOUND) {
-                        Log.i("HTTP_NOT_FOUND 404", authenticationResponse.message());
-                        return error(new BadRequestException());
-                    }
-                    return error(new RuntimeException(Objects.requireNonNull(authenticationResponse.errorBody()).toString()));
+                    return error(validatorHttpBuilder.validate(this.getClass().getName(),
+                            authenticationResponse));
                 }));
     }
 }

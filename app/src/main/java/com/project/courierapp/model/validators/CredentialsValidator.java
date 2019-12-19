@@ -22,7 +22,7 @@ public class CredentialsValidator extends BaseValidator implements Validator {
     @Override
     public void validate() {
         validatorBuilder = ValidatorBuilder.builder()
-                .add(new EmptyFieldsValidatorChain(fields))
+                .add(EmptyFieldsValidatorChain.of(fields))
                 .validate();
     }
 }

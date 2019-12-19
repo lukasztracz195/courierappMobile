@@ -33,6 +33,7 @@
     <string name="saved_but_not_yet_validated">Saved but not yet validated</string>
     <string name="saved_and_validated">Saved and validated</string>
 
+
     //BUTTONS
     <string name="change_password_bt">Change password</string>
     <string name="log_in_bt">Log in</string>
@@ -46,6 +47,7 @@
     <string name="refresh_workers_spinner">Refresh list workers</string>
     <string name="save_bt">Save</string>
     <string name="delete_bt">Delete</string>
+    <string name="create_delivery_point_bt">Create point</string>
 
     //KEYS
     <string name="auth_preferences">auth_preferences</string>
