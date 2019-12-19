@@ -2,20 +2,35 @@ package com.project.courierapp.model.validators.components;
 
 import android.util.Pair;
 
+import java.util.Collections;
 import java.util.List;
 
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@Setter
+@NoArgsConstructor
 public class EmptyFieldsValidatorChain implements ValidatorChain {
 
     private List<String> fieldsToValid;
-    private final static String ERROR_MESSAGE = "fields must not is blank";
+    private final static String ERROR_MESSAGE = "Field cannot be empty";
 
-    public EmptyFieldsValidatorChain(List<String> fieldsToValid){
+    private EmptyFieldsValidatorChain(List<String> fieldsToValid){
     this.fieldsToValid = fieldsToValid;
 
     }
 
+    public static EmptyFieldsValidatorChain of(List<String> fieldsToValid){
+        return new EmptyFieldsValidatorChain(fieldsToValid);
+    }
+
     public Pair<Boolean, String> validate(){
             return checkEmptyFields();
+    }
+
+    @Override
+    public void setTextToValidation(String textToValidation) {
+        fieldsToValid = Collections.singletonList(textToValidation);
     }
 
     private Pair<Boolean,String> checkEmptyFields(){

@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -38,10 +37,6 @@ import icepick.Icepick;
 import icepick.State;
 
 public class AdapterDeliveryPoints extends BaseAdapter {
-
-
-    @BindView(R.id.validation_label)
-    TextView validationMessage;
 
     @BindView(R.id.edit_bt)
     Button editButton;

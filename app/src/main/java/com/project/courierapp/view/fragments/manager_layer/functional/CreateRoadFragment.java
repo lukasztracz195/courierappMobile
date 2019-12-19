@@ -171,11 +171,11 @@ public class CreateRoadFragment extends Fragment implements BackWithRemoveFromSt
     }
 
     private void setSpinnerValues() {
-        String[] workerUsernames = workerResponseList.stream()
+        String[] workerUserNames = workerResponseList.stream()
                 .map(WorkerResponse::getLogin)
                 .collect(Collectors.toList()).toArray(new String[workerResponseList.size()]);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(CourierApplication.getContext(),
-                android.R.layout.simple_spinner_item, workerUsernames);
+                android.R.layout.simple_spinner_item, workerUserNames);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         workersSpinner.setAdapter(adapter);
     }

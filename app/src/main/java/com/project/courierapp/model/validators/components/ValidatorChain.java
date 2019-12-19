@@ -8,4 +8,6 @@ public interface ValidatorChain {
 
     Pair<Boolean, String> validate();
 
+    void setTextToValidation(String textToValidation);
+
 }

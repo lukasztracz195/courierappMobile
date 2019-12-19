@@ -1,10 +1,12 @@
 package com.project.courierapp.model.validators;
 
-import java.util.List;
+import lombok.Setter;
 
+@Setter
 public class BaseValidator implements Validator {
 
     protected ValidatorBuilder validatorBuilder;
+
     @Override
     public void validate() {
 
@@ -16,7 +18,12 @@ public class BaseValidator implements Validator {
     }
 
     @Override
-    public List<String> getErrorMessages() {
-        return validatorBuilder.getErrorsMessages();
+    public boolean isInvalid() {
+      return validatorBuilder.isInvalid();
+    }
+
+    @Override
+    public String getErrorMessage() {
+        return validatorBuilder.getErrorMessage();
     }
 }
