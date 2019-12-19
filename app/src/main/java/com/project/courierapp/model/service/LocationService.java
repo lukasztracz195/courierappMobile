@@ -11,7 +11,7 @@ import androidx.annotation.Nullable;
 import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationServices;
 import com.project.courierapp.model.calculator.DistanceCalculator;
-import com.project.courierapp.model.constans.DistanceUnits;
+import com.project.courierapp.model.enums.DistanceUnits;
 import com.project.courierapp.view.activities.MainActivity;
 
 import java.util.Timer;

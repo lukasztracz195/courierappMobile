@@ -2,7 +2,7 @@ package com.project.courierapp.model.calculator;
 
 import android.location.Location;
 
-import com.project.courierapp.model.constans.DistanceUnits;
+import com.project.courierapp.model.enums.DistanceUnits;
 
 import static java.lang.Math.acos;
 import static java.lang.Math.cos;

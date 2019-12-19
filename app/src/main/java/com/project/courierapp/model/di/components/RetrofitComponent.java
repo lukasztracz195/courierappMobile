@@ -4,6 +4,7 @@ import com.project.courierapp.model.di.clients.ChangePasswordClient;
 import com.project.courierapp.model.di.clients.DeliveryPointsClient;
 import com.project.courierapp.model.di.clients.LoginClient;
 import com.project.courierapp.model.di.clients.RegisterClient;
+import com.project.courierapp.model.di.clients.RoadClient;
 import com.project.courierapp.model.di.clients.WorkerClient;
 import com.project.courierapp.model.di.modules.RetrofitModule;
 
@@ -24,4 +25,6 @@ public interface RetrofitComponent {
     void inject(WorkerClient workerClient);
 
     void inject(DeliveryPointsClient deliveryPointsClient);
+
+    void inject(RoadClient roadClient);
 }
