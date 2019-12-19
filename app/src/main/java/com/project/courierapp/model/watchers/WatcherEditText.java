@@ -1,23 +1,31 @@
 package com.project.courierapp.model.watchers;
 
-import android.graphics.Color;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.widget.TextView;
 
-import com.project.courierapp.R;
-import com.project.courierapp.applications.CourierApplication;
+import com.google.android.material.textfield.TextInputEditText;
+import com.google.android.material.textfield.TextInputLayout;
+import com.project.courierapp.model.validators.TextValidator;
+
+import javax.annotation.Nonnull;
+import javax.annotation.Nullable;
 
 public class WatcherEditText implements TextWatcher {
 
-    private Editabled editabled;
-    private String fieldText;
+    private TextInputLayout textInputLayout;
     private TextView errorTextView;
+    private TextValidator validator;
 
-    public WatcherEditText(Editabled editabled, String fieldText, TextView errorTextView) {
-        this.editabled = editabled;
-        this.fieldText = fieldText;
+    private WatcherEditText(@Nonnull TextInputEditText textInputEditText, @Nullable TextView errorTextView,@Nonnull TextValidator validator) {
+        this.textInputLayout = (TextInputLayout) textInputEditText.getParent().getParent();
         this.errorTextView = errorTextView;
+        this.validator = validator;
+    }
+
+    public static WatcherEditText of(@Nonnull TextInputEditText textInputEditText,
+                                     @Nullable TextView errorTextView, @Nonnull TextValidator validator){
+        return new WatcherEditText(textInputEditText,errorTextView,validator);
     }
 
     @Override
@@ -32,14 +40,14 @@ public class WatcherEditText implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable s) {
-        editabled.setEditabled(true);
-        fieldText = s.toString();
-        errorTextView.setTextColor(Color.RED);
-        if(editabled.isSaved()) {
-            errorTextView.setText(CourierApplication.getContext().getText(R.string.saved_but_not_yet_validated));
-        }else{
-            errorTextView.setText(CourierApplication.getContext().getText(R.string.not_saved_and_not_yet_validated));
+        validator.setTextToValidation(s.toString());
+        validator.validate();
+        if (validator.isInvalid()) {
+            if (textInputLayout != null && textInputLayout.isErrorEnabled()) {
+                    textInputLayout.setError(validator.getErrorMessage());
+            } else {
+                errorTextView.setText(validator.getErrorMessage());
+            }
         }
-        errorTextView.setBackgroundResource(R.color.white);
     }
 }

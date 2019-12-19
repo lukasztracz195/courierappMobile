@@ -12,6 +12,7 @@ import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.project.courierapp.R;
 import com.project.courierapp.applications.CourierApplication;
 import com.project.courierapp.databinding.CreateDeliveryPointFragmentBinding;
@@ -20,12 +21,14 @@ import com.project.courierapp.model.di.clients.DeliveryPointsClient;
 import com.project.courierapp.model.dtos.request.AddDeliveryPointRequest;
 import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
 import com.project.courierapp.model.dtos.transfer.DeliveryPointDto;
+import com.project.courierapp.model.watchers.WatcherEditText;
 import com.project.courierapp.view.Iback.BackWithRemoveFromStack;
 import com.project.courierapp.view.activities.MainActivity;
 import com.project.courierapp.view.fragments.manager_layer.ManagerFragmentTags;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
 
@@ -46,6 +49,18 @@ public class CreateDeliveryPointFragment extends Fragment implements BackWithRem
 
     @BindView(R.id.error_message)
     TextView errorMessage;
+
+    @BindView(R.id.address_content)
+    TextInputEditText addresInputEditText;
+
+    @BindView(R.id.postal_code_content)
+    TextInputEditText postalCodeInputEditText;
+
+    @BindView(R.id.city_content)
+    TextInputEditText cityInputEditText;
+
+    @BindView(R.id.country_content)
+    TextInputEditText countryInputEditText;
 
     @State(ABundler.class)
     DeliveryPointDto deliveryPointDto = new DeliveryPointDto();
@@ -85,7 +100,10 @@ public class CreateDeliveryPointFragment extends Fragment implements BackWithRem
     }
 
     private void setValidators() {
-
+        List<TextInputEditText> textInputEditTexts = Arrays.asList(addresInputEditText,
+                postalCodeInputEditText,cityInputEditText,countryInputEditText);
+        addresInputEditText.addTextChangedListener(WatcherEditText.of(addresInputEditText,
+                errorMessage,null));
     }
 
     @SuppressLint("CheckResult")

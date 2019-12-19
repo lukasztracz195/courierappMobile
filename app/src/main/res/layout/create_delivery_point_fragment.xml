@@ -3,10 +3,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <data>
+
         <variable
             name="deliveryPointDto"
             type="com.project.courierapp.model.dtos.transfer.DeliveryPointDto" />
     </data>
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -35,200 +37,170 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0">
 
-                <TextView
-                    android:id="@+id/error_message"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_margin="5dp"
-                    android:textAlignment="center"
-                    android:textColor="@color/red"
-                    android:textSize="24sp" />
+            <TextView
+                android:id="@+id/error_message"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:textAlignment="center"
+                android:textColor="@color/red"
+                android:textSize="24sp" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/label_enter_worker_to_road"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_margin="5dp"
+                android:layout_weight="2"
+                android:text="@string/enter_data_to_create_delivery_point"
+                android:textAlignment="center"
+                android:textSize="16sp" />
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="20dp"
+                        app:boxBackgroundMode="outline"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="20"
+                        app:errorEnabled="true"
+                        app:errorTextColor="@color/red"
+                        app:helperText="@string/helper_text_address"
+                        app:helperTextEnabled="true">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/address_content"
+                            style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:background="@color/white"
+                            android:hint="@string/enter_address_hint"
+                            android:maxLength="20"
+                            android:text="@={deliveryPointDto.address}"
+                            android:textSize="12sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="20dp"
+                        android:layout_weight="4"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="20"
+                        app:errorEnabled="true"
+                        app:errorTextColor="@color/red"
+                        app:helperText="@string/helper_text_postal_code"
+                        app:helperTextEnabled="true">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/postal_code_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@color/white"
+                            android:hint="@string/enter_postal_code_hint"
+                            android:maxLength="20"
+                            android:text="@={deliveryPointDto.postalCode}"
+                            android:textSize="12sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="20dp"
+                        android:layout_weight="4"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="20"
+                        app:errorEnabled="true"
+                        app:errorTextColor="@color/red"
+                        app:helperText="@string/helper_text_city"
+                        app:helperTextEnabled="true">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/city_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@color/white"
+                            android:hint="@string/enter_city_hint"
+                            android:maxLength="20"
+                            android:text="@={deliveryPointDto.city}"
+                            android:textSize="12sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_margin="20dp"
+                        android:layout_weight="4"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="20"
+                        app:errorEnabled="true"
+                        app:errorTextColor="@color/red"
+                        app:helperText="@string/helper_text_country"
+                        app:helperTextEnabled="true">
+
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/country_content"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:background="@color/white"
+                            android:hint="@string/enter_country_hint"
+                            android:maxLength="20"
+                            android:text="@={deliveryPointDto.country}"
+                            android:textSize="12sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
 
                     <TextView
-                        android:id="@+id/label_enter_worker_to_road"
+                        android:id="@+id/expected_time_label"
                         android:layout_width="match_parent"
-                        android:layout_height="0dp"
+                        android:layout_height="wrap_content"
                         android:layout_margin="5dp"
-                        android:layout_weight="2"
-                        android:text="@string/enter_data_to_create_delivery_point"
+                        android:layout_weight="4"
+                        android:gravity="center_vertical"
+                        android:text="@string/input_expected_time"
                         android:textAlignment="center"
+                        android:textColor="@color/black"
                         android:textSize="16sp" />
 
-                    <LinearLayout
+                    <com.google.android.material.textfield.TextInputLayout
+                        style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical">
+                        android:layout_height="wrap_content"
+                        android:layout_margin="20dp"
+                        android:maxLength="3"
+                        app:counterEnabled="true"
+                        app:counterMaxLength="3"
+                        app:errorEnabled="true"
+                        app:errorTextColor="@color/red"
+                        app:helperText="@string/helper_text_expended_time"
+                        app:helperTextEnabled="true">
 
-                        <LinearLayout
+                        <com.google.android.material.textfield.TextInputEditText
+                            android:id="@+id/expected_time_content"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:orientation="horizontal">
-
-                            <TextView
-                                android:id="@+id/validation_label"
-                                android:layout_width="0dp"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:layout_weight="1"
-                                android:background="@drawable/rounded_corner"
-                                android:backgroundTint="@color/white"
-                                android:textAlignment="center"
-                                android:textColor="@color/black"
-                                android:textSize="16sp" />
-                        </LinearLayout>
-
-                        <LinearLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:baselineAligned="false"
-                            android:orientation="vertical">
-
-                            <com.google.android.material.textfield.TextInputLayout
-                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:layout_weight="4"
-                                app:counterEnabled="true"
-                                app:counterMaxLength="20"
-                                app:errorEnabled="true"
-                                app:errorTextColor="@color/red"
-                                app:helperTextEnabled="true"
-                                app:helperText="@string/helper_text_address">
-
-                                <com.google.android.material.textfield.TextInputEditText
-                                    android:id="@+id/address_content"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="5dp"
-                                    android:background="@color/white"
-                                    android:hint="@string/enter_address_hint"
-                                    android:maxLength="20"
-                                    android:text="@={deliveryPointDto.address}"
-                                    android:textSize="12sp" />
-                            </com.google.android.material.textfield.TextInputLayout>
-
-                            <com.google.android.material.textfield.TextInputLayout
-                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:layout_weight="4"
-                                app:counterEnabled="true"
-                                app:counterMaxLength="20"
-                                app:errorEnabled="true"
-                                app:errorTextColor="@color/red"
-                                app:helperTextEnabled="true"
-                                app:helperText="@string/helper_text_postal_code">
-                                <com.google.android.material.textfield.TextInputEditText
-                                    android:id="@+id/postal_code_content"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="5dp"
-                                    android:background="@color/white"
-                                    android:hint="@string/enter_postal_code_hint"
-                                    android:maxLength="20"
-                                    android:text="@={deliveryPointDto.postalCode}"
-                                    android:textSize="12sp" />
-                            </com.google.android.material.textfield.TextInputLayout>
-
-                            <com.google.android.material.textfield.TextInputLayout
-                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:layout_weight="4"
-                                app:counterEnabled="true"
-                                app:counterMaxLength="20"
-                                app:errorEnabled="true"
-                                app:errorTextColor="@color/red"
-                                app:helperTextEnabled="true"
-                                app:helperText="@string/helper_text_city">
-
-                                <com.google.android.material.textfield.TextInputEditText
-                                    android:id="@+id/city_content"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="5dp"
-                                    android:background="@color/white"
-                                    android:hint="@string/enter_city_hint"
-                                    android:maxLength="20"
-                                    android:text="@={deliveryPointDto.city}"
-                                    android:textSize="12sp" />
-                            </com.google.android.material.textfield.TextInputLayout>
-
-                            <com.google.android.material.textfield.TextInputLayout
-                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:layout_weight="4"
-                                app:counterEnabled="true"
-                                app:counterMaxLength="20"
-                                app:errorEnabled="true"
-                                app:errorTextColor="@color/red"
-                                app:helperTextEnabled="true"
-                                app:helperText="@string/helper_text_country">
-
-                                <com.google.android.material.textfield.TextInputEditText
-                                    android:id="@+id/country_content"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="5dp"
-                                    android:background="@color/white"
-                                    android:hint="@string/enter_country_hint"
-                                    android:maxLength="20"
-                                    android:text="@={deliveryPointDto.country}"
-                                    android:textSize="12sp" />
-                            </com.google.android.material.textfield.TextInputLayout>
-
-                            <TextView
-                                android:id="@+id/expected_time_label"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:layout_weight="4"
-                                android:gravity="center_vertical"
-                                android:text="@string/input_expected_time"
-                                android:textAlignment="center"
-                                android:textColor="@color/black"
-                                android:textSize="16sp" />
-
-                            <com.google.android.material.textfield.TextInputLayout
-                                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_margin="5dp"
-                                android:layout_weight="4"
-                                android:maxLength="3"
-                                app:counterEnabled="true"
-                                app:counterMaxLength="3"
-                                app:errorEnabled="true"
-                                app:errorTextColor="@color/red"
-                                app:helperTextEnabled="true"
-                                app:helperText="@string/helper_text_expended_time">
-
-                                <com.google.android.material.textfield.TextInputEditText
-                                    android:id="@+id/expected_time_content"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-                                    android:layout_margin="5dp"
-                                    android:layout_weight="2"
-                                    android:background="@color/white"
-                                    android:hint="@string/enter_expected_time_hint"
-                                    android:inputType="numberSigned"
-                                    android:maxLength="3"
-                                    android:text="@={deliveryPointDto.expendedTime}"
-                                    android:textSize="12sp" />
-                            </com.google.android.material.textfield.TextInputLayout>
-                        </LinearLayout>
-                    </LinearLayout>
-                </LinearLayout>
+                            android:layout_height="wrap_content"
+                            android:layout_margin="5dp"
+                            android:layout_weight="2"
+                            android:background="@color/white"
+                            android:hint="@string/enter_expected_time_hint"
+                            android:inputType="numberSigned"
+                            android:maxLength="3"
+                            android:text="@={deliveryPointDto.expendedTime}"
+                            android:textSize="12sp" />
+                    </com.google.android.material.textfield.TextInputLayout>
+            </LinearLayout>
 
 
                 <LinearLayout

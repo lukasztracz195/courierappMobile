@@ -8,10 +8,24 @@ public class RegexValidatorChain implements ValidatorChain {
     private String regex;
     private String textToValidation;
 
-    public RegexValidatorChain(String textToValidation, String regex, String errorMessage) {
+    private RegexValidatorChain(String textToValidation, String regex, String errorMessage) {
         this.textToValidation = textToValidation;
         this.regex = regex;
         this.errorMessage = errorMessage;
+    }
+
+    private RegexValidatorChain(String regex, String errorMessage) {
+        this.regex = regex;
+        this.errorMessage = errorMessage;
+    }
+
+
+    public static RegexValidatorChain of(String textToValidation, String regex, String errorMessage) {
+        return new RegexValidatorChain(textToValidation, regex, errorMessage);
+    }
+
+    public RegexValidatorChain of(String regex, String errorMessage) {
+        return new RegexValidatorChain(regex, errorMessage);
     }
 
     @Override
@@ -21,5 +35,10 @@ public class RegexValidatorChain implements ValidatorChain {
             return new Pair<>(true, ValidatorChain.VALIDATION_PASSED);
         }
         return new Pair<>(false, errorMessage);
+    }
+
+    @Override
+    public void setTextToValidation(String textToValidation) {
+        this.textToValidation = textToValidation;
     }
 }

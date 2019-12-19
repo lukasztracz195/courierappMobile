@@ -85,7 +85,7 @@ public class RegisterWorkerFragment extends Fragment implements BackWithRemoveFr
         RegisterValidator registerValidator = RegisterValidator.of(registerCredentialsRequest);
         registerValidator.validate();
         if (!registerValidator.isValid()) {
-            errorMessage.setText(registerValidator.getErrorMessages().toString());
+            errorMessage.setText(registerValidator.getErrorMessage());
         } else {
             Disposable disposable = registerClient.register(registerCredentialsRequest)
                     .subscribe(request -> {
