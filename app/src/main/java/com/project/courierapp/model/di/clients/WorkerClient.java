@@ -1,14 +1,9 @@
 package com.project.courierapp.model.di.clients;
 
-import android.util.Log;
-
 import com.project.courierapp.applications.CourierApplication;
 import com.project.courierapp.model.daos.WorkerDao;
 import com.project.courierapp.model.dtos.response.WorkerResponse;
-import com.project.courierapp.model.exceptions.http.BadRequestException;
-import com.project.courierapp.model.exceptions.http.UnauthorizedException;
 
-import java.net.HttpURLConnection;
 import java.util.List;
 import java.util.Objects;
 
@@ -32,6 +27,7 @@ public class WorkerClient extends BaseClient {
     public WorkerClient() {
         CourierApplication.getRetrofitComponent().inject(this);
         this.workerDao = retrofit.create(WorkerDao.class);
+        setValidators();
     }
 
     public Single<List<WorkerResponse>> getWorkers() {
@@ -40,15 +36,7 @@ public class WorkerClient extends BaseClient {
                     if (response.isSuccessful()) {
                         return just(Objects.requireNonNull(response.body()));
                     }
-                    if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
-                        Log.i("HTTP_UNAUTHORIZED 401", response.message());
-                        return error((new UnauthorizedException()));
-                    }
-                    if (response.code() == HttpURLConnection.HTTP_NOT_FOUND) {
-                        Log.i("HTTP_NOT_FOUND 404", response.message());
-                        return error(new BadRequestException());
-                    }
-                    return error(new RuntimeException(Objects.requireNonNull(response.errorBody()).toString()));
+                    return error(validatorHttpBuilder.validate(this.getClass().getName(),response));
                 }));
     }
 
@@ -58,15 +46,7 @@ public class WorkerClient extends BaseClient {
                     if (response.isSuccessful()) {
                         return just(Objects.requireNonNull(response.body()));
                     }
-                    if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
-                        Log.i("HTTP_UNAUTHORIZED 401", response.message());
-                        return error((new UnauthorizedException()));
-                    }
-                    if (response.code() == HttpURLConnection.HTTP_NOT_FOUND) {
-                        Log.i("HTTP_NOT_FOUND 404", response.message());
-                        return error(new BadRequestException());
-                    }
-                    return error(new RuntimeException(Objects.requireNonNull(response.errorBody()).toString()));
+                    return error(validatorHttpBuilder.validate(this.getClass().getName(),response));
                 }));
     }
 
@@ -76,15 +56,7 @@ public class WorkerClient extends BaseClient {
                     if (response.isSuccessful()) {
                         return just(Objects.requireNonNull(response.body()));
                     }
-                    if (response.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
-                        Log.i("HTTP_UNAUTHORIZED 401", response.message());
-                        return error((new UnauthorizedException()));
-                    }
-                    if (response.code() == HttpURLConnection.HTTP_NOT_FOUND) {
-                        Log.i("HTTP_NOT_FOUND 404", response.message());
-                        return error(new BadRequestException());
-                    }
-                    return error(new RuntimeException(Objects.requireNonNull(response.errorBody()).toString()));
+                    return error(validatorHttpBuilder.validate(this.getClass().getName(),response));
                 }));
     }
 }

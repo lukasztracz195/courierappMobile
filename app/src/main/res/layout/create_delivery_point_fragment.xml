@@ -222,7 +222,7 @@
                         android:layout_height="wrap_content"
                         android:layout_margin="5dp"
                         android:layout_weight="2"
-                        android:text="@string/create_road_bt" />
+                        android:text="@string/create_delivery_point_bt" />
                 </LinearLayout>
 
 

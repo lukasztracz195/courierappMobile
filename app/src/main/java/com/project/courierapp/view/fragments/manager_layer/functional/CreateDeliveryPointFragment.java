@@ -21,6 +21,7 @@ import com.project.courierapp.model.di.clients.DeliveryPointsClient;
 import com.project.courierapp.model.dtos.request.AddDeliveryPointRequest;
 import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
 import com.project.courierapp.model.dtos.transfer.DeliveryPointDto;
+import com.project.courierapp.model.validators.TextValidator;
 import com.project.courierapp.model.watchers.WatcherEditText;
 import com.project.courierapp.view.Iback.BackWithRemoveFromStack;
 import com.project.courierapp.view.activities.MainActivity;
@@ -102,8 +103,10 @@ public class CreateDeliveryPointFragment extends Fragment implements BackWithRem
     private void setValidators() {
         List<TextInputEditText> textInputEditTexts = Arrays.asList(addresInputEditText,
                 postalCodeInputEditText,cityInputEditText,countryInputEditText);
-        addresInputEditText.addTextChangedListener(WatcherEditText.of(addresInputEditText,
-                errorMessage,null));
+        for(TextInputEditText textInputEditText : textInputEditTexts){
+            textInputEditText.addTextChangedListener(WatcherEditText.of(textInputEditText,
+                    errorMessage,new TextValidator()));
+        }
     }
 
     @SuppressLint("CheckResult")

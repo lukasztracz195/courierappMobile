@@ -40,13 +40,15 @@ public class WatcherEditText implements TextWatcher {
 
     @Override
     public void afterTextChanged(Editable s) {
-        validator.setTextToValidation(s.toString());
-        validator.validate();
-        if (validator.isInvalid()) {
-            if (textInputLayout != null && textInputLayout.isErrorEnabled()) {
+        if(!s.toString().isEmpty()) {
+            validator.setTextToValidation(s.toString());
+            validator.validate();
+            if (validator.isInvalid()) {
+                if (textInputLayout != null && textInputLayout.isErrorEnabled()) {
                     textInputLayout.setError(validator.getErrorMessage());
-            } else {
-                errorTextView.setText(validator.getErrorMessage());
+                } else {
+                    errorTextView.setText(validator.getErrorMessage());
+                }
             }
         }
     }

@@ -4,9 +4,10 @@ import com.project.courierapp.applications.CourierApplication;
 import com.project.courierapp.model.daos.RegisterDao;
 import com.project.courierapp.model.dtos.request.RegisterCredentialsRequest;
 import com.project.courierapp.model.exceptions.UserIsTakenException;
+import com.project.courierapp.model.exceptions.http.ServerErrorException;
+import com.project.courierapp.model.validators.ValidatorHttpBuilder;
 
 import java.net.HttpURLConnection;
-import java.util.Objects;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -28,6 +29,7 @@ public class RegisterClient extends BaseClient {
     public RegisterClient() {
         CourierApplication.getRetrofitComponent().inject(this);
         this.registerDao = retrofit.create(RegisterDao.class);
+        setValidators();
     }
 
     public Single<Integer> register(final RegisterCredentialsRequest registerCredentialsRequest) {
@@ -36,10 +38,15 @@ public class RegisterClient extends BaseClient {
                     if (authenticationResponse.isSuccessful()) {
                         return just(authenticationResponse.code());
                     }
-                    if (authenticationResponse.code() == HttpURLConnection.HTTP_UNAUTHORIZED) {
-                        return error(new UserIsTakenException());
-                    }
-                    return error(new RuntimeException(Objects.requireNonNull(authenticationResponse.errorBody()).toString()));
+                    return error(validatorHttpBuilder.validate(this.getClass().getName(),
+                            authenticationResponse));
                 }));
+    }
+
+    @Override
+    public void setValidators() {
+        validatorHttpBuilder = ValidatorHttpBuilder.builder()
+                .addValidator(HttpURLConnection.HTTP_UNAUTHORIZED, new UserIsTakenException())
+                .addValidator(HttpURLConnection.HTTP_SERVER_ERROR, new ServerErrorException());
     }
 }
