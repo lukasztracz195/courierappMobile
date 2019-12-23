@@ -2,8 +2,6 @@ package com.project.courierapp.model.dtos.response;
 
 import com.google.gson.annotations.SerializedName;
 
-import java.time.Duration;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -24,7 +22,7 @@ public class DeliveryPointResponse {
     String address;
 
     @SerializedName("expectedSpendTime")
-    Duration expectedSpendTime;
+    String expectedSpendTime;
 
     @SerializedName("latitude")
     double latitude;

@@ -6,7 +6,6 @@ import androidx.databinding.library.baseAdapters.BR;
 
 import com.project.courierapp.model.dtos.request.Request;
 import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
-import com.project.courierapp.model.watchers.Editabled;
 
 import org.parceler.Parcel;
 
@@ -23,7 +22,7 @@ import lombok.Setter;
 @Parcel
 @Getter
 @Setter
-public class DeliveryPointDto extends BaseObservable implements Request, Editabled, Serializable {
+public class DeliveryPointDto extends BaseObservable implements Request, Serializable {
 
     boolean editabled;
     boolean saved;
@@ -31,7 +30,7 @@ public class DeliveryPointDto extends BaseObservable implements Request, Editabl
     String postalCode;
     String city;
     String country;
-    Long expendedTime;
+    String expendedTime;
     Long pointId;
 
     public DeliveryPointDto() {
@@ -41,20 +40,20 @@ public class DeliveryPointDto extends BaseObservable implements Request, Editabl
         postalCode = "";
         city = "";
         country = "";
-        expendedTime = 0L;
+        expendedTime = "0";
         pointId = null;
     }
 
-    public DeliveryPointDto(DeliveryPointResponse deliveryPointResponse){
+    public DeliveryPointDto(DeliveryPointResponse deliveryPointResponse) {
         String[] fields = deliveryPointResponse.getAddress().split(" ");
-        if(fields.length == 5) {
+        if (fields.length == 5) {
             editabled = false;
             saved = true;
             address = fields[0];
             postalCode = fields[1];
             city = fields[2];
             country = fields[3];
-            expendedTime = Long.parseLong(fields[4]);
+            expendedTime = fields[4];
             pointId = deliveryPointResponse.getPointId();
         }
     }
@@ -101,35 +100,15 @@ public class DeliveryPointDto extends BaseObservable implements Request, Editabl
 
     @Bindable
     public String getExpendedTime() {
-        return expendedTime.toString();
+        return expendedTime;
     }
 
     public void setExpendedTime(String expendedTime) {
         if (!expendedTime.isEmpty()) {
-            this.expendedTime = Long.parseLong(expendedTime);
+            this.expendedTime = expendedTime;
         } else {
-            this.expendedTime = 0L;
+            this.expendedTime = "0";
         }
         notifyPropertyChanged(BR.expendedTime);
-    }
-
-    @Override
-    public boolean isEditeabled() {
-        return editabled;
-    }
-
-    @Override
-    public void setEditabled(boolean editabled) {
-        this.editabled = editabled;
-    }
-
-    @Override
-    public boolean isSaved() {
-        return saved;
-    }
-
-    @Override
-    public void setSaved(boolean saved) {
-        this.saved = saved;
     }
 }
