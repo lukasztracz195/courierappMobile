@@ -170,7 +170,7 @@ public class CreateRoadFragment extends Fragment implements BackWithRemoveFromSt
     @OnClick(R.id.create_road)
     public void createRoad() {
         if (!deliveryPointResponseList.isEmpty()) {
-            roadClient.add(AddRoadRequest.builder().deliveryPointsIds(deliveryPointResponseList.stream()
+            Disposable disposable = roadClient.add(AddRoadRequest.builder().deliveryPointsIds(deliveryPointResponseList.stream()
                     .map(DeliveryPointResponse::getPointId).collect(Collectors.toList()))
                     .workerId(findWorkerIdByLogin((String) workersSpinner.getSelectedItem()))
                     .build()).subscribe(response -> {
@@ -180,8 +180,9 @@ public class CreateRoadFragment extends Fragment implements BackWithRemoveFromSt
             }, (Throwable e) -> {
                 errorMessage.setText(e.getMessage());
             });
-
+            compositeDisposable.add(disposable);
         }
+
     }
 
     @OnClick(R.id.reload_workers_spinner)

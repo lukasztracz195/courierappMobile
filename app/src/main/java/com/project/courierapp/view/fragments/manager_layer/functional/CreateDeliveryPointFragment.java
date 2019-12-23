@@ -40,6 +40,8 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import icepick.Icepick;
 import icepick.State;
+import io.reactivex.disposables.CompositeDisposable;
+import io.reactivex.disposables.Disposable;
 import lombok.Setter;
 
 @Setter
@@ -68,6 +70,8 @@ public class CreateDeliveryPointFragment extends Fragment implements BackWithRem
 
     @Inject
     DeliveryPointsClient deliveryPointsClient;
+
+    private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
     public CreateDeliveryPointFragment() {
     }
@@ -112,15 +116,16 @@ public class CreateDeliveryPointFragment extends Fragment implements BackWithRem
     @SuppressLint("CheckResult")
     @OnClick(R.id.create_delivery_point)
     public void save() {
-        deliveryPointsClient.addDeliveryPoint(AddDeliveryPointRequest.of(deliveryPointDto))
-                .subscribe(response -> {
-                    deliveryPointResponseList.add(response);
-                    ((MainActivity) Objects.requireNonNull(getActivity()))
-                            .putFragment(new CreateRoadFragment(deliveryPointResponseList),
-                            ManagerFragmentTags.CreateRoadFragment);
-                }, (Throwable e) -> {
-                    errorMessage.setText(e.getMessage());
-                });
+        Disposable disposable = deliveryPointsClient.addDeliveryPoint(AddDeliveryPointRequest.of(deliveryPointDto))
+                .subscribe(this::moveToCreateRoadFragment,e -> errorMessage.setText(e.getMessage()));
+        compositeDisposable.add(disposable);
+    }
+
+    private void moveToCreateRoadFragment(DeliveryPointResponse deliveryPointResponse){
+        deliveryPointResponseList.add(deliveryPointResponse);
+        ((MainActivity) Objects.requireNonNull(getActivity()))
+                .putFragment(new CreateRoadFragment(deliveryPointResponseList),
+                        ManagerFragmentTags.CreateRoadFragment);
     }
 
     @OnClick(R.id.cancel_bt)

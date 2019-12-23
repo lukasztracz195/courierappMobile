@@ -2,9 +2,8 @@ package com.project.courierapp.model.dtos.request;
 
 import com.google.gson.annotations.SerializedName;
 import com.project.courierapp.model.builders.AddressBuilder;
+import com.project.courierapp.model.converters.DurationConverter;
 import com.project.courierapp.model.dtos.transfer.DeliveryPointDto;
-
-import org.joda.time.Duration;
 
 import lombok.Builder;
 import lombok.Getter;
@@ -29,8 +28,9 @@ public class AddDeliveryPointRequest implements Request{
                 .add(deliveryPointDto.getCity())
                 .add(deliveryPointDto.getCountry())
                 .build())
-                .expectedSpendTime(Duration.standardMinutes(
-                Long.parseLong(deliveryPointDto.getExpendedTime())).toString()).build();
+                .expectedSpendTime(DurationConverter.formatDuration(Long.parseLong(deliveryPointDto.getExpendedTime())))
+                .build();
+
 
     }
 }

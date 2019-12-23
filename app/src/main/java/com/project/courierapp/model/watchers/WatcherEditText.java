@@ -17,14 +17,16 @@ public class WatcherEditText implements TextWatcher {
     private TextView errorTextView;
     private TextValidator validator;
 
-    private WatcherEditText(@Nonnull TextInputEditText textInputEditText, @Nullable TextView errorTextView,@Nonnull TextValidator validator) {
+    private WatcherEditText(@Nonnull TextInputEditText textInputEditText,
+                            @Nullable TextView errorTextView,@Nonnull TextValidator validator) {
         this.textInputLayout = (TextInputLayout) textInputEditText.getParent().getParent();
         this.errorTextView = errorTextView;
         this.validator = validator;
     }
 
     public static WatcherEditText of(@Nonnull TextInputEditText textInputEditText,
-                                     @Nullable TextView errorTextView, @Nonnull TextValidator validator){
+                                     @Nullable TextView errorTextView,
+                                     @Nonnull TextValidator validator){
         return new WatcherEditText(textInputEditText,errorTextView,validator);
     }
 
