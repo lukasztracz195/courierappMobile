@@ -81,7 +81,8 @@
                         android:layout_margin="5dp"
                         android:background="@drawable/image_button_rounded"
                         android:src="@drawable/delete"
-                        android:text="@string/delete_bt" />
+                        android:text="@string/delete_bt"
+                        android:contentDescription="TODO" />
 
                     <ImageButton
                         android:id="@+id/edit_bt"
@@ -91,7 +92,8 @@
                         android:background="@drawable/image_button_rounded"
                         android:src="@drawable/edit"
                         android:text="@string/save_bt"
-                        android:textSize="12sp" />
+                        android:textSize="12sp"
+                        android:contentDescription="TODO" />
                 </LinearLayout>
             </LinearLayout>
 

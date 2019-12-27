@@ -15,20 +15,17 @@ import androidx.fragment.app.Fragment;
 import com.google.android.material.textfield.TextInputEditText;
 import com.project.courierapp.R;
 import com.project.courierapp.applications.CourierApplication;
-import com.project.courierapp.databinding.CreateDeliveryPointFragmentBinding;
+import com.project.courierapp.databinding.EditDeliveryPointFragmentBinding;
 import com.project.courierapp.model.bundlers.ABundler;
 import com.project.courierapp.model.di.clients.DeliveryPointsClient;
 import com.project.courierapp.model.dtos.request.AddDeliveryPointRequest;
 import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
 import com.project.courierapp.model.dtos.transfer.DeliveryPointDto;
 import com.project.courierapp.model.validators.TextValidator;
-import com.project.courierapp.model.validators.ValidatorBuilder;
-import com.project.courierapp.model.validators.components.EmptyFieldsValidatorChain;
 import com.project.courierapp.model.watchers.WatcherEditText;
 import com.project.courierapp.view.Iback.BackWithRemoveFromStack;
 import com.project.courierapp.view.activities.MainActivity;
 import com.project.courierapp.view.fragments.manager_layer.ManagerFragmentTags;
-import com.project.courierapp.view.toasts.ToastFactory;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -48,7 +45,7 @@ import io.reactivex.disposables.Disposable;
 import lombok.Setter;
 
 @Setter
-public class CreateDeliveryPointFragment extends Fragment implements BackWithRemoveFromStack {
+public class EditDeliveryPointFragment extends Fragment implements BackWithRemoveFromStack {
 
 
     private List<DeliveryPointResponse> deliveryPointResponseList;
@@ -57,7 +54,7 @@ public class CreateDeliveryPointFragment extends Fragment implements BackWithRem
     TextView errorMessage;
 
     @BindView(R.id.address_content)
-    TextInputEditText addresInputEditText;
+    TextInputEditText addressInputEditText;
 
     @BindView(R.id.postal_code_content)
     TextInputEditText postalCodeInputEditText;
@@ -76,12 +73,12 @@ public class CreateDeliveryPointFragment extends Fragment implements BackWithRem
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    public CreateDeliveryPointFragment() {
+    public EditDeliveryPointFragment() {
     }
 
-    public CreateDeliveryPointFragment(List<DeliveryPointResponse> deliveryPointResponseList) {
+    public EditDeliveryPointFragment(List<DeliveryPointResponse> deliveryPointResponseList, int position) {
         this.deliveryPointResponseList = deliveryPointResponseList;
-    }
+        deliveryPointDto = new DeliveryPointDto(deliveryPointResponseList.get(position));    }
 
     @Nullable
     @Override
@@ -90,12 +87,11 @@ public class CreateDeliveryPointFragment extends Fragment implements BackWithRem
         if (savedInstanceState != null) {
             Icepick.restoreInstanceState(this, savedInstanceState);
         }
-        CreateDeliveryPointFragmentBinding createDeliveryPointFragmentBinding = DataBindingUtil
-                .inflate(inflater,
-                R.layout.create_delivery_point_fragment, container, false);
+        EditDeliveryPointFragmentBinding editDeliveryPointFragmentBinding = DataBindingUtil.inflate(inflater,
+                R.layout.edit_delivery_point_fragment, container, false);
 
-        View mainView = createDeliveryPointFragmentBinding.getRoot();
-        createDeliveryPointFragmentBinding.setDeliveryPointDto(deliveryPointDto);
+        View mainView = editDeliveryPointFragmentBinding.getRoot();
+        editDeliveryPointFragmentBinding.setDeliveryPointDto(deliveryPointDto);
         ButterKnife.bind(this, mainView);
         CourierApplication.getClientsComponent().inject(this);
         setValidators();
@@ -109,42 +105,23 @@ public class CreateDeliveryPointFragment extends Fragment implements BackWithRem
     }
 
     private void setValidators() {
-        List<TextInputEditText> textInputEditTexts = Arrays.asList(addresInputEditText,
-                postalCodeInputEditText, cityInputEditText, countryInputEditText);
-        for (TextInputEditText textInputEditText : textInputEditTexts) {
+        List<TextInputEditText> textInputEditTexts = Arrays.asList(addressInputEditText,
+                postalCodeInputEditText,cityInputEditText,countryInputEditText);
+        for(TextInputEditText textInputEditText : textInputEditTexts){
             textInputEditText.addTextChangedListener(WatcherEditText.of(textInputEditText,
-                    errorMessage, new TextValidator()));
+                    errorMessage,new TextValidator()));
         }
     }
 
     @SuppressLint("CheckResult")
-    @OnClick(R.id.create_delivery_point)
-    public void save() {
-        ValidatorBuilder validatorBuilder = ValidatorBuilder.builder()
-                .add(
-                        EmptyFieldsValidatorChain.of(
-                        Arrays.asList(
-                        deliveryPointDto.getAddress(),
-                        deliveryPointDto.getPostalCode(),
-                        deliveryPointDto.getCity(),
-                        deliveryPointDto.getCountry()))
-                )
-                .validate();
-                if(validatorBuilder.isValid()) {
-                    Disposable disposable = deliveryPointsClient.
-                            addDeliveryPoint(AddDeliveryPointRequest.of(deliveryPointDto))
-                            .subscribe(this::moveToCreateRoadFragment, e ->
-                                    errorMessage.setText(e.getMessage()));
-                    compositeDisposable.add(disposable);
-                }
-                else{
-                    errorMessage.setText(validatorBuilder.getErrorMessage());
-                    ToastFactory.createToast(Objects.requireNonNull(getContext()),
-                            validatorBuilder.getErrorMessage());
-                }
+    @OnClick(R.id.edit_delivery_point)
+    public void edit() {
+        Disposable disposable = deliveryPointsClient.editDeliveryPoint(AddDeliveryPointRequest.of(deliveryPointDto))
+                .subscribe(this::moveToCreateRoadFragment,e -> errorMessage.setText(e.getMessage()));
+        compositeDisposable.add(disposable);
     }
 
-    private void moveToCreateRoadFragment(DeliveryPointResponse deliveryPointResponse) {
+    private void moveToCreateRoadFragment(DeliveryPointResponse deliveryPointResponse){
         deliveryPointResponseList.add(deliveryPointResponse);
         ((MainActivity) Objects.requireNonNull(getActivity()))
                 .putFragment(new CreateRoadFragment(deliveryPointResponseList),
@@ -153,6 +130,7 @@ public class CreateDeliveryPointFragment extends Fragment implements BackWithRem
 
     @OnClick(R.id.cancel_bt)
     public void cancel() {
+        //TODO ALLERT DIALOG ON UNSAVED DATA
         ((MainActivity) Objects.requireNonNull(getActivity()))
                 .putFragment(new CreateRoadFragment(deliveryPointResponseList),
                         ManagerFragmentTags.CreateRoadFragment);

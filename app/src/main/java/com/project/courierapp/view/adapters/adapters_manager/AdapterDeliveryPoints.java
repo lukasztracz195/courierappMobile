@@ -4,7 +4,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.ImageButton;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
@@ -19,14 +19,13 @@ import com.project.courierapp.model.dtos.transfer.DeliveryPointDto;
 import com.project.courierapp.view.activities.MainActivity;
 import com.project.courierapp.view.adapters.BaseAdapter;
 import com.project.courierapp.view.fragments.manager_layer.ManagerFragmentTags;
-import com.project.courierapp.view.fragments.manager_layer.functional.CreateDeliveryPointFragment;
+import com.project.courierapp.view.fragments.manager_layer.functional.EditDeliveryPointFragment;
 import com.project.courierapp.view.holders.BaseHolder;
 import com.project.courierapp.view.holders.holders_manager.HolderDeliveryPoint;
 
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
-import java.util.Objects;
 
 import javax.inject.Inject;
 
@@ -39,10 +38,10 @@ import icepick.State;
 public class AdapterDeliveryPoints extends BaseAdapter {
 
     @BindView(R.id.edit_bt)
-    Button editButton;
+    ImageButton editButton;
 
     @BindView(R.id.delete_bt)
-    Button deleteButton;
+    ImageButton deleteButton;
 
     @Inject
     DeliveryPointsClient deliveryPointsClient;
@@ -80,8 +79,9 @@ public class AdapterDeliveryPoints extends BaseAdapter {
     public void onBindViewHolder(@NotNull BaseHolder holder, int position) {
         super.onBindViewHolder(holder, position);
         DeliveryPointResponse deliveryPointDto = deliveryPointResponseList.get(position);
-        setActionOnEditDeliveryPoint(deliveryPointDto);
+        setActionOnEditDeliveryPoint(deliveryPointDto, position);
         setActionOnDeleteDeliveryPoint(position);
+        holder.setFields(deliveryPointResponseList.get(position));
     }
 
     public void addPoint() {
@@ -96,14 +96,13 @@ public class AdapterDeliveryPoints extends BaseAdapter {
         }
     }
 
-    public void setActionOnEditDeliveryPoint(DeliveryPointResponse deliveryPointDto) {
+    public void setActionOnEditDeliveryPoint(DeliveryPointResponse deliveryPointDto, int position) {
         editButton.setOnClickListener(view -> {
-            CreateDeliveryPointFragment createDeliveryPointFragment =
-                    new CreateDeliveryPointFragment(deliveryPointResponseList);
+            EditDeliveryPointFragment createDeliveryPointFragment =
+                    new EditDeliveryPointFragment(deliveryPointResponseList, position);
             createDeliveryPointFragment.setDeliveryPointDto(new DeliveryPointDto(deliveryPointDto));
 
-            ((MainActivity) Objects.requireNonNull(CourierApplication.getContext()))
-                    .putFragment(createDeliveryPointFragment,
+            MainActivity.instance.putFragment(createDeliveryPointFragment,
                             ManagerFragmentTags.CreateRoadFragment);
         });
     }
@@ -132,6 +131,7 @@ public class AdapterDeliveryPoints extends BaseAdapter {
     public void removePoint(int position) {
         if (!deliveryPointResponseList.isEmpty()) {
             deliveryPointResponseList.remove(position);
+            super.notifyItemRemoved(position);
         }
 
     }

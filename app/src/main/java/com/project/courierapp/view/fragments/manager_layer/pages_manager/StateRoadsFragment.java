@@ -15,7 +15,7 @@ import com.project.courierapp.R;
 import com.project.courierapp.databinding.RoadsListFragmentBinding;
 import com.project.courierapp.view.Iback.BackWithLogOutDialog;
 import com.project.courierapp.view.activities.MainActivity;
-import com.project.courierapp.view.adapters.adapters_manager.AdapterWorkersListItem;
+import com.project.courierapp.view.adapters.adapters_manager.AdapterRoadListItem;
 import com.project.courierapp.view.fragments.manager_layer.ManagerFragmentTags;
 import com.project.courierapp.view.fragments.manager_layer.functional.CreateRoadFragment;
 
@@ -41,8 +41,8 @@ public class StateRoadsFragment extends Fragment implements BackWithLogOutDialog
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        AdapterWorkersListItem adapterWorkersListItem = new AdapterWorkersListItem(getContext());
-        recyclerView.setAdapter(adapterWorkersListItem);
+        AdapterRoadListItem adapterRoadListItem = new AdapterRoadListItem(getContext());
+        recyclerView.setAdapter(adapterRoadListItem);
         ButterKnife.bind(this, mainView);
         return mainView;
     }

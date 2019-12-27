@@ -29,6 +29,8 @@ public interface RoadDao {
     String ADD_PATH = ROAD_PATH + "";
     String GET_BY_WORKER_ID_PATH = ROAD_PATH + "/worker/" + WORKER_ID_PATH_VARIABLE;
 
+    String GET_ALL_ROADS = ROAD_PATH + "/getAllRoads";
+
     String STARTED_TIME_ID_PATH = ROAD_PATH + ROAD_ID_PATH_VARIABLE + "/startedTime";
     String FINISHED_TIME_ID_PATH = ROAD_PATH + ROAD_ID_PATH_VARIABLE + "/finishedTime";
 
@@ -82,6 +84,9 @@ public interface RoadDao {
 
     @GET(GET_PLANNED_WORKER_ROADS_PATH)
     Single<Response<List<RoadResponse>>> getAllPlannedRoadForLoggedWorker();
+
+    @GET(GET_ALL_ROADS)
+    Single<Response<List<RoadResponse>>> getAllRoads();
 
 
     @DELETE(DELETE_ROAD_PATH)

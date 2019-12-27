@@ -120,6 +120,7 @@ public class LoginFragment extends Fragment implements BackWithExitDialog {
                             Log.i(BaseFragmentTags.LoginFragment, "Server error", e);
                             errorMessage.setText(getString(R.string.server_error));
                         }
+
                     });
 
             this.compositeDisposable.add(disposable);
