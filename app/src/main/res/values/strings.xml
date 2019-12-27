@@ -26,6 +26,11 @@
     <string name="username_label">Username:</string>
     <string name="status_label">Status:</string>
     <string name="finished_roads_label">Finished roads:</string>
+    <string name="started_time">Started:</string>
+    <string name="finished_time">Finished:</string>
+    <string name="delivery_points">Points:</string>
+    <string name="assigned_worker">Assigned:</string>
+    <string name="visted">Visited:</string>
     <string name="enter_worker_to_road_label">Below choose you worker from list</string>
     <string name="enter_data_to_create_delivery_point">Fill data below to create delivery point</string>
     <string name="input_expected_time">Input expected time in minutes below</string>
@@ -48,6 +53,7 @@
     <string name="save_bt">Save</string>
     <string name="delete_bt">Delete</string>
     <string name="create_delivery_point_bt">Create point</string>
+    <string name="edit_delivery_point_bt">Edit point</string>
 
     //KEYS
     <string name="auth_preferences">auth_preferences</string>

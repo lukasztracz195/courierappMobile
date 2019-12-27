@@ -66,13 +66,15 @@ public class CreateRoadFragment extends Fragment implements BackWithRemoveFromSt
     @BindView(R.id.create_road)
     Button createRoad;
 
+    @BindView(R.id.remove_point_bt)
+    Button removePoint;
+
     @BindView(R.id.delivery_points_recyclerview)
     RecyclerView deliveryPointsRecyclerView;
 
-
-    private List<WorkerResponse> workerResponseList = new ArrayList<>();
-
     @State(ABundler.class)
+    List<WorkerResponse> workerResponseList = new ArrayList<>();
+
     List<DeliveryPointResponse> deliveryPointResponseList = new ArrayList<>();
 
     @Inject
@@ -84,7 +86,7 @@ public class CreateRoadFragment extends Fragment implements BackWithRemoveFromSt
     @Inject
     RoadClient roadClient;
 
-    private AdapterDeliveryPoints adapterDeliveryPoints;
+    AdapterDeliveryPoints adapterDeliveryPoints;
 
 
     public CreateRoadFragment() {
@@ -115,6 +117,8 @@ public class CreateRoadFragment extends Fragment implements BackWithRemoveFromSt
         if (workerResponseList == null || workerResponseList.isEmpty()) {
             reloadWorkers();
         }
+        createRoad.setEnabled(false);
+        removePoint.setEnabled(false);
         return mainView;
     }
 
@@ -131,27 +135,34 @@ public class CreateRoadFragment extends Fragment implements BackWithRemoveFromSt
         ((MainActivity) Objects.requireNonNull(getActivity())).putFragment(
                 new CreateDeliveryPointFragment(deliveryPointResponseList),
                 ManagerFragmentTags.CreateDeliveryPointFragment);
+        createRoad.setEnabled(true);
+        removePoint.setEnabled(true);
     }
 
 
     @SuppressLint("CheckResult")
     @OnClick(R.id.remove_point_bt)
     public void removeLast() {
-        DeliveryPointResponse deliveryPointToDeleteFromServer = deliveryPointResponseList
-                .get(deliveryPointResponseList.size() - 1);
-        deliveryPointsClient.deleteDeliveryPointById(deliveryPointToDeleteFromServer.getPointId())
-                .subscribe(response -> {
-                    if (response) {
-                        adapterDeliveryPoints.removePoint();
-                        deliveryPointResponseList = adapterDeliveryPoints
-                                .getDeliveryPointResponseList();
-                        if (deliveryPointResponseList.isEmpty()) {
-                            createRoad.setEnabled(false);
+        if(!deliveryPointResponseList.isEmpty()) {
+            DeliveryPointResponse deliveryPointToDeleteFromServer = deliveryPointResponseList
+                    .get(deliveryPointResponseList.size() - 1);
+            deliveryPointsClient.deleteDeliveryPointById(deliveryPointToDeleteFromServer.getPointId())
+                    .subscribe(response -> {
+                        if (response) {
+                            adapterDeliveryPoints.removePoint();
+                            deliveryPointResponseList = adapterDeliveryPoints
+                                    .getDeliveryPointResponseList();
+                            if (deliveryPointResponseList.isEmpty()) {
+                                createRoad.setEnabled(false);
+                            }
                         }
-                    }
-                }, (Throwable e) -> {
-                    errorMessage.setText(e.getMessage());
-                });
+                    }, (Throwable e) -> {
+                        errorMessage.setText(e.getMessage());
+                    });
+        }
+        if(deliveryPointResponseList.isEmpty()){
+            createRoad.setEnabled(false);
+        }
     }
 
     @OnClick(R.id.cancel_bt)
@@ -182,7 +193,6 @@ public class CreateRoadFragment extends Fragment implements BackWithRemoveFromSt
             });
             compositeDisposable.add(disposable);
         }
-
     }
 
     @OnClick(R.id.reload_workers_spinner)

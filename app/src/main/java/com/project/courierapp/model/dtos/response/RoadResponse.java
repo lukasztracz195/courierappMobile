@@ -3,33 +3,46 @@ package com.project.courierapp.model.dtos.response;
 import com.google.gson.annotations.SerializedName;
 import com.project.courierapp.model.enums.RoadState;
 
-import java.time.Duration;
-import java.time.LocalDateTime;
+import org.joda.time.LocalDateTime;
+import org.parceler.Parcel;
+
 import java.util.List;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+@Setter
+@Parcel
+@Getter
 public class RoadResponse implements Response {
 
     @SerializedName("roadId")
-    private  Long roadId;
+      Long roadId;
 
-    @SerializedName("workerId")
-    private  long workerId;
+    @SerializedName("worker")
+      String worker;
 
     @SerializedName("deliveryPoints")
-    private  List<DeliveryPointResponse> deliveryPoints;
+      List<DeliveryPointResponse> deliveryPoints;
 
     @SerializedName("state")
-    private RoadState state;
+     RoadState state;
 
     @SerializedName("expectedTime")
-    private  Duration expectedTime;
+     String expectedTime;
 
     @SerializedName("startedTime")
-    private  LocalDateTime startedTime;
+     LocalDateTime startedTime;
 
     @SerializedName("finishedTime")
-    private  LocalDateTime finishedTime;
+      LocalDateTime finishedTime;
 
     @SerializedName("encodedPath")
-    private  String encodedPath;
+      String encodedPath;
 }

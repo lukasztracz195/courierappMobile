@@ -2,6 +2,8 @@ package com.project.courierapp.model.dtos.response;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.parceler.Parcel;
+
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
@@ -13,13 +15,17 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class DeliveryPointResponse {
+@Parcel
+public class DeliveryPointResponse implements Response{
 
     @SerializedName("pointId")
     long pointId;
 
     @SerializedName("address")
     String address;
+
+    @SerializedName("visited")
+    boolean visited;
 
     @SerializedName("expectedSpendTime")
     String expectedSpendTime;

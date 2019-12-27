@@ -46,7 +46,7 @@ public class HolderDeliveryPoint extends BaseHolder {
                 .setText(deliveryPointResponse.getAddress());
         Objects.requireNonNull((TextView) mapTextView.get(R.id.longitude_content))
                 .setText("Lng: " + deliveryPointResponse.getLongitude());
-        Objects.requireNonNull((TextView) mapTextView.get(R.id.finished_roads_content))
+        Objects.requireNonNull((TextView) mapTextView.get(R.id.latitude_content))
                 .setText("Lat: " + deliveryPointResponse.getLatitude());
     }
 

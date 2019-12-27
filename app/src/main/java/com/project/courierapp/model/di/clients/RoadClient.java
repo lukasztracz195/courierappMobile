@@ -145,6 +145,16 @@ public class RoadClient extends BaseClient {
                 }));
     }
 
+    public Single<List<RoadResponse>> getAllRoads() {
+        return async(this.roadDao.getAllRoads()
+                .flatMap(response -> {
+                    if (response.isSuccessful()) {
+                        return just(Objects.requireNonNull(response.body()));
+                    }
+                    return error(validatorHttpBuilder.validate(this.getClass().getName(), response));
+                }));
+    }
+
     public Single<Boolean> deleteRoadById(Long roadId) {
         return async(this.roadDao.deleteRoadById(roadId)
                 .flatMap(response -> {
