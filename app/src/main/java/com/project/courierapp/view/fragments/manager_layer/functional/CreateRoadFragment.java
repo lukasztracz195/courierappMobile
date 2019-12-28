@@ -34,6 +34,7 @@ import com.project.courierapp.view.adapters.adapters_manager.AdapterDeliveryPoin
 import com.project.courierapp.view.fragments.BaseFragment;
 import com.project.courierapp.view.fragments.base_layer.ManagerBaseFragment;
 import com.project.courierapp.view.fragments.manager_layer.ManagerFragmentTags;
+import com.project.courierapp.view.toasts.ToastFactory;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -117,8 +118,10 @@ public class CreateRoadFragment extends BaseFragment implements BackWithRemoveFr
         if (workerResponseList == null || workerResponseList.isEmpty()) {
             reloadWorkers();
         }
-        createRoad.setEnabled(false);
-        removePoint.setEnabled(false);
+        if(deliveryPointResponseList.isEmpty()){
+            createRoad.setEnabled(false);
+            removePoint.setEnabled(false);
+        }
         return mainView;
     }
 
@@ -155,6 +158,7 @@ public class CreateRoadFragment extends BaseFragment implements BackWithRemoveFr
                             if (deliveryPointResponseList.isEmpty()) {
                                 createRoad.setEnabled(false);
                             }
+                            ToastFactory.createToast(getContext()," Delivery point was deleted");
                         }
                     }, (Throwable e) -> {
                         errorMessage.setText(e.getMessage());

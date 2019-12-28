@@ -8,6 +8,8 @@ import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 import com.project.courierapp.model.validators.TextValidator;
 
+import org.apache.commons.lang3.StringUtils;
+
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
@@ -37,7 +39,9 @@ public class WatcherEditText implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+        if(!errorTextView.getText().toString().isEmpty()) {
+            errorTextView.setText(StringUtils.EMPTY);
+        }
     }
 
     @Override
