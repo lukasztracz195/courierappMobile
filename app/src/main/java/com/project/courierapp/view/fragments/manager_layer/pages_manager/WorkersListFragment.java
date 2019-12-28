@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -16,6 +15,7 @@ import com.project.courierapp.databinding.WorkerListFragmentBinding;
 import com.project.courierapp.view.Iback.BackWithLogOutDialog;
 import com.project.courierapp.view.activities.MainActivity;
 import com.project.courierapp.view.adapters.adapters_manager.AdapterWorkersListItem;
+import com.project.courierapp.view.fragments.BaseFragment;
 import com.project.courierapp.view.fragments.manager_layer.ManagerFragmentTags;
 import com.project.courierapp.view.fragments.manager_layer.functional.RegisterWorkerFragment;
 
@@ -26,7 +26,7 @@ import javax.annotation.Nullable;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class WorkersListFragment extends Fragment implements BackWithLogOutDialog {
+public class WorkersListFragment extends BaseFragment implements BackWithLogOutDialog {
 
     @Nullable
     @Override

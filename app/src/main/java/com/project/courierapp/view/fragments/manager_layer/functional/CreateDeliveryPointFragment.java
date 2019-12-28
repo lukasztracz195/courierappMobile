@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.project.courierapp.R;
@@ -27,6 +26,7 @@ import com.project.courierapp.model.validators.components.EmptyFieldsValidatorCh
 import com.project.courierapp.model.watchers.WatcherEditText;
 import com.project.courierapp.view.Iback.BackWithRemoveFromStack;
 import com.project.courierapp.view.activities.MainActivity;
+import com.project.courierapp.view.fragments.BaseFragment;
 import com.project.courierapp.view.fragments.manager_layer.ManagerFragmentTags;
 import com.project.courierapp.view.toasts.ToastFactory;
 
@@ -48,7 +48,7 @@ import io.reactivex.disposables.Disposable;
 import lombok.Setter;
 
 @Setter
-public class CreateDeliveryPointFragment extends Fragment implements BackWithRemoveFromStack {
+public class CreateDeliveryPointFragment extends BaseFragment implements BackWithRemoveFromStack {
 
 
     private List<DeliveryPointResponse> deliveryPointResponseList;
