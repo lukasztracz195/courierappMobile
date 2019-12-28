@@ -9,12 +9,12 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.fragment.app.Fragment;
 import androidx.viewpager.widget.ViewPager;
 
 import com.project.courierapp.R;
 import com.project.courierapp.view.Iback.BackWithLogOutDialog;
 import com.project.courierapp.view.adapters.adapters_manager.AdapterManagerTabsPages;
+import com.project.courierapp.view.fragments.BaseFragment;
 
 import net.lucode.hackware.magicindicator.MagicIndicator;
 import net.lucode.hackware.magicindicator.ViewPagerHelper;
@@ -33,7 +33,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class ManagerBaseFragment extends Fragment implements BackWithLogOutDialog {
+public class ManagerBaseFragment extends BaseFragment implements BackWithLogOutDialog {
 
     @BindView(R.id.managerViewPager)
     ViewPager viewPager;

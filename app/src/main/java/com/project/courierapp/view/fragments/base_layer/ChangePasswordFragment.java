@@ -11,7 +11,6 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 
 import com.project.courierapp.R;
 import com.project.courierapp.applications.CourierApplication;
@@ -20,9 +19,10 @@ import com.project.courierapp.model.bundlers.ABundler;
 import com.project.courierapp.model.di.clients.ChangePasswordClient;
 import com.project.courierapp.model.dtos.request.ChangePasswordRequest;
 import com.project.courierapp.model.dtos.transfer.ChangePasswordDto;
-import com.project.courierapp.model.exceptions.http.BadRequestException;
 import com.project.courierapp.model.exceptions.ChangePasswordException;
+import com.project.courierapp.model.exceptions.http.BadRequestException;
 import com.project.courierapp.view.activities.MainActivity;
+import com.project.courierapp.view.fragments.BaseFragment;
 import com.project.courierapp.view.fragments.BaseFragmentTags;
 
 import org.jetbrains.annotations.NotNull;
@@ -40,7 +40,7 @@ import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
 
-public class ChangePasswordFragment extends Fragment{
+public class ChangePasswordFragment extends BaseFragment {
 
     @BindView(R.id.error_message)
     TextView errorMessage;

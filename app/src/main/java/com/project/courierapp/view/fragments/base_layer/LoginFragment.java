@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 
 import com.project.courierapp.R;
 import com.project.courierapp.applications.CourierApplication;
@@ -28,6 +27,7 @@ import com.project.courierapp.model.store.RolesStore;
 import com.project.courierapp.model.store.TokenStore;
 import com.project.courierapp.view.Iback.BackWithExitDialog;
 import com.project.courierapp.view.activities.MainActivity;
+import com.project.courierapp.view.fragments.BaseFragment;
 import com.project.courierapp.view.fragments.BaseFragmentTags;
 
 import org.jetbrains.annotations.NotNull;
@@ -45,7 +45,7 @@ import icepick.State;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
-public class LoginFragment extends Fragment implements BackWithExitDialog {
+public class LoginFragment extends BaseFragment implements BackWithExitDialog {
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 

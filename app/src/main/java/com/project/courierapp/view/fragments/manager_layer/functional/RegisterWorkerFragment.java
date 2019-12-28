@@ -10,7 +10,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 
 import com.project.courierapp.R;
 import com.project.courierapp.applications.CourierApplication;
@@ -18,11 +17,12 @@ import com.project.courierapp.databinding.RegisterWorkerFragmentBinding;
 import com.project.courierapp.model.bundlers.ABundler;
 import com.project.courierapp.model.di.clients.RegisterClient;
 import com.project.courierapp.model.dtos.request.RegisterCredentialsRequest;
-import com.project.courierapp.model.exceptions.http.BadRequestException;
 import com.project.courierapp.model.exceptions.LoginException;
+import com.project.courierapp.model.exceptions.http.BadRequestException;
 import com.project.courierapp.model.validators.RegisterValidator;
 import com.project.courierapp.view.Iback.BackWithRemoveFromStack;
 import com.project.courierapp.view.activities.MainActivity;
+import com.project.courierapp.view.fragments.BaseFragment;
 import com.project.courierapp.view.fragments.BaseFragmentTags;
 import com.project.courierapp.view.fragments.base_layer.ManagerBaseFragment;
 import com.project.courierapp.view.fragments.manager_layer.ManagerFragmentTags;
@@ -42,7 +42,7 @@ import icepick.State;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
-public class RegisterWorkerFragment extends Fragment implements BackWithRemoveFromStack {
+public class RegisterWorkerFragment extends BaseFragment implements BackWithRemoveFromStack {
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 

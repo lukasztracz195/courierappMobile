@@ -14,7 +14,6 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
-import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -32,6 +31,7 @@ import com.project.courierapp.view.Iback.BackWithRemoveFromStack;
 import com.project.courierapp.view.activities.MainActivity;
 import com.project.courierapp.view.adapters.AdaptersTags;
 import com.project.courierapp.view.adapters.adapters_manager.AdapterDeliveryPoints;
+import com.project.courierapp.view.fragments.BaseFragment;
 import com.project.courierapp.view.fragments.base_layer.ManagerBaseFragment;
 import com.project.courierapp.view.fragments.manager_layer.ManagerFragmentTags;
 
@@ -52,7 +52,7 @@ import icepick.State;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
-public class CreateRoadFragment extends Fragment implements BackWithRemoveFromStack {
+public class CreateRoadFragment extends BaseFragment implements BackWithRemoveFromStack {
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
