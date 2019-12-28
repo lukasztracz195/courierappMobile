@@ -22,6 +22,7 @@ import com.project.courierapp.view.fragments.manager_layer.ManagerFragmentTags;
 import com.project.courierapp.view.fragments.manager_layer.functional.EditDeliveryPointFragment;
 import com.project.courierapp.view.holders.BaseHolder;
 import com.project.courierapp.view.holders.holders_manager.HolderDeliveryPoint;
+import com.project.courierapp.view.toasts.ToastFactory;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -31,9 +32,9 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 import icepick.Icepick;
 import icepick.State;
+import io.reactivex.disposables.Disposable;
 
 public class AdapterDeliveryPoints extends BaseAdapter {
 
@@ -111,21 +112,29 @@ public class AdapterDeliveryPoints extends BaseAdapter {
     public void setActionOnDeleteDeliveryPoint(int position) {
         deleteButton.setOnClickListener(view -> {
             if (position >= 0 && position < deliveryPointResponseList.size()) {
-                deliveryPointResponseList.remove(position);
+                Disposable disposable = deliveryPointsClient.deleteDeliveryPointById(
+                        deliveryPointResponseList.remove(position).getPointId())
+                        .subscribe(deleted -> {
+                    if(deleted){
+                        ToastFactory.createToast(context,"Delivery point was deleted");
+                    }
+                });
+                compositeDisposable.add(disposable);
                 super.notifyItemRemoved(position);
             } else {
                 if (position != deliveryPointResponseList.size() && !deliveryPointResponseList.isEmpty()) {
-                    deliveryPointResponseList.remove(0);
+                    Disposable disposable = deliveryPointsClient.deleteDeliveryPointById(
+                            deliveryPointResponseList.remove(0).getPointId())
+                            .subscribe(deleted -> {
+                        if(deleted){
+                            ToastFactory.createToast(context,"Delivery point was deleted");
+                        }
+                    });
+                    compositeDisposable.add(disposable);
                     super.notifyItemRemoved(0);
                 }
             }
         });
-    }
-
-
-    @OnClick(R.id.delete_bt)
-    public void delete() {
-
     }
 
     public void removePoint(int position) {

@@ -130,7 +130,6 @@ public class EditDeliveryPointFragment extends BaseFragment implements BackWithR
 
     @OnClick(R.id.cancel_bt)
     public void cancel() {
-        //TODO ALLERT DIALOG ON UNSAVED DATA
         ((MainActivity) Objects.requireNonNull(getActivity()))
                 .putFragment(new CreateRoadFragment(deliveryPointResponseList),
                         ManagerFragmentTags.CreateRoadFragment);
