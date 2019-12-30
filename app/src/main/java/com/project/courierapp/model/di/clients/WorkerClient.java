@@ -2,6 +2,7 @@ package com.project.courierapp.model.di.clients;
 
 import com.project.courierapp.applications.CourierApplication;
 import com.project.courierapp.model.daos.WorkerDao;
+import com.project.courierapp.model.dtos.response.IsBusyResponse;
 import com.project.courierapp.model.dtos.response.WorkerResponse;
 
 import java.util.List;
@@ -52,6 +53,16 @@ public class WorkerClient extends BaseClient {
 
     public Single<Void> unlockWorker(Long workerId) {
         return async(this.workerDao.unlockWorker(workerId)
+                .flatMap(response -> {
+                    if (response.isSuccessful()) {
+                        return just(Objects.requireNonNull(response.body()));
+                    }
+                    return error(validatorHttpBuilder.validate(this.getClass().getName(),response));
+                }));
+    }
+
+    public Single<IsBusyResponse> isBusy() {
+        return async(this.workerDao.isBusy()
                 .flatMap(response -> {
                     if (response.isSuccessful()) {
                         return just(Objects.requireNonNull(response.body()));
