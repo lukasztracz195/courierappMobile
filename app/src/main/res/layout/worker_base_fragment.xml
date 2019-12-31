@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white">
+
+    <include layout="@layout/worker_base_bar" />
+
+    <net.lucode.hackware.magicindicator.MagicIndicator
+        android:id="@+id/managerMagicIndicator"
+        android:layout_width="match_parent"
+        android:layout_height="40dp" />
+
+    <androidx.viewpager.widget.ViewPager
+        android:id="@+id/managerViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>

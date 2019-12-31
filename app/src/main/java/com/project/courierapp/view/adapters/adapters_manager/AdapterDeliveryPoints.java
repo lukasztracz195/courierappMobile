@@ -12,7 +12,6 @@ import androidx.databinding.DataBindingUtil;
 import com.project.courierapp.R;
 import com.project.courierapp.applications.CourierApplication;
 import com.project.courierapp.databinding.DeliveryPointHolderBinding;
-import com.project.courierapp.model.bundlers.ABundler;
 import com.project.courierapp.model.di.clients.DeliveryPointsClient;
 import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
 import com.project.courierapp.model.dtos.transfer.DeliveryPointDto;
@@ -32,8 +31,6 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
-import icepick.Icepick;
-import icepick.State;
 import io.reactivex.disposables.Disposable;
 
 public class AdapterDeliveryPoints extends BaseAdapter {
@@ -47,24 +44,18 @@ public class AdapterDeliveryPoints extends BaseAdapter {
     @Inject
     DeliveryPointsClient deliveryPointsClient;
 
-    @State(ABundler.class)
-    List<DeliveryPointResponse> deliveryPointResponseList;
-
-    private Bundle savedInstanceState;
-
-    public AdapterDeliveryPoints(Context context, List<DeliveryPointResponse> deliveryPointDtos, Bundle savedInstanceState) {
-        super(context);
-        this.deliveryPointResponseList = deliveryPointDtos;
-        this.savedInstanceState = savedInstanceState;
+    public AdapterDeliveryPoints(Context context, List<DeliveryPointResponse> deliveryPointsDto,
+                                 Bundle savedInstanceState) {
+        super(context, savedInstanceState);
+        if(!responses.equals(deliveryPointsDto)) {
+            responses = deliveryPointsDto;
+        }
     }
 
     @NonNull
     @Override
     public HolderDeliveryPoint onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
         super.onCreateViewHolder(viewGroup, viewType);
-        if (savedInstanceState != null) {
-            Icepick.restoreInstanceState(this, savedInstanceState);
-        }
         LayoutInflater layoutInflater = LayoutInflater.from(viewGroup.getContext());
         DeliveryPointHolderBinding deliveryPointHolderBinding = DataBindingUtil
                 .inflate(layoutInflater,
@@ -79,20 +70,20 @@ public class AdapterDeliveryPoints extends BaseAdapter {
     @Override
     public void onBindViewHolder(@NotNull BaseHolder holder, int position) {
         super.onBindViewHolder(holder, position);
-        DeliveryPointResponse deliveryPointDto = deliveryPointResponseList.get(position);
+        DeliveryPointResponse deliveryPointDto = (DeliveryPointResponse) responses.get(position);
         setActionOnEditDeliveryPoint(deliveryPointDto, position);
         setActionOnDeleteDeliveryPoint(position);
-        holder.setFields(deliveryPointResponseList.get(position));
+        holder.setFields((DeliveryPointResponse)responses.get(position));
     }
 
     public void addPoint() {
-        deliveryPointResponseList.add(new DeliveryPointResponse());
+        responses.add(new DeliveryPointResponse());
         super.notifyDataSetChanged();
     }
 
     public void removePoint() {
-        if (!deliveryPointResponseList.isEmpty()) {
-            deliveryPointResponseList.remove(deliveryPointResponseList.size() - 1);
+        if (!responses.isEmpty()) {
+            responses.remove(responses.size() - 1);
             super.notifyDataSetChanged();
         }
     }
@@ -100,7 +91,7 @@ public class AdapterDeliveryPoints extends BaseAdapter {
     public void setActionOnEditDeliveryPoint(DeliveryPointResponse deliveryPointDto, int position) {
         editButton.setOnClickListener(view -> {
             EditDeliveryPointFragment createDeliveryPointFragment =
-                    new EditDeliveryPointFragment(deliveryPointResponseList, position);
+                    new EditDeliveryPointFragment(responses, position);
             createDeliveryPointFragment.setDeliveryPointDto(new DeliveryPointDto(deliveryPointDto));
 
             MainActivity.instance.putFragment(createDeliveryPointFragment,
@@ -111,9 +102,9 @@ public class AdapterDeliveryPoints extends BaseAdapter {
 
     public void setActionOnDeleteDeliveryPoint(int position) {
         deleteButton.setOnClickListener(view -> {
-            if (position >= 0 && position < deliveryPointResponseList.size()) {
+            if (position >= 0 && position < responses.size()) {
                 Disposable disposable = deliveryPointsClient.deleteDeliveryPointById(
-                        deliveryPointResponseList.remove(position).getPointId())
+                        ((DeliveryPointResponse)responses.remove(position)).getPointId())
                         .subscribe(deleted -> {
                     if(deleted){
                         ToastFactory.createToast(context,"Delivery point was deleted");
@@ -122,9 +113,9 @@ public class AdapterDeliveryPoints extends BaseAdapter {
                 compositeDisposable.add(disposable);
                 super.notifyItemRemoved(position);
             } else {
-                if (position != deliveryPointResponseList.size() && !deliveryPointResponseList.isEmpty()) {
+                if (position != responses.size() && !responses.isEmpty()) {
                     Disposable disposable = deliveryPointsClient.deleteDeliveryPointById(
-                            deliveryPointResponseList.remove(0).getPointId())
+                            ((DeliveryPointResponse)responses.remove(0)).getPointId())
                             .subscribe(deleted -> {
                         if(deleted){
                             ToastFactory.createToast(context,"Delivery point was deleted");
@@ -138,8 +129,8 @@ public class AdapterDeliveryPoints extends BaseAdapter {
     }
 
     public void removePoint(int position) {
-        if (!deliveryPointResponseList.isEmpty()) {
-            deliveryPointResponseList.remove(position);
+        if (!responses.isEmpty()) {
+            responses.remove(position);
             super.notifyItemRemoved(position);
         }
 
@@ -147,16 +138,14 @@ public class AdapterDeliveryPoints extends BaseAdapter {
 
     @Override
     public int getItemCount() {
-        return deliveryPointResponseList.size();
+        return responses.size();
     }
 
     public List<DeliveryPointResponse> getDeliveryPointResponseList() {
-        return deliveryPointResponseList;
+        return responses;
     }
 
 
-    public void onSaveInstanceState(@NotNull Bundle outState) {
-        Icepick.saveInstanceState(this, outState);
-    }
+
 
 }

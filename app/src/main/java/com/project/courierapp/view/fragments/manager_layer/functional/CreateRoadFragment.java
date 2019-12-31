@@ -76,6 +76,7 @@ public class CreateRoadFragment extends BaseFragment implements BackWithRemoveFr
     @State(ABundler.class)
     List<WorkerResponse> workerResponseList = new ArrayList<>();
 
+    @State(ABundler.class)
     List<DeliveryPointResponse> deliveryPointResponseList = new ArrayList<>();
 
     @Inject
@@ -88,7 +89,6 @@ public class CreateRoadFragment extends BaseFragment implements BackWithRemoveFr
     RoadClient roadClient;
 
     AdapterDeliveryPoints adapterDeliveryPoints;
-
 
     public CreateRoadFragment() {
 
@@ -118,7 +118,7 @@ public class CreateRoadFragment extends BaseFragment implements BackWithRemoveFr
         if (workerResponseList == null || workerResponseList.isEmpty()) {
             reloadWorkers();
         }
-        if(deliveryPointResponseList.isEmpty()){
+        if (deliveryPointResponseList.isEmpty()) {
             createRoad.setEnabled(false);
             removePoint.setEnabled(false);
         }
@@ -128,6 +128,9 @@ public class CreateRoadFragment extends BaseFragment implements BackWithRemoveFr
     @Override
     public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
+        if (adapterDeliveryPoints == null) {
+            adapterDeliveryPoints = new AdapterDeliveryPoints(getContext(), deliveryPointResponseList, outState);
+        }
         adapterDeliveryPoints.onSaveInstanceState(outState);
         deliveryPointResponseList = adapterDeliveryPoints.getDeliveryPointResponseList();
         Icepick.saveInstanceState(this, outState);
@@ -146,7 +149,7 @@ public class CreateRoadFragment extends BaseFragment implements BackWithRemoveFr
     @SuppressLint("CheckResult")
     @OnClick(R.id.remove_point_bt)
     public void removeLast() {
-        if(!deliveryPointResponseList.isEmpty()) {
+        if (!deliveryPointResponseList.isEmpty()) {
             DeliveryPointResponse deliveryPointToDeleteFromServer = deliveryPointResponseList
                     .get(deliveryPointResponseList.size() - 1);
             deliveryPointsClient.deleteDeliveryPointById(deliveryPointToDeleteFromServer.getPointId())
@@ -158,13 +161,13 @@ public class CreateRoadFragment extends BaseFragment implements BackWithRemoveFr
                             if (deliveryPointResponseList.isEmpty()) {
                                 createRoad.setEnabled(false);
                             }
-                            ToastFactory.createToast(getContext()," Delivery point was deleted");
+                            ToastFactory.createToast(activity, " Delivery point was deleted");
                         }
                     }, (Throwable e) -> {
                         errorMessage.setText(e.getMessage());
                     });
         }
-        if(deliveryPointResponseList.isEmpty()){
+        if (deliveryPointResponseList.isEmpty()) {
             createRoad.setEnabled(false);
         }
     }

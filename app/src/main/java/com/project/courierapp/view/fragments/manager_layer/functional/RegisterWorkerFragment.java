@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.project.courierapp.R;
 import com.project.courierapp.applications.CourierApplication;
 import com.project.courierapp.databinding.RegisterWorkerFragmentBinding;
@@ -20,6 +21,9 @@ import com.project.courierapp.model.dtos.request.RegisterCredentialsRequest;
 import com.project.courierapp.model.exceptions.LoginException;
 import com.project.courierapp.model.exceptions.http.BadRequestException;
 import com.project.courierapp.model.validators.RegisterValidator;
+import com.project.courierapp.model.validators.TextValidator;
+import com.project.courierapp.model.validators.components.EmailValidatorChain;
+import com.project.courierapp.model.watchers.WatcherEditText;
 import com.project.courierapp.view.Iback.BackWithRemoveFromStack;
 import com.project.courierapp.view.activities.MainActivity;
 import com.project.courierapp.view.fragments.BaseFragment;
@@ -30,6 +34,7 @@ import com.project.courierapp.view.toasts.ToastFactory;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -49,6 +54,12 @@ public class RegisterWorkerFragment extends BaseFragment implements BackWithRemo
     @BindView(R.id.error_message)
     TextView errorMessage;
 
+    @BindView(R.id.emailTextInputEditText)
+    TextInputEditText emailTextInputEditText;
+
+    @BindView(R.id.usernameTextInputEditText)
+    TextInputEditText usernameTextInputEditText;
+
     @Inject
     RegisterClient registerClient;
 
@@ -62,14 +73,13 @@ public class RegisterWorkerFragment extends BaseFragment implements BackWithRemo
         if (savedInstanceState != null) {
             Icepick.restoreInstanceState(this, savedInstanceState);
         }
-
         RegisterWorkerFragmentBinding registerWorkerFragmentBinding = DataBindingUtil
                 .inflate(inflater, R.layout.register_worker_fragment,
-                container, false);
+                        container, false);
         View mainView = registerWorkerFragmentBinding.getRoot();
         registerWorkerFragmentBinding.setRegisterCredentialsRequest(registerCredentialsRequest);
         ButterKnife.bind(this, mainView);
-
+        setValidators();
         CourierApplication.getClientsComponent().inject(this);
         return mainView;
     }
@@ -89,10 +99,10 @@ public class RegisterWorkerFragment extends BaseFragment implements BackWithRemo
         } else {
             Disposable disposable = registerClient.register(registerCredentialsRequest)
                     .subscribe(request -> {
-                            Log.i(ManagerFragmentTags.RegisterWorkerFragment,
-                                    "New worker was register");
-                            ToastFactory.createToast(Objects.requireNonNull(getContext()),
-                                    "New Worker was register");
+                        Log.i(ManagerFragmentTags.RegisterWorkerFragment,
+                                "New worker was register");
+                        ToastFactory.createToast(Objects.requireNonNull(getContext()),
+                                "New Worker was register");
                     }, (Throwable e) -> {
                         if (e instanceof LoginException) {
                             Log.i(ManagerFragmentTags.RegisterWorkerFragment,
@@ -106,10 +116,22 @@ public class RegisterWorkerFragment extends BaseFragment implements BackWithRemo
                     });
             compositeDisposable.add(disposable);
         }
-        if(errorMessage.getText().toString().isEmpty()){
+        if (errorMessage.getText().toString().isEmpty()) {
             MainActivity.instance
                     .setBaseForBackStack(new ManagerBaseFragment(),
                             BaseFragmentTags.ManagerBaseFragment);
         }
+    }
+
+    private void setValidators() {
+        usernameTextInputEditText.addTextChangedListener(WatcherEditText.of(
+                usernameTextInputEditText,errorMessage,new TextValidator()));
+        emailTextInputEditText.addTextChangedListener(WatcherEditText.of(
+                emailTextInputEditText,
+                errorMessage,
+                TextValidator.of(Collections.singletonList(
+                EmailValidatorChain.of(
+                        Objects.requireNonNull(emailTextInputEditText.getText()).toString())
+        ))));
     }
 }

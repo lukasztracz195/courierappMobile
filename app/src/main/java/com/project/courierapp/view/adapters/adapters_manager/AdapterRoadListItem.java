@@ -53,7 +53,8 @@ public class AdapterRoadListItem extends BaseAdapter {
     public void downloadData() {
         super.downloadData();
         Disposable disposable = roadClient.getAllRoads()
-                .subscribe(this::updateData, e -> Log.e(AdaptersTags.AdapterWorkersListItem, e.getMessage(), e));
+                .subscribe(this::updateData, e -> Log.e(AdaptersTags.AdapterWorkersListItem,
+                        e.getMessage(), e));
         compositeDisposable.add(disposable);
     }
 }
