@@ -71,7 +71,8 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
             Icepick.restoreInstanceState(this, savedInstanceState);
         }
 
-        LoginFragmentBinding loginFragmentBinding = DataBindingUtil.inflate(inflater, R.layout.login_fragment,
+        LoginFragmentBinding loginFragmentBinding = DataBindingUtil.inflate(inflater,
+                R.layout.login_fragment,
                 container, false);
         View mainView = loginFragmentBinding.getRoot();
         loginFragmentBinding.setCredentialsRequest(this.credentialsRequest);
