@@ -4,6 +4,7 @@ import android.util.Pair;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -35,7 +36,8 @@ public class EmptyFieldsValidatorChain implements ValidatorChain {
 
     private Pair<Boolean,String> checkEmptyFields(){
         for (String field : fieldsToValid) {
-            if (field.isEmpty()) {
+            Optional<String> stringOptional = Optional.ofNullable(field);
+            if (!stringOptional.isPresent() || stringOptional.get().isEmpty()) {
                 return  new Pair<>(false, ERROR_MESSAGE);
             }
         }

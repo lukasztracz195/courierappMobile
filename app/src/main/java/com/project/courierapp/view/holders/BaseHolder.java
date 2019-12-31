@@ -44,6 +44,10 @@ public class BaseHolder extends RecyclerView.ViewHolder implements Holder{
         this.dataObject = dataObject;
     }
 
+    public void setFields(List<Response> dataObject){
+        this.dataObject = dataObject;
+    }
+
     protected void setDateField(LocalDateTime localDateTime, int idTextView){
         Optional<LocalDateTime> optionalLocalDateTime = Optional.ofNullable(localDateTime);
         if(optionalLocalDateTime.isPresent()){

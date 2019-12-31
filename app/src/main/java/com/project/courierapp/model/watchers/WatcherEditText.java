@@ -50,11 +50,14 @@ public class WatcherEditText implements TextWatcher {
             validator.setTextToValidation(s.toString());
             validator.validate();
             if (validator.isInvalid()) {
+                textInputLayout.setErrorEnabled(true);
                 if (textInputLayout != null && textInputLayout.isErrorEnabled()) {
                     textInputLayout.setError(validator.getErrorMessage());
                 } else {
                     errorTextView.setText(validator.getErrorMessage());
                 }
+            }else{
+                textInputLayout.setErrorEnabled(false);
             }
         }
     }

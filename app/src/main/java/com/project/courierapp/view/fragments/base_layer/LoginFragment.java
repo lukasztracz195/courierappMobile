@@ -18,10 +18,11 @@ import com.project.courierapp.model.bundlers.ABundler;
 import com.project.courierapp.model.constans.Roles;
 import com.project.courierapp.model.deserializers.JwtDeserializer;
 import com.project.courierapp.model.di.clients.LoginClient;
+import com.project.courierapp.model.di.clients.WorkerClient;
 import com.project.courierapp.model.dtos.request.CredentialsRequest;
-import com.project.courierapp.model.exceptions.http.BadRequestException;
+import com.project.courierapp.model.enums.Role;
+import com.project.courierapp.model.exceptions.http.ServerErrorException;
 import com.project.courierapp.model.exceptions.http.UnauthorizedException;
-import com.project.courierapp.model.service.LocationService;
 import com.project.courierapp.model.store.CredentialsStore;
 import com.project.courierapp.model.store.RolesStore;
 import com.project.courierapp.model.store.TokenStore;
@@ -49,13 +50,14 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
-    private LocationService locationService;
     @BindView(R.id.error_message)
     TextView errorMessage;
 
     @Inject
     LoginClient loginClient;
 
+    @Inject
+    WorkerClient workerClient;
 
     @State(ABundler.class)
     CredentialsRequest credentialsRequest = new CredentialsRequest();
@@ -88,42 +90,33 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
 
     @OnClick(R.id.login_button)
     void login() {
-            Disposable disposable = loginClient.login(credentialsRequest)
-                    .subscribe(token -> {
-                        Log.i(BaseFragmentTags.LoginFragment, "Logged in");
-                        TokenStore.saveToken(token);
-                        CredentialsStore.saveCredentials(credentialsRequest);
-                        Map<String, String> map = JwtDeserializer.decoded(TokenStore.getToken());
-                        String role = map.get("\"roles\"");
-                        if (Objects.requireNonNull(role).contains(Roles.MANAGER)) {
-                            Log.i(BaseFragmentTags.LoginFragment, Roles.MANAGER);
-                            RolesStore.saveRole(Roles.MANAGER);
-                            ((MainActivity) Objects.requireNonNull(getActivity()))
-                                    .setBaseForBackStack(new ManagerBaseFragment(),
-                                            BaseFragmentTags.ManagerBaseFragment);
-                        } else if (role.contains(Roles.WORKER)) {
-                            Log.i(BaseFragmentTags.LoginFragment, Roles.WORKER);
-                            RolesStore.saveRole(Roles.WORKER);
-                        } else {
-                            Log.i(BaseFragmentTags.LoginFragment, Roles.TEMPORARY);
-                            RolesStore.saveRole(Roles.TEMPORARY);
-                            ((MainActivity) Objects.requireNonNull(getActivity()))
-                                    .putFragment(new ChangePasswordFragment(),
-                                            BaseFragmentTags.ChangePasswordFragment);
-                        }
-
-                    }, (Throwable e) -> {
-                        if (e instanceof UnauthorizedException) {
-                            Log.i(BaseFragmentTags.LoginFragment, "LoginException", e);
-                            errorMessage.setText(getString(R.string.login_error));
-                        } else if (e instanceof BadRequestException) {
-                            Log.i(BaseFragmentTags.LoginFragment, "Server error", e);
-                            errorMessage.setText(getString(R.string.server_error));
-                        }
-
-                    });
-
-            this.compositeDisposable.add(disposable);
+        Disposable disposable = loginClient.login(credentialsRequest)
+                .subscribe(token -> {
+                    Log.i(BaseFragmentTags.LoginFragment, "Logged in");
+                    TokenStore.saveToken(token);
+                    CredentialsStore.saveCredentials(credentialsRequest);
+                    Role role = getRoleFromTokenStore();
+                    switch (role) {
+                        case MANAGER:
+                            switchOnManagerBaseFragment();
+                            break;
+                        case WORKER:
+                            checkWorkingStatusAndSwitchOnWorkerFragment();
+                            break;
+                        case TEMPORARY:
+                            switchOnChangePasswordFragment();
+                            break;
+                    }
+                }, (Throwable e) -> {
+                    if (e instanceof UnauthorizedException) {
+                        Log.i(BaseFragmentTags.LoginFragment, "LoginException", e);
+                        errorMessage.setText(getString(R.string.login_error));
+                    } else if (e instanceof ServerErrorException) {
+                        Log.i(BaseFragmentTags.LoginFragment, "Server error", e);
+                        errorMessage.setText(getString(R.string.server_error));
+                    }
+                });
+        this.compositeDisposable.add(disposable);
 
     }
 
@@ -139,5 +132,49 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
 
     private void clearErrorMessage() {
         errorMessage.setText("");
+    }
+
+    private void checkWorkingStatusAndSwitchOnWorkerFragment() {
+        Log.i(BaseFragmentTags.LoginFragment, Roles.WORKER);
+        RolesStore.saveRole(Roles.WORKER);
+        Disposable disposable = workerClient.isBusy().subscribe(worker -> {
+            if (worker.isBusy()) {
+                ((MainActivity) Objects.requireNonNull(getActivity()))
+                        .putFragment(new WorkerBaseFragment(true),
+                                BaseFragmentTags.ChangePasswordFragment);
+            } else {
+                ((MainActivity) Objects.requireNonNull(getActivity()))
+                        .putFragment(new WorkerBaseFragment(false),
+                                BaseFragmentTags.ChangePasswordFragment);
+            }
+        });
+        this.compositeDisposable.add(disposable);
+    }
+
+    private void switchOnChangePasswordFragment() {
+        Log.i(BaseFragmentTags.LoginFragment, Roles.TEMPORARY);
+        RolesStore.saveRole(Roles.TEMPORARY);
+        ((MainActivity) Objects.requireNonNull(getActivity()))
+                .putFragment(new ChangePasswordFragment(),
+                        BaseFragmentTags.ChangePasswordFragment);
+    }
+
+    private void switchOnManagerBaseFragment() {
+        Log.i(BaseFragmentTags.LoginFragment, Roles.MANAGER);
+        RolesStore.saveRole(Roles.MANAGER);
+        ((MainActivity) Objects.requireNonNull(getActivity()))
+                .setBaseForBackStack(new ManagerBaseFragment(),
+                        BaseFragmentTags.ManagerBaseFragment);
+    }
+
+    private Role getRoleFromTokenStore() {
+        Map<String, String> map = JwtDeserializer.decoded(TokenStore.getToken());
+        String role = map.get("\"roles\"");
+        if (Objects.requireNonNull(role).contains(Roles.MANAGER)) {
+            return Role.MANAGER;
+        } else if (role.contains(Roles.WORKER)) {
+            return Role.WORKER;
+        }
+        return Role.TEMPORARY;
     }
 }

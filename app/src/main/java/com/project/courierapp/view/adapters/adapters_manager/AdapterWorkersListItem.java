@@ -54,7 +54,8 @@ public class AdapterWorkersListItem extends BaseAdapter {
     public void downloadData() {
         super.downloadData();
         Disposable disposable = workerClient.getWorkers()
-                .subscribe(this::updateData, e -> Log.e(AdaptersTags.AdapterWorkersListItem, e.getMessage(), e));
+                .subscribe(this::updateData, e -> Log.e(AdaptersTags.AdapterWorkersListItem,
+                        e.getMessage(), e));
         compositeDisposable.add(disposable);
     }
 }
