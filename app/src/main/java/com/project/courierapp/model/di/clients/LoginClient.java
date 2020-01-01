@@ -28,6 +28,7 @@ public class LoginClient extends BaseClient {
     public LoginClient() {
         CourierApplication.getRetrofitComponent().inject(this);
         this.loginDao = retrofit.create(LoginDao.class);
+        setValidators();
     }
 
     public Single<String> login(final CredentialsRequest credentialsRequest) {

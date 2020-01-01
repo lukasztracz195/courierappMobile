@@ -3,8 +3,8 @@ package com.project.courierapp.model.di.clients;
 import com.project.courierapp.applications.CourierApplication;
 import com.project.courierapp.model.daos.RegisterDao;
 import com.project.courierapp.model.dtos.request.RegisterCredentialsRequest;
-import com.project.courierapp.model.exceptions.UserIsTakenException;
 import com.project.courierapp.model.exceptions.http.ServerErrorException;
+import com.project.courierapp.model.exceptions.http.UnauthorizedException;
 import com.project.courierapp.model.validators.ValidatorHttpBuilder;
 
 import java.net.HttpURLConnection;
@@ -46,7 +46,7 @@ public class RegisterClient extends BaseClient {
     @Override
     public void setValidators() {
         validatorHttpBuilder = ValidatorHttpBuilder.builder()
-                .addValidator(HttpURLConnection.HTTP_UNAUTHORIZED, new UserIsTakenException())
+                .addValidator(HttpURLConnection.HTTP_UNAUTHORIZED, new UnauthorizedException())
                 .addValidator(HttpURLConnection.HTTP_SERVER_ERROR, new ServerErrorException());
     }
 }
