@@ -20,7 +20,7 @@ public class WatcherEditText implements TextWatcher {
     private TextValidator validator;
 
     private WatcherEditText(@Nonnull TextInputEditText textInputEditText,
-                            @Nullable TextView errorTextView,@Nonnull TextValidator validator) {
+                            @Nullable TextView errorTextView, @Nonnull TextValidator validator) {
         this.textInputLayout = (TextInputLayout) textInputEditText.getParent().getParent();
         this.errorTextView = errorTextView;
         this.validator = validator;
@@ -28,8 +28,8 @@ public class WatcherEditText implements TextWatcher {
 
     public static WatcherEditText of(@Nonnull TextInputEditText textInputEditText,
                                      @Nullable TextView errorTextView,
-                                     @Nonnull TextValidator validator){
-        return new WatcherEditText(textInputEditText,errorTextView,validator);
+                                     @Nonnull TextValidator validator) {
+        return new WatcherEditText(textInputEditText, errorTextView, validator);
     }
 
     @Override
@@ -39,14 +39,14 @@ public class WatcherEditText implements TextWatcher {
 
     @Override
     public void onTextChanged(CharSequence s, int start, int before, int count) {
-        if(!errorTextView.getText().toString().isEmpty()) {
+        if (!errorTextView.getText().toString().isEmpty()) {
             errorTextView.setText(StringUtils.EMPTY);
         }
     }
 
     @Override
     public void afterTextChanged(Editable s) {
-        if(!s.toString().isEmpty()) {
+        if (!s.toString().isEmpty()) {
             validator.setTextToValidation(s.toString());
             validator.validate();
             if (validator.isInvalid()) {
@@ -56,9 +56,11 @@ public class WatcherEditText implements TextWatcher {
                 } else {
                     errorTextView.setText(validator.getErrorMessage());
                 }
-            }else{
+            } else {
                 textInputLayout.setErrorEnabled(false);
             }
+        } else {
+            textInputLayout.setErrorEnabled(false);
         }
     }
 }
