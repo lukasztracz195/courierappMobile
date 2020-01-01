@@ -18,8 +18,7 @@ import com.project.courierapp.databinding.RegisterWorkerFragmentBinding;
 import com.project.courierapp.model.bundlers.ABundler;
 import com.project.courierapp.model.di.clients.RegisterClient;
 import com.project.courierapp.model.dtos.request.RegisterCredentialsRequest;
-import com.project.courierapp.model.exceptions.LoginException;
-import com.project.courierapp.model.exceptions.http.BadRequestException;
+import com.project.courierapp.model.interceptors.CreateWorkerInterceptor;
 import com.project.courierapp.model.validators.RegisterValidator;
 import com.project.courierapp.model.validators.TextValidator;
 import com.project.courierapp.model.validators.components.EmailValidatorChain;
@@ -104,15 +103,7 @@ public class RegisterWorkerFragment extends BaseFragment implements BackWithRemo
                         ToastFactory.createToast(Objects.requireNonNull(getContext()),
                                 "New Worker was register");
                     }, (Throwable e) -> {
-                        if (e instanceof LoginException) {
-                            Log.i(ManagerFragmentTags.RegisterWorkerFragment,
-                                    "RegisterException", e);
-                            this.errorMessage.setText(getString(R.string.login_error));
-                        } else if (e instanceof BadRequestException) {
-                            Log.i(ManagerFragmentTags.RegisterWorkerFragment,
-                                    "Server error", e);
-                            this.errorMessage.setText(getString(R.string.server_error));
-                        }
+                        CreateWorkerInterceptor.of(errorMessage, e);
                     });
             compositeDisposable.add(disposable);
         }
@@ -125,13 +116,13 @@ public class RegisterWorkerFragment extends BaseFragment implements BackWithRemo
 
     private void setValidators() {
         usernameTextInputEditText.addTextChangedListener(WatcherEditText.of(
-                usernameTextInputEditText,errorMessage,new TextValidator()));
+                usernameTextInputEditText, errorMessage, new TextValidator()));
         emailTextInputEditText.addTextChangedListener(WatcherEditText.of(
                 emailTextInputEditText,
                 errorMessage,
                 TextValidator.of(Collections.singletonList(
-                EmailValidatorChain.of(
-                        Objects.requireNonNull(emailTextInputEditText.getText()).toString())
-        ))));
+                        EmailValidatorChain.of(
+                                Objects.requireNonNull(emailTextInputEditText.getText()).toString())
+                ))));
     }
 }

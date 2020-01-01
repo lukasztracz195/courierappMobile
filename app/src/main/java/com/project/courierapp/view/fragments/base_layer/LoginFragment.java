@@ -21,6 +21,7 @@ import com.project.courierapp.model.di.clients.LoginClient;
 import com.project.courierapp.model.di.clients.WorkerClient;
 import com.project.courierapp.model.dtos.request.CredentialsRequest;
 import com.project.courierapp.model.enums.Role;
+import com.project.courierapp.model.interceptors.LoginInterceptor;
 import com.project.courierapp.model.store.CredentialsStore;
 import com.project.courierapp.model.store.RolesStore;
 import com.project.courierapp.model.store.TokenStore;
@@ -107,7 +108,7 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
                                     break;
                             }
                         }, (Throwable e) -> {
-                            errorMessage.setText(e.getMessage());
+                            LoginInterceptor.of(errorMessage).getError(e);
                         }
                 );
         this.compositeDisposable.add(disposable);
