@@ -23,10 +23,14 @@ import java.util.Objects;
 
 import javax.annotation.Nullable;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class StateRoadsFragment extends BaseFragment implements BackWithLogOutDialog {
+
+    @BindView(R.id.roads_recyclerview)
+    RecyclerView recyclerView;
 
     @Nullable
     @Override
@@ -35,21 +39,23 @@ public class StateRoadsFragment extends BaseFragment implements BackWithLogOutDi
         RoadsListFragmentBinding roadsListFragmentBinding = DataBindingUtil.inflate(inflater,
                 R.layout.roads_list_fragment,
                 container, false);
-
-        View mainView = roadsListFragmentBinding.getRoot();
-        RecyclerView recyclerView = mainView.findViewById(R.id.roads_recyclerview);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
-
-        AdapterRoadListItem adapterRoadListItem = new AdapterRoadListItem(getContext());
-        recyclerView.setAdapter(adapterRoadListItem);
+        mainView = roadsListFragmentBinding.getRoot();
         ButterKnife.bind(this, mainView);
+        initRecyclerView();
         return mainView;
     }
 
     @OnClick(R.id.add_new_road)
     public void addNewRoad(){
         ((MainActivity) Objects.requireNonNull(getActivity()))
-                .putFragment(new CreateRoadFragment(), ManagerFragmentTags.CreateDeliveryPointFragment);
+                .putFragment(new CreateRoadFragment(),
+                        ManagerFragmentTags.CreateDeliveryPointFragment);
+    }
+
+    private void initRecyclerView(){
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        AdapterRoadListItem adapterRoadListItem = new AdapterRoadListItem(getContext());
+        recyclerView.setAdapter(adapterRoadListItem);
     }
 }

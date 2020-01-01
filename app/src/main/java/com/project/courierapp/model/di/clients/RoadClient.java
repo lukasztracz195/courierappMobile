@@ -145,6 +145,16 @@ public class RoadClient extends BaseClient {
                 }));
     }
 
+    public Single<List<RoadResponse>> getAllFinishedRoadForLoggedWorker() {
+        return async(this.roadDao.getAllFinishedRoadForLoggedWorker()
+                .flatMap(response -> {
+                    if (response.isSuccessful()) {
+                        return just(Objects.requireNonNull(response.body()));
+                    }
+                    return error(validatorHttpBuilder.validate(this.getClass().getName(), response));
+                }));
+    }
+
     public Single<List<RoadResponse>> getAllRoads() {
         return async(this.roadDao.getAllRoads()
                 .flatMap(response -> {

@@ -1,6 +1,7 @@
 package com.project.courierapp.view.fragments;
 
 import android.content.Context;
+import android.view.View;
 
 import androidx.fragment.app.Fragment;
 
@@ -11,6 +12,8 @@ import javax.annotation.Nonnull;
 public class BaseFragment extends Fragment {
 
     protected MainActivity activity;
+
+    protected View mainView;
 
     @Override
     public void onAttach(@Nonnull Context context) {

@@ -4,6 +4,9 @@ import com.project.courierapp.model.di.modules.ClientsModule;
 import com.project.courierapp.view.adapters.adapters_manager.AdapterDeliveryPoints;
 import com.project.courierapp.view.adapters.adapters_manager.AdapterRoadListItem;
 import com.project.courierapp.view.adapters.adapters_manager.AdapterWorkersListItem;
+import com.project.courierapp.view.adapters.adapters_worker.AdapterFinishedRoads;
+import com.project.courierapp.view.adapters.adapters_worker.AdapterRoadsToStart;
+import com.project.courierapp.view.adapters.adapters_worker.AdapterToVisitDeliveryPoints;
 import com.project.courierapp.view.fragments.base_layer.ChangePasswordFragment;
 import com.project.courierapp.view.fragments.base_layer.LoginFragment;
 import com.project.courierapp.view.fragments.manager_layer.functional.CreateDeliveryPointFragment;
@@ -36,4 +39,10 @@ public interface ClientsComponent {
     void inject(EditDeliveryPointFragment editDeliveryPointFragment);
 
     void inject(AdapterRoadListItem adapterRoadListItem);
+
+    void inject(AdapterToVisitDeliveryPoints adapterToVisitDeliveryPoints);
+
+    void inject(AdapterRoadsToStart adapterRoadsToStart);
+
+    void inject(AdapterFinishedRoads adapterFinishedRoads);
 }

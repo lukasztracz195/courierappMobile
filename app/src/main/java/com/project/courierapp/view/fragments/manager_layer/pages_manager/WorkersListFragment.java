@@ -23,10 +23,14 @@ import java.util.Objects;
 
 import javax.annotation.Nullable;
 
+import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 public class WorkersListFragment extends BaseFragment implements BackWithLogOutDialog {
+
+    @BindView(R.id.workers_recyclerview)
+    RecyclerView recyclerView;
 
     @Nullable
     @Override
@@ -35,21 +39,23 @@ public class WorkersListFragment extends BaseFragment implements BackWithLogOutD
         WorkerListFragmentBinding mySurveysFragmentBinding = DataBindingUtil.inflate(inflater,
                 R.layout.worker_list_fragment,
                 container, false);
-
-        View mainView = mySurveysFragmentBinding.getRoot();
-        RecyclerView recyclerView = mainView.findViewById(R.id.workers_recyclerview);
-        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
-        recyclerView.setLayoutManager(layoutManager);
-
-        AdapterWorkersListItem adapterWorkersListItem = new AdapterWorkersListItem(getContext());
-        recyclerView.setAdapter(adapterWorkersListItem);
+        mainView = mySurveysFragmentBinding.getRoot();
         ButterKnife.bind(this, mainView);
+        initRecyclerView();
         return mainView;
     }
 
     @OnClick(R.id.register_new_worker)
     public void registerNewWorker(){
         ((MainActivity) Objects.requireNonNull(getActivity()))
-                .putFragment(new RegisterWorkerFragment(), ManagerFragmentTags.RegisterWorkerFragment);
+                .putFragment(new RegisterWorkerFragment(),
+                        ManagerFragmentTags.RegisterWorkerFragment);
+    }
+
+    private void initRecyclerView(){
+        LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
+        recyclerView.setLayoutManager(layoutManager);
+        AdapterWorkersListItem adapterWorkersListItem = new AdapterWorkersListItem(getContext());
+        recyclerView.setAdapter(adapterWorkersListItem);
     }
 }

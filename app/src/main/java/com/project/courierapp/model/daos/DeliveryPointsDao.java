@@ -1,6 +1,6 @@
 package com.project.courierapp.model.daos;
 
-import com.project.courierapp.model.dtos.request.AddDeliveryPointRequest;
+import com.project.courierapp.model.dtos.request.AddOrEditDeliveryPointRequest;
 import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
 
 import java.util.List;
@@ -36,17 +36,20 @@ public interface DeliveryPointsDao {
 
     @POST(ADD_DELIVERY_POINT)
     Single<Response<DeliveryPointResponse>> addDeliveryPoint(
-            @Body AddDeliveryPointRequest addDeliveryPointRequest);
+            @Body AddOrEditDeliveryPointRequest addOrEditDeliveryPointRequest);
 
 
     @POST(ADD_DELIVERY_POINTS_PATH)
-    Single<Response<List<Long>>> addDeliveryPoint(
-            @Body List<AddDeliveryPointRequest> addDeliveryPointRequestList);
+    Single<Response<List<Long>>> addDeliveryPoints(
+            @Body List<AddOrEditDeliveryPointRequest> addOrEditDeliveryPointRequestList);
+
+    @PUT(VISIT_PATH)
+    Single<Response<String>> visitDeliveryPoint(@Named(DELIVERY_POINT_ID) Long deliveryPointId);
 
     @PUT(EDIT_ADDRESS_PATH)
     Single<Response<DeliveryPointResponse>> editDeliveryPoint(
             @Named(DELIVERY_POINT_ID) Long deliveryPointId,
-            @Body AddDeliveryPointRequest editDeliveryPointRequest);
+            @Body AddOrEditDeliveryPointRequest editDeliveryPointRequest);
 
 
     @GET(GET_BY_ID_PATH)

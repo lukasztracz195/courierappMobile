@@ -44,6 +44,7 @@ public interface RoadDao {
     String GET_FINISHED_ROADS_BY_WORKER_PATH = ROAD_PATH + GET_BY_WORKER_ID_PATH + "/finishedTime";
 
     String GET_PLANNED_WORKER_ROADS_PATH = ROAD_PATH + "/me/planned";
+    String GET_FINISHEDD_WORKER_ROADS_PATH = ROAD_PATH + "/me/finished";
 
     String DELETE_ROAD_PATH = ROAD_PATH + ROAD_ID_PATH_VARIABLE;
 
@@ -84,6 +85,9 @@ public interface RoadDao {
 
     @GET(GET_PLANNED_WORKER_ROADS_PATH)
     Single<Response<List<RoadResponse>>> getAllPlannedRoadForLoggedWorker();
+
+    @GET(GET_FINISHEDD_WORKER_ROADS_PATH)
+    Single<Response<List<RoadResponse>>> getAllFinishedRoadForLoggedWorker();
 
     @GET(GET_ALL_ROADS)
     Single<Response<List<RoadResponse>>> getAllRoads();

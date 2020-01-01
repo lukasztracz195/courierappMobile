@@ -76,7 +76,7 @@ public class RegisterWorkerFragment extends BaseFragment implements BackWithRemo
         RegisterWorkerFragmentBinding registerWorkerFragmentBinding = DataBindingUtil
                 .inflate(inflater, R.layout.register_worker_fragment,
                         container, false);
-        View mainView = registerWorkerFragmentBinding.getRoot();
+        mainView = registerWorkerFragmentBinding.getRoot();
         registerWorkerFragmentBinding.setRegisterCredentialsRequest(registerCredentialsRequest);
         ButterKnife.bind(this, mainView);
         setValidators();

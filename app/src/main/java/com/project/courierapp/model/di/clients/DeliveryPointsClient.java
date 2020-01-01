@@ -2,9 +2,10 @@ package com.project.courierapp.model.di.clients;
 
 import com.project.courierapp.applications.CourierApplication;
 import com.project.courierapp.model.daos.DeliveryPointsDao;
-import com.project.courierapp.model.dtos.request.AddDeliveryPointRequest;
+import com.project.courierapp.model.dtos.request.AddOrEditDeliveryPointRequest;
 import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
 
+import java.util.List;
 import java.util.Objects;
 
 import javax.inject.Inject;
@@ -30,8 +31,8 @@ public class DeliveryPointsClient extends BaseClient {
     }
 
     public Single<DeliveryPointResponse> addDeliveryPoint(
-            AddDeliveryPointRequest addDeliveryPointRequest) {
-        return async(this.deliveryPointsDao.addDeliveryPoint(addDeliveryPointRequest)
+            AddOrEditDeliveryPointRequest addOrEditDeliveryPointRequest) {
+        return async(this.deliveryPointsDao.addDeliveryPoint(addOrEditDeliveryPointRequest)
                 .flatMap(response -> {
                     if (response.isSuccessful()) {
                         return just(Objects.requireNonNull(response.body()));
@@ -42,8 +43,53 @@ public class DeliveryPointsClient extends BaseClient {
     }
 
     public Single<DeliveryPointResponse> editDeliveryPoint(
-            AddDeliveryPointRequest editDeliveryPointRequest) {
-        return async(this.deliveryPointsDao.addDeliveryPoint(editDeliveryPointRequest)
+            Long deliveryPointId, AddOrEditDeliveryPointRequest editDeliveryPointRequest) {
+        return async(this.deliveryPointsDao.editDeliveryPoint(deliveryPointId,
+                editDeliveryPointRequest)
+                .flatMap(response -> {
+                    if (response.isSuccessful()) {
+                        return just(Objects.requireNonNull(response.body()));
+                    }
+                    return error(validatorHttpBuilder.validate(this.getClass().getName(),
+                            response));
+                }));
+    }
+
+    public Single<String> visitDeliveryPoint(Long deliveryPointId) {
+        return async(this.deliveryPointsDao.visitDeliveryPoint(deliveryPointId)
+                .flatMap(response -> {
+                    if (response.isSuccessful()) {
+                        return just(Objects.requireNonNull(response.body()));
+                    }
+                    return error(validatorHttpBuilder.validate(this.getClass().getName(),
+                            response));
+                }));
+    }
+
+    public Single<List<DeliveryPointResponse>> getDeliveryPointsByRoadId(Long roadId) {
+        return async(this.deliveryPointsDao.getDeliveryPointsByRoadId(roadId)
+                .flatMap(response -> {
+                    if (response.isSuccessful()) {
+                        return just(Objects.requireNonNull(response.body()));
+                    }
+                    return error(validatorHttpBuilder.validate(this.getClass().getName(),
+                            response));
+                }));
+    }
+
+    public Single<List<DeliveryPointResponse>> getAllDeliveryPoints() {
+        return async(this.deliveryPointsDao.getAllDeliveryPoints()
+                .flatMap(response -> {
+                    if (response.isSuccessful()) {
+                        return just(Objects.requireNonNull(response.body()));
+                    }
+                    return error(validatorHttpBuilder.validate(this.getClass().getName(),
+                            response));
+                }));
+    }
+
+    public Single<DeliveryPointResponse> getDeliveryPointById(Long deliveryPointId) {
+        return async(this.deliveryPointsDao.getDeliveryPointById(deliveryPointId)
                 .flatMap(response -> {
                     if (response.isSuccessful()) {
                         return just(Objects.requireNonNull(response.body()));
