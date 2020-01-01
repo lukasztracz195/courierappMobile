@@ -66,6 +66,7 @@
                     android:layout_height="wrap_content"
                     android:layout_margin="20dp"
                     android:hint="@string/enter_password_msg"
+                    app:passwordToggleEnabled="true"
                     android:textSize="24sp">
 
                     <com.google.android.material.textfield.TextInputEditText

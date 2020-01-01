@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.databinding.DataBindingUtil;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.project.courierapp.R;
 import com.project.courierapp.applications.CourierApplication;
 import com.project.courierapp.databinding.LoginFragmentBinding;
@@ -25,6 +26,9 @@ import com.project.courierapp.model.interceptors.LoginInterceptor;
 import com.project.courierapp.model.store.CredentialsStore;
 import com.project.courierapp.model.store.RolesStore;
 import com.project.courierapp.model.store.TokenStore;
+import com.project.courierapp.model.validators.TextValidator;
+import com.project.courierapp.model.validators.components.WhiteCharsValidatorChain;
+import com.project.courierapp.model.watchers.WatcherEditText;
 import com.project.courierapp.view.Iback.BackWithExitDialog;
 import com.project.courierapp.view.activities.MainActivity;
 import com.project.courierapp.view.fragments.BaseFragment;
@@ -32,6 +36,7 @@ import com.project.courierapp.view.fragments.BaseFragmentTags;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Collections;
 import java.util.Map;
 import java.util.Objects;
 
@@ -51,6 +56,12 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
 
     @BindView(R.id.error_message)
     TextView errorMessage;
+
+    @BindView(R.id.usernameTextInputEditText)
+    TextInputEditText usernameTextInputEditText;
+
+    @BindView(R.id.passwordTextInputEditText)
+    TextInputEditText passwordTextInputEditText;
 
     @Inject
     LoginClient loginClient;
@@ -76,7 +87,7 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
         mainView = loginFragmentBinding.getRoot();
         loginFragmentBinding.setCredentialsRequest(this.credentialsRequest);
         ButterKnife.bind(this, mainView);
-
+        setValidators();
         CourierApplication.getClientsComponent().inject(this);
         return mainView;
     }
@@ -127,6 +138,18 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
 
     private void clearErrorMessage() {
         errorMessage.setText("");
+    }
+
+    private void setValidators(){
+        usernameTextInputEditText.addTextChangedListener(WatcherEditText.of(
+                usernameTextInputEditText,
+                errorMessage,
+                TextValidator.of(Collections.singletonList(
+                        WhiteCharsValidatorChain.of(
+                                Objects.requireNonNull(
+                                        usernameTextInputEditText.getText()
+                                ).toString())
+                ))));
     }
 
     private void checkWorkingStatusAndSwitchOnWorkerFragment() {
