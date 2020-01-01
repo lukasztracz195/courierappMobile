@@ -64,7 +64,7 @@ public class ChangePasswordFragment extends BaseFragment {
         ChangePasswordFragmentBinding changePasswordFragmentBinding = DataBindingUtil
                 .inflate(inflater, R.layout.change_password_fragment,
                         container, false);
-        View mainView = changePasswordFragmentBinding.getRoot();
+        mainView = changePasswordFragmentBinding.getRoot();
         changePasswordFragmentBinding.setChangePasswordDto(this.changePasswordDto);
         ButterKnife.bind(this, mainView);
 

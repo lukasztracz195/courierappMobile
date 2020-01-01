@@ -17,7 +17,7 @@ import com.project.courierapp.applications.CourierApplication;
 import com.project.courierapp.databinding.CreateDeliveryPointFragmentBinding;
 import com.project.courierapp.model.bundlers.ABundler;
 import com.project.courierapp.model.di.clients.DeliveryPointsClient;
-import com.project.courierapp.model.dtos.request.AddDeliveryPointRequest;
+import com.project.courierapp.model.dtos.request.AddOrEditDeliveryPointRequest;
 import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
 import com.project.courierapp.model.dtos.transfer.DeliveryPointDto;
 import com.project.courierapp.model.validators.TextValidator;
@@ -32,6 +32,7 @@ import com.project.courierapp.view.toasts.ToastFactory;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Objects;
@@ -50,8 +51,7 @@ import lombok.Setter;
 @Setter
 public class CreateDeliveryPointFragment extends BaseFragment implements BackWithRemoveFromStack {
 
-
-    private List<DeliveryPointResponse> deliveryPointResponseList;
+    private List<DeliveryPointResponse> deliveryPointResponseList = new ArrayList<>();
 
     @BindView(R.id.error_message)
     TextView errorMessage;
@@ -92,9 +92,9 @@ public class CreateDeliveryPointFragment extends BaseFragment implements BackWit
         }
         CreateDeliveryPointFragmentBinding createDeliveryPointFragmentBinding = DataBindingUtil
                 .inflate(inflater,
-                R.layout.create_delivery_point_fragment, container, false);
+                        R.layout.create_delivery_point_fragment, container, false);
 
-        View mainView = createDeliveryPointFragmentBinding.getRoot();
+        mainView = createDeliveryPointFragmentBinding.getRoot();
         createDeliveryPointFragmentBinding.setDeliveryPointDto(deliveryPointDto);
         ButterKnife.bind(this, mainView);
         CourierApplication.getClientsComponent().inject(this);
@@ -120,28 +120,12 @@ public class CreateDeliveryPointFragment extends BaseFragment implements BackWit
     @SuppressLint("CheckResult")
     @OnClick(R.id.create_delivery_point)
     public void save() {
-        ValidatorBuilder validatorBuilder = ValidatorBuilder.builder()
-                .add(
-                        EmptyFieldsValidatorChain.of(
-                        Arrays.asList(
-                        deliveryPointDto.getAddress(),
-                        deliveryPointDto.getPostalCode(),
-                        deliveryPointDto.getCity(),
-                        deliveryPointDto.getCountry()))
-                )
-                .validate();
-                if(validatorBuilder.isValid()) {
-                    Disposable disposable = deliveryPointsClient.
-                            addDeliveryPoint(AddDeliveryPointRequest.of(deliveryPointDto))
-                            .subscribe(this::moveToCreateRoadFragment, e ->
-                                    errorMessage.setText(e.getMessage()));
-                    compositeDisposable.add(disposable);
-                }
-                else{
-                    errorMessage.setText(validatorBuilder.getErrorMessage());
-                    ToastFactory.createToast(Objects.requireNonNull(getContext()),
-                            validatorBuilder.getErrorMessage());
-                }
+        ValidatorBuilder validatorBuilder = createDeliveryPointsValidator();
+        if (validatorBuilder.isValid()) {
+            saveDeliveryPoint();
+        } else {
+            showErrorMessage(validatorBuilder);
+        }
     }
 
     private void moveToCreateRoadFragment(DeliveryPointResponse deliveryPointResponse) {
@@ -156,5 +140,32 @@ public class CreateDeliveryPointFragment extends BaseFragment implements BackWit
         ((MainActivity) Objects.requireNonNull(getActivity()))
                 .putFragment(new CreateRoadFragment(deliveryPointResponseList),
                         ManagerFragmentTags.CreateRoadFragment);
+    }
+
+    private ValidatorBuilder createDeliveryPointsValidator() {
+        return ValidatorBuilder.builder()
+                .add(
+                        EmptyFieldsValidatorChain.of(
+                                Arrays.asList(
+                                        deliveryPointDto.getAddress(),
+                                        deliveryPointDto.getPostalCode(),
+                                        deliveryPointDto.getCity(),
+                                        deliveryPointDto.getCountry()))
+                )
+                .validate();
+    }
+
+    private void saveDeliveryPoint() {
+        Disposable disposable = deliveryPointsClient.
+                addDeliveryPoint(AddOrEditDeliveryPointRequest.of(deliveryPointDto))
+                .subscribe(this::moveToCreateRoadFragment, e ->
+                        errorMessage.setText(e.getMessage()));
+        compositeDisposable.add(disposable);
+    }
+
+    private void showErrorMessage(ValidatorBuilder validatorBuilder) {
+        errorMessage.setText(validatorBuilder.getErrorMessage());
+        ToastFactory.createToast(Objects.requireNonNull(getContext()),
+                validatorBuilder.getErrorMessage());
     }
 }

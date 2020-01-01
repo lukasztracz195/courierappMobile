@@ -12,7 +12,7 @@ import lombok.Setter;
 @Builder
 @Getter
 @Setter
-public class AddDeliveryPointRequest implements Request{
+public class AddOrEditDeliveryPointRequest implements Request{
 
     @SerializedName("address")
     String address;
@@ -20,8 +20,8 @@ public class AddDeliveryPointRequest implements Request{
     @SerializedName("expectedSpendTime")
     String expectedSpendTime;
 
-    public static AddDeliveryPointRequest of(DeliveryPointDto deliveryPointDto){
-        return AddDeliveryPointRequest.builder()
+    public static AddOrEditDeliveryPointRequest of(DeliveryPointDto deliveryPointDto){
+        return AddOrEditDeliveryPointRequest.builder()
                 .address(AddressBuilder.builder()
                 .add(deliveryPointDto.getAddress())
                 .add(deliveryPointDto.getPostalCode())

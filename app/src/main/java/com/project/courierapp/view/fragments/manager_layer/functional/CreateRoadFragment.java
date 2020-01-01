@@ -88,7 +88,7 @@ public class CreateRoadFragment extends BaseFragment implements BackWithRemoveFr
     @Inject
     RoadClient roadClient;
 
-    AdapterDeliveryPoints adapterDeliveryPoints;
+     private AdapterDeliveryPoints adapterDeliveryPoints;
 
     public CreateRoadFragment() {
 
@@ -108,7 +108,7 @@ public class CreateRoadFragment extends BaseFragment implements BackWithRemoveFr
         CreateRoadFragmentBinding createSurveyFragmentBinding = DataBindingUtil.inflate(inflater,
                 R.layout.create_road_fragment, container, false);
 
-        View mainView = createSurveyFragmentBinding.getRoot();
+        mainView = createSurveyFragmentBinding.getRoot();
         ButterKnife.bind(this, mainView);
         CourierApplication.getClientsComponent().inject(this);
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -174,7 +174,7 @@ public class CreateRoadFragment extends BaseFragment implements BackWithRemoveFr
 
     @OnClick(R.id.cancel_bt)
     public void cancel() {
-        //TODO THINKING ABOU ALERT DIALOG ON EXIT WITH UNSAVED DELIVERY POINTS
+        //TODO THINKING ABOUT ALERT DIALOG ON EXIT WITH UNSAVED DELIVERY POINTS
         for (DeliveryPointResponse deliveryPointResponse : deliveryPointResponseList) {
             deliveryPointsClient.deleteDeliveryPointById((deliveryPointResponse).getPointId());
         }

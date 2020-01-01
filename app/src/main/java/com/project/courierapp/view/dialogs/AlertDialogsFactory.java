@@ -7,6 +7,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.project.courierapp.model.constans.Roles;
 import com.project.courierapp.model.store.RolesStore;
+import com.project.courierapp.model.store.TokenStore;
 import com.project.courierapp.view.activities.MainActivity;
 import com.project.courierapp.view.fragments.BaseFragmentTags;
 import com.project.courierapp.view.fragments.base_layer.LoginFragment;
@@ -21,6 +22,8 @@ public class AlertDialogsFactory {
         return builder.setTitle("Confirm you log out")
                 .setMessage("Are you sure, You want log out?")
                 .setPositiveButton("Yes", (arg0, arg1) -> {
+                    RolesStore.clear();
+                    TokenStore.clear();
                     ((MainActivity) Objects.requireNonNull(activity)).clearBackStack();
                     ((MainActivity) Objects.
                             requireNonNull(activity)).setBaseForBackStack(new LoginFragment(),
@@ -37,6 +40,8 @@ public class AlertDialogsFactory {
         return builder.setTitle("Confirm you exit")
                 .setMessage("Are you sure, You want exit?")
                 .setPositiveButton("Yes", (arg0, arg1) -> {
+                    RolesStore.clear();
+                    TokenStore.clear();
                     Objects.requireNonNull(activity).finish();
                     System.exit(0);
                 })

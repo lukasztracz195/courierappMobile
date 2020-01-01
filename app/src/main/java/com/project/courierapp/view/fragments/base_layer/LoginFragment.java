@@ -21,8 +21,6 @@ import com.project.courierapp.model.di.clients.LoginClient;
 import com.project.courierapp.model.di.clients.WorkerClient;
 import com.project.courierapp.model.dtos.request.CredentialsRequest;
 import com.project.courierapp.model.enums.Role;
-import com.project.courierapp.model.exceptions.http.ServerErrorException;
-import com.project.courierapp.model.exceptions.http.UnauthorizedException;
 import com.project.courierapp.model.store.CredentialsStore;
 import com.project.courierapp.model.store.RolesStore;
 import com.project.courierapp.model.store.TokenStore;
@@ -74,7 +72,7 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
         LoginFragmentBinding loginFragmentBinding = DataBindingUtil.inflate(inflater,
                 R.layout.login_fragment,
                 container, false);
-        View mainView = loginFragmentBinding.getRoot();
+        mainView = loginFragmentBinding.getRoot();
         loginFragmentBinding.setCredentialsRequest(this.credentialsRequest);
         ButterKnife.bind(this, mainView);
 
@@ -93,30 +91,25 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
     void login() {
         Disposable disposable = loginClient.login(credentialsRequest)
                 .subscribe(token -> {
-                    Log.i(BaseFragmentTags.LoginFragment, "Logged in");
-                    TokenStore.saveToken(token);
-                    CredentialsStore.saveCredentials(credentialsRequest);
-                    Role role = getRoleFromTokenStore();
-                    switch (role) {
-                        case MANAGER:
-                            switchOnManagerBaseFragment();
-                            break;
-                        case WORKER:
-                            checkWorkingStatusAndSwitchOnWorkerFragment();
-                            break;
-                        case TEMPORARY:
-                            switchOnChangePasswordFragment();
-                            break;
-                    }
-                }, (Throwable e) -> {
-                    if (e instanceof UnauthorizedException) {
-                        Log.i(BaseFragmentTags.LoginFragment, "LoginException", e);
-                        errorMessage.setText(getString(R.string.login_error));
-                    } else if (e instanceof ServerErrorException) {
-                        Log.i(BaseFragmentTags.LoginFragment, "Server error", e);
-                        errorMessage.setText(getString(R.string.server_error));
-                    }
-                });
+                            Log.i(BaseFragmentTags.LoginFragment, "Logged in");
+                            TokenStore.saveToken(token);
+                            CredentialsStore.saveCredentials(credentialsRequest);
+                            Role role = getRoleFromTokenStore();
+                            switch (role) {
+                                case MANAGER:
+                                    switchOnManagerBaseFragment();
+                                    break;
+                                case WORKER:
+                                    checkWorkingStatusAndSwitchOnWorkerFragment();
+                                    break;
+                                case TEMPORARY:
+                                    switchOnChangePasswordFragment();
+                                    break;
+                            }
+                        }, (Throwable e) -> {
+                            errorMessage.setText(e.getMessage());
+                        }
+                );
         this.compositeDisposable.add(disposable);
 
     }
@@ -148,6 +141,8 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
                         .putFragment(new WorkerBaseFragment(false),
                                 BaseFragmentTags.ChangePasswordFragment);
             }
+        }, (Throwable e) -> {
+            errorMessage.setText(e.getMessage());
         });
         this.compositeDisposable.add(disposable);
     }

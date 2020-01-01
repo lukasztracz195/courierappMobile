@@ -13,6 +13,9 @@
     <string name="enter_repeated_password_msg">Repeated your password</string>
     <string name="enter_login_new_worker">Enter username new worker</string>
     <string name="enter_email_new_worker">Enter email new worker</string>
+    <string name="enter_worker_to_road_label">Below choose you worker from list</string>
+    <string name="enter_data_to_create_delivery_point">Fill data below to create delivery point</string>
+    <string name="input_expected_time">Input expected time in minutes below</string>
 
     //ERRORS
     <string name="login_error">Incorrect username or password</string>
@@ -26,17 +29,16 @@
     <string name="username_label">Username:</string>
     <string name="status_label">Status:</string>
     <string name="finished_roads_label">Finished roads:</string>
-    <string name="started_time">Started:</string>
-    <string name="finished_time">Finished:</string>
-    <string name="delivery_points">Points:</string>
-    <string name="assigned_worker">Assigned:</string>
-    <string name="visted">Visited:</string>
-    <string name="enter_worker_to_road_label">Below choose you worker from list</string>
-    <string name="enter_data_to_create_delivery_point">Fill data below to create delivery point</string>
-    <string name="input_expected_time">Input expected time in minutes below</string>
-    <string name="not_saved_and_not_yet_validated">Not saved and not yet validated</string>
-    <string name="saved_but_not_yet_validated">Saved but not yet validated</string>
+    <string name="started_time_label">Started:</string>
+    <string name="finished_time_label">Finished:</string>
+    <string name="delivery_points_label">Points:</string>
+    <string name="assigned_worker_label">Assigned:</string>
+    <string name="visited_label">Visited points:</string>
     <string name="saved_and_validated">Saved and validated</string>
+    <string name="points_to_visit_label">Points to visit:</string>
+    <string name="distance_estimated_label">Estimated distance (km):</string>
+    <string name="time_traveled_label">Time traveled (h):</string>
+    <string name="performance_opinion_label">Performance opinion:</string>
 
 
     //BUTTONS
@@ -54,6 +56,9 @@
     <string name="delete_bt">Delete</string>
     <string name="create_delivery_point_bt">Create point</string>
     <string name="edit_delivery_point_bt">Edit point</string>
+    <string name="visit_delivery_point_bt">Visit</string>
+    <string name="visited_delivery_point_bt">Visited</string>
+    <string name="start_road_bt">Start road</string>
 
     //KEYS
     <string name="auth_preferences">auth_preferences</string>

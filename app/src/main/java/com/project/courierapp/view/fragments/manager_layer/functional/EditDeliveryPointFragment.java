@@ -17,7 +17,7 @@ import com.project.courierapp.applications.CourierApplication;
 import com.project.courierapp.databinding.EditDeliveryPointFragmentBinding;
 import com.project.courierapp.model.bundlers.ABundler;
 import com.project.courierapp.model.di.clients.DeliveryPointsClient;
-import com.project.courierapp.model.dtos.request.AddDeliveryPointRequest;
+import com.project.courierapp.model.dtos.request.AddOrEditDeliveryPointRequest;
 import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
 import com.project.courierapp.model.dtos.transfer.DeliveryPointDto;
 import com.project.courierapp.model.validators.TextValidator;
@@ -90,7 +90,7 @@ public class EditDeliveryPointFragment extends BaseFragment implements BackWithR
         EditDeliveryPointFragmentBinding editDeliveryPointFragmentBinding = DataBindingUtil.inflate(inflater,
                 R.layout.edit_delivery_point_fragment, container, false);
 
-        View mainView = editDeliveryPointFragmentBinding.getRoot();
+        mainView = editDeliveryPointFragmentBinding.getRoot();
         editDeliveryPointFragmentBinding.setDeliveryPointDto(deliveryPointDto);
         ButterKnife.bind(this, mainView);
         CourierApplication.getClientsComponent().inject(this);
@@ -116,7 +116,8 @@ public class EditDeliveryPointFragment extends BaseFragment implements BackWithR
     @SuppressLint("CheckResult")
     @OnClick(R.id.edit_delivery_point)
     public void edit() {
-        Disposable disposable = deliveryPointsClient.editDeliveryPoint(AddDeliveryPointRequest.of(deliveryPointDto))
+        Disposable disposable = deliveryPointsClient.editDeliveryPoint(deliveryPointDto.getPointId(),
+                AddOrEditDeliveryPointRequest.of(deliveryPointDto))
                 .subscribe(this::moveToCreateRoadFragment,e -> errorMessage.setText(e.getMessage()));
         compositeDisposable.add(disposable);
     }
