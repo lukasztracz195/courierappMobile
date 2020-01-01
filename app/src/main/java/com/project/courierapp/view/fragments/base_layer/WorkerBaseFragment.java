@@ -1,5 +1,6 @@
 package com.project.courierapp.view.fragments.base_layer;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,6 +12,7 @@ import androidx.viewpager.widget.ViewPager;
 
 import com.project.courierapp.R;
 import com.project.courierapp.model.bundlers.ABundler;
+import com.project.courierapp.model.service.LocationService;
 import com.project.courierapp.view.Iback.BackWithLogOutDialog;
 import com.project.courierapp.view.adapters.BaseAdapterTabs;
 import com.project.courierapp.view.adapters.NavigatorAdapter;
@@ -78,7 +80,11 @@ public class WorkerBaseFragment extends BaseFragment implements BackWithLogOutDi
             Icepick.restoreInstanceState(this, savedInstanceState);
         }
         if (!isInitialized) {
-
+            if(workerIsBusy) {
+                titlesOfPages = PAGES_WHEN_WORKER_IS_BUSY;
+            }else {
+                titlesOfPages = PAGES_WHEN_WORKER_IS_FREE;
+            }
             mainView = inflater.inflate(R.layout.worker_base_fragment, container,
                     false);
             ButterKnife.bind(this, mainView);
@@ -87,6 +93,14 @@ public class WorkerBaseFragment extends BaseFragment implements BackWithLogOutDi
             initViewPager();
             isInitialized = true;
         }
+        final Runnable r = () -> {
+            if(LocationService.instance == null){
+                Intent intent = new Intent(activity, LocationService.class);
+                activity.startService(intent);
+            }
+        };
+        r.run();
+
         return mainView;
     }
 

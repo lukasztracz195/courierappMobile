@@ -45,4 +45,16 @@ public class RoadResponse implements Response {
 
     @SerializedName("encodedPath")
       String encodedPath;
+
+    public static RoadResponse of(RoadResponse roadResponse){
+        return RoadResponse.builder()
+                .roadId(roadResponse.getRoadId())
+                .worker(roadResponse.getWorker())
+                .deliveryPoints(roadResponse.getDeliveryPoints())
+                .state(roadResponse.getState())
+                .expectedTime(roadResponse.getExpectedTime())
+                .startedTime(roadResponse.getStartedTime())
+                .encodedPath(roadResponse.getEncodedPath())
+                .build();
+    }
 }

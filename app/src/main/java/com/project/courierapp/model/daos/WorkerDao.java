@@ -5,13 +5,12 @@ import com.project.courierapp.model.dtos.response.WorkerResponse;
 
 import java.util.List;
 
-import javax.inject.Named;
-
 import io.reactivex.Single;
 import retrofit2.Response;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Path;
 
 public interface WorkerDao {
 
@@ -32,13 +31,13 @@ public interface WorkerDao {
     Single<Response<List<WorkerResponse>>> getWorkers();
 
     @PUT(LOCK_WORKER_PATH)
-    Single<Response<Void>> lockWorker(@Named(WORKER_ID) Long workerId);
+    Single<Response<Void>> lockWorker(@Path(WORKER_ID) Long workerId);
 
     @PUT(UNLOCK_WORKER_PATH)
-    Single<Response<Void>> unlockWorker(@Named(WORKER_ID) Long workerId);
+    Single<Response<Void>> unlockWorker(@Path(WORKER_ID) Long workerId);
 
     @POST(RESET_PASSWORD_PATH)
-    Single<Response<Void>> resetPassword(@Named(LOGIN) String login);
+    Single<Response<Void>> resetPassword(@Path(LOGIN) String login);
 
     @GET(IS_BUSY_PATH)
     Single<Response<IsBusyResponse>> isBusy();

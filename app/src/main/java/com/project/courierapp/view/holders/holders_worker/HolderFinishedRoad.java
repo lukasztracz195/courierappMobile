@@ -6,17 +6,13 @@ import android.widget.TextView;
 import com.project.courierapp.R;
 import com.project.courierapp.databinding.FinishedRoadItemBinding;
 import com.project.courierapp.model.calculator.DistanceCalculator;
-import com.project.courierapp.model.calculator.Point;
+import com.project.courierapp.model.calculator.TimeCalculator;
 import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
 import com.project.courierapp.model.dtos.response.Response;
 import com.project.courierapp.model.dtos.response.RoadResponse;
-import com.project.courierapp.model.enums.DistanceUnits;
 import com.project.courierapp.view.holders.BaseHolder;
 
-import org.joda.time.DateTimeZone;
-import org.joda.time.Duration;
 import org.joda.time.Instant;
-import org.joda.time.LocalDateTime;
 
 import java.util.Arrays;
 import java.util.Comparator;
@@ -51,12 +47,13 @@ public class HolderFinishedRoad extends BaseHolder {
         RoadResponse roadResponse = (RoadResponse) super.dataObject;
         Objects.requireNonNull((TextView) mapTextView.get(R.id.worker_points_to_visit_content))
                 .setText(roadResponse.getDeliveryPoints().size());
-        double distanceInKilometers = calculateDistance(roadResponse.getDeliveryPoints().stream()
+        double distanceInKilometers = DistanceCalculator
+                .caluculateDistanceFromListDeliveryPoints(roadResponse.getDeliveryPoints().stream()
                 .sorted(Comparator.comparingInt(DeliveryPointResponse::getOrder))
                 .collect(Collectors.toList()));
         Objects.requireNonNull((TextView) mapTextView.get(R.id.worker_road_distance_content))
                 .setText(String.valueOf(distanceInKilometers));
-        double traveledInHours = calculatedHoursBetween(
+        double traveledInHours = TimeCalculator.calculatedHoursBetween(
                 roadResponse.getStartedTime(),
                 roadResponse.getFinishedTime());
         Objects.requireNonNull((TextView) mapTextView.get(R.id.worker_road_time_traveled_content))
@@ -76,27 +73,5 @@ public class HolderFinishedRoad extends BaseHolder {
         }
     }
 
-    private double calculateDistance(List<DeliveryPointResponse> sortedByOrderDeliveryPoints) {
-        double distance = 0.0;
-        for (int i = 1; i < sortedByOrderDeliveryPoints.size(); i++) {
-            DeliveryPointResponse sourceDeliveryPoint = sortedByOrderDeliveryPoints.get(i - 1);
-            DeliveryPointResponse destinationDeliveryPoint = sortedByOrderDeliveryPoints.get(i);
-            Point source = Point.of(
-                    sourceDeliveryPoint.getLatitude(),
-                    sourceDeliveryPoint.getLongitude());
-            Point destination = Point.of(
-                    destinationDeliveryPoint.getLatitude(),
-                    destinationDeliveryPoint.getLongitude());
-            distance += DistanceCalculator.calculateDistance(source, destination,
-                    DistanceUnits.KILOMETERS);
-        }
-        return distance;
-    }
 
-    private double calculatedHoursBetween(LocalDateTime start, LocalDateTime stop) {
-        Duration duration = new Duration(start.toDateTime(DateTimeZone.UTC),
-                stop.toDateTime(DateTimeZone.UTC));
-        int minutes = duration.toStandardMinutes().getMinutes();
-        return minutes / 60;
-    }
 }

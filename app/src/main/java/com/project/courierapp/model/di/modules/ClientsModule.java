@@ -5,6 +5,7 @@ import com.project.courierapp.model.di.clients.DeliveryPointsClient;
 import com.project.courierapp.model.di.clients.LoginClient;
 import com.project.courierapp.model.di.clients.RegisterClient;
 import com.project.courierapp.model.di.clients.RoadClient;
+import com.project.courierapp.model.di.clients.TrackingPointsClient;
 import com.project.courierapp.model.di.clients.WorkerClient;
 
 import javax.inject.Singleton;
@@ -50,5 +51,11 @@ public class ClientsModule {
     @Provides
     public RoadClient roadClient() {
         return new RoadClient();
+    }
+
+    @Singleton
+    @Provides
+    public TrackingPointsClient trackingPointsClients() {
+        return new TrackingPointsClient();
     }
 }

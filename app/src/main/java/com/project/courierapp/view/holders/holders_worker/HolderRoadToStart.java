@@ -35,7 +35,7 @@ public class HolderRoadToStart extends BaseHolder {
         super.setFields(object);
         RoadResponse roadResponse = (RoadResponse) super.dataObject;
         Objects.requireNonNull((TextView) mapTextView.get(R.id.worker_points_to_visit_content))
-                .setText(roadResponse.getDeliveryPoints().size());
+                .setText(String.valueOf(roadResponse.getDeliveryPoints().size()));
         Objects.requireNonNull((TextView) mapTextView.get(R.id.worker_road_status_content))
                 .setText(roadResponse.getState().toString());
     }

@@ -70,6 +70,9 @@ public class CreateRoadFragment extends BaseFragment implements BackWithRemoveFr
     @BindView(R.id.remove_point_bt)
     Button removePoint;
 
+    @BindView(R.id.add_point_bt)
+    Button addPoint;
+
     @BindView(R.id.delivery_points_recyclerview)
     RecyclerView deliveryPointsRecyclerView;
 
@@ -88,7 +91,7 @@ public class CreateRoadFragment extends BaseFragment implements BackWithRemoveFr
     @Inject
     RoadClient roadClient;
 
-     private AdapterDeliveryPoints adapterDeliveryPoints;
+    private AdapterDeliveryPoints adapterDeliveryPoints;
 
     public CreateRoadFragment() {
 
@@ -172,16 +175,24 @@ public class CreateRoadFragment extends BaseFragment implements BackWithRemoveFr
         }
     }
 
+    @SuppressLint("CheckResult")
     @OnClick(R.id.cancel_bt)
     public void cancel() {
         //TODO THINKING ABOUT ALERT DIALOG ON EXIT WITH UNSAVED DELIVERY POINTS
         for (DeliveryPointResponse deliveryPointResponse : deliveryPointResponseList) {
-            deliveryPointsClient.deleteDeliveryPointById((deliveryPointResponse).getPointId());
+            deliveryPointsClient.deleteDeliveryPointById((deliveryPointResponse).getPointId())
+                    .subscribe(deleted -> {
+                        if (deleted) {
+                            ToastFactory.createToast(activity, "Delivery point was deleted");
+                        }
+                    }, (Throwable e) -> {
+                        ToastFactory.createToast(activity, "Delivery point was deleted");
+                    });
         }
         while (!deliveryPointResponseList.isEmpty()) {
             removeLast();
         }
-        Objects.requireNonNull(getActivity()).onBackPressed();
+        activity.onBackPressed();
     }
 
     @SuppressLint("CheckResult")
@@ -227,6 +238,9 @@ public class CreateRoadFragment extends BaseFragment implements BackWithRemoveFr
 
     private void updateData(List<WorkerResponse> workerResponseList) {
         this.workerResponseList = workerResponseList;
+        if (workerResponseList.isEmpty()) {
+            addPoint.setEnabled(false);
+        }
         setSpinnerValues();
     }
 }

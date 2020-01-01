@@ -25,6 +25,7 @@ import com.project.courierapp.model.validators.ValidatorBuilder;
 import com.project.courierapp.model.validators.components.EmptyFieldsValidatorChain;
 import com.project.courierapp.model.watchers.WatcherEditText;
 import com.project.courierapp.view.Iback.BackWithRemoveFromStack;
+import com.project.courierapp.view.Iback.IOnBackPressed;
 import com.project.courierapp.view.activities.MainActivity;
 import com.project.courierapp.view.fragments.BaseFragment;
 import com.project.courierapp.view.fragments.manager_layer.ManagerFragmentTags;
@@ -49,7 +50,7 @@ import io.reactivex.disposables.Disposable;
 import lombok.Setter;
 
 @Setter
-public class CreateDeliveryPointFragment extends BaseFragment implements BackWithRemoveFromStack {
+public class CreateDeliveryPointFragment extends BaseFragment implements BackWithRemoveFromStack, IOnBackPressed {
 
     private List<DeliveryPointResponse> deliveryPointResponseList = new ArrayList<>();
 
@@ -167,5 +168,10 @@ public class CreateDeliveryPointFragment extends BaseFragment implements BackWit
         errorMessage.setText(validatorBuilder.getErrorMessage());
         ToastFactory.createToast(Objects.requireNonNull(getContext()),
                 validatorBuilder.getErrorMessage());
+    }
+
+    @Override
+    public boolean onBackPressed() {
+        return false;
     }
 }

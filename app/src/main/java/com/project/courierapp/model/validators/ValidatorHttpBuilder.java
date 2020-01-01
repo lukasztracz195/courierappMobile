@@ -5,8 +5,10 @@ import android.util.Log;
 import com.project.courierapp.model.exceptions.http.BaseHttpException;
 import com.project.courierapp.model.exceptions.http.NotFoundException;
 
+import java.io.IOException;
 import java.util.LinkedHashMap;
 import java.util.Map;
+import java.util.Optional;
 
 import retrofit2.Response;
 
@@ -34,8 +36,16 @@ public class ValidatorHttpBuilder {
             if (response.errorBody() != null) {
                 Log.e(clientTag, response.errorBody().toString());
             }
-            BaseHttpException baseHttpException = validatorsMap.get(response.code());
-            baseHttpException.setMessage(response.message());
+            BaseHttpException baseHttpException = validatorsMap.getOrDefault(response.code(),
+                    new BaseHttpException());
+            Optional.ofNullable(response.errorBody()).ifPresent(responseBody ->
+            {
+                try {
+                    baseHttpException.setMessage(responseBody.string());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            });
             return baseHttpException;
         }
         return new NotFoundException();
