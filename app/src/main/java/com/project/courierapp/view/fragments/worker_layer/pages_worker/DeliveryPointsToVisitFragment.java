@@ -50,6 +50,7 @@ import icepick.State;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 
+
 public class DeliveryPointsToVisitFragment extends BaseFragment implements BackWithLogOutDialog {
 
     @BindView(R.id.delivery_points_to_visit_recyclerview)
@@ -84,7 +85,7 @@ public class DeliveryPointsToVisitFragment extends BaseFragment implements BackW
         this.roadResponse = roadResponse;
         CourierApplication.getClientsComponent().inject(this);
     }
-
+  
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -97,6 +98,7 @@ public class DeliveryPointsToVisitFragment extends BaseFragment implements BackW
         }
         this.savedInstanceState = savedInstanceState;
         downloadDate();
+
         DeliveryPointsToVisitFragmentBinding deliveryPointsToVisitFragmentBinding = DataBindingUtil.inflate(inflater,
                 R.layout.delivery_points_to_visit_fragment,
                 container, false);

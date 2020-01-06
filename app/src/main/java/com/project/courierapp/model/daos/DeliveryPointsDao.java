@@ -51,8 +51,7 @@ public interface DeliveryPointsDao {
     Single<Response<DeliveryPointResponse>> editDeliveryPoint(
             @Path(DELIVERY_POINT_ID) Long deliveryPointId,
             @Body AddOrEditDeliveryPointRequest editDeliveryPointRequest);
-
-
+  
     @GET(GET_BY_ID_PATH)
     Single<Response<DeliveryPointResponse>> getDeliveryPointById(
             @Path(DELIVERY_POINT_ID) Long deliveryPointId);

@@ -105,6 +105,7 @@ public class AdapterDeliveryPoints extends BaseAdapter {
             if (position >= 0 && position < responses.size()) {
                 Disposable disposable = deliveryPointsClient.deleteDeliveryPointById(
                         ((DeliveryPointResponse) responses.remove(position)).getPointId())
+
                         .subscribe(deleted -> {
                             if (deleted) {
                                 ToastFactory.createToast(context, "Delivery point was deleted");
@@ -148,6 +149,4 @@ public class AdapterDeliveryPoints extends BaseAdapter {
     public List<DeliveryPointResponse> getDeliveryPointResponseList() {
         return responses;
     }
-
-
 }

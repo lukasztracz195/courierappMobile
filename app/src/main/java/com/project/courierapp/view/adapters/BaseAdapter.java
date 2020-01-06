@@ -8,6 +8,7 @@ import android.view.ViewGroup;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.project.courierapp.model.bundlers.ABundler;
 import com.project.courierapp.model.dtos.response.Response;
 import com.project.courierapp.view.holders.BaseHolder;
 
@@ -20,6 +21,7 @@ import io.reactivex.disposables.CompositeDisposable;
 
 public class BaseAdapter<T extends BaseHolder> extends RecyclerView.Adapter<T> implements Adapter{
 
+    @State(ABundler.class)
     protected List<? extends Response> responses = new ArrayList<>();
 
     protected Response response;
@@ -44,7 +46,6 @@ public class BaseAdapter<T extends BaseHolder> extends RecyclerView.Adapter<T> i
     @NonNull
     @Override
     public T onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-
         return null;
     }
 

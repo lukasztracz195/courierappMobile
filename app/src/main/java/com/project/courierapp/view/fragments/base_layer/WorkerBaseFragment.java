@@ -1,6 +1,7 @@
 package com.project.courierapp.view.fragments.base_layer;
 
 import android.content.Intent;
+
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,6 +14,7 @@ import androidx.viewpager.widget.ViewPager;
 import com.project.courierapp.R;
 import com.project.courierapp.model.bundlers.ABundler;
 import com.project.courierapp.model.service.LocationService;
+
 import com.project.courierapp.view.Iback.BackWithLogOutDialog;
 import com.project.courierapp.view.adapters.BaseAdapterTabs;
 import com.project.courierapp.view.adapters.NavigatorAdapter;
@@ -100,6 +102,7 @@ public class WorkerBaseFragment extends BaseFragment implements BackWithLogOutDi
             }
         };
         r.run();
+
 
         return mainView;
     }

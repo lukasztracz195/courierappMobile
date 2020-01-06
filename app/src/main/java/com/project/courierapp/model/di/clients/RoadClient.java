@@ -155,9 +155,7 @@ public class RoadClient extends BaseClient {
                     return error(validatorHttpBuilder.validate(this.getClass().getName(), response));
                 }));
     }
-
-
-
+  
     public Single<List<RoadResponse>> getAllRoads() {
         return async(this.roadDao.getAllRoads()
                 .flatMap(response -> {

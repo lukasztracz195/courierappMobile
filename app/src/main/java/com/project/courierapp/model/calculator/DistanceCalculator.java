@@ -58,6 +58,7 @@ public class DistanceCalculator {
         return 0;
     }
 
+
     public static double caluculateDistanceFromListDeliveryPoints(List<DeliveryPointResponse> sortedByOrderDeliveryPoints){
         double distance = 0.0;
         for (int i = 1; i < sortedByOrderDeliveryPoints.size(); i++) {
@@ -74,7 +75,7 @@ public class DistanceCalculator {
         }
         return distance;
     }
-
+  
     private static double calculateInMiles(Location source, Location destination) {
         double theta = source.getLongitude() - destination.getLongitude();
         double dist = sin(toRadians(source.getLatitude())) * sin(toRadians(destination.getLatitude())) +

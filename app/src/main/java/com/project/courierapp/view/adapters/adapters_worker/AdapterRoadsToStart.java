@@ -3,6 +3,7 @@ package com.project.courierapp.view.adapters.adapters_worker;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Location;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -39,15 +40,12 @@ import butterknife.ButterKnife;
 import io.reactivex.disposables.Disposable;
 
 public class AdapterRoadsToStart extends BaseAdapter implements Adapter {
-
-
+  
     @BindView(R.id.start_road_bt)
     Button startRoadButton;
 
     @Inject
     RoadClient roadClient;
-
-
 
     public AdapterRoadsToStart(Context context, Bundle savedInstanceState) {
         super(context, savedInstanceState);
@@ -95,6 +93,7 @@ public class AdapterRoadsToStart extends BaseAdapter implements Adapter {
         compositeDisposable.add(disposable);
     }
 
+
     private void setActionOnStartRoad(RoadResponse roadResponse, int position) {
         startRoadButton.setOnClickListener(view -> {
             LastStartedRoadStore.saveRoadId(roadResponse.getRoadId());
@@ -120,6 +119,7 @@ public class AdapterRoadsToStart extends BaseAdapter implements Adapter {
                             ToastFactory.createToast(context, e.getMessage());
                         });
                     locationService.setSendingTrackingPointsIsActivated(true);
+
         });
 
     }

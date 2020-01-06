@@ -90,8 +90,8 @@ public class CreateRoadFragment extends BaseFragment implements BackWithRemoveFr
 
     @Inject
     RoadClient roadClient;
-
     private AdapterDeliveryPoints adapterDeliveryPoints;
+
 
     public CreateRoadFragment() {
 

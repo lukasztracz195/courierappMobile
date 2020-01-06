@@ -110,6 +110,7 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
                             Role role = getRoleFromTokenStore();
                             Button loginButton = mainView.findViewById(R.id.login_button);
                             loginButton.setEnabled(false);
+
                             switch (role) {
                                 case MANAGER:
                                     switchOnManagerBaseFragment();
@@ -178,6 +179,7 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
         Log.i(BaseFragmentTags.LoginFragment, Roles.TEMPORARY);
         RolesStore.saveRole(Roles.TEMPORARY);
         activity.putFragment(new ChangePasswordFragment(),
+
                         BaseFragmentTags.ChangePasswordFragment);
     }
 
@@ -185,6 +187,7 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
         Log.i(BaseFragmentTags.LoginFragment, Roles.MANAGER);
         RolesStore.saveRole(Roles.MANAGER);
         activity.setBaseForBackStack(new ManagerBaseFragment(),
+
                         BaseFragmentTags.ManagerBaseFragment);
     }
 

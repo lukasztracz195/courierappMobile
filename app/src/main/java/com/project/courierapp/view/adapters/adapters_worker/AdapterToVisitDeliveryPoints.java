@@ -2,6 +2,7 @@ package com.project.courierapp.view.adapters.adapters_worker;
 
 import android.content.Context;
 import android.location.Location;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +20,7 @@ import com.project.courierapp.model.dtos.request.LocationRequest;
 import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
 import com.project.courierapp.model.service.LocationService;
 import com.project.courierapp.model.store.LastStartedRoadStore;
+
 import com.project.courierapp.view.adapters.AdaptersTags;
 import com.project.courierapp.view.adapters.BaseAdapter;
 import com.project.courierapp.view.holders.BaseHolder;
@@ -26,11 +28,11 @@ import com.project.courierapp.view.holders.holders_worker.HolderDeliveryPointToV
 import com.project.courierapp.view.toasts.ToastFactory;
 
 import org.jetbrains.annotations.NotNull;
-
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
 
 import javax.inject.Inject;
 
@@ -43,9 +45,10 @@ import lombok.Getter;
 @Getter
 public class AdapterToVisitDeliveryPoints extends BaseAdapter {
 
+
     @BindView(R.id.visite_bt)
     Button visitButton;
-
+  
     Button finishRoadButton;
 
     @Inject

@@ -47,8 +47,9 @@ public interface ClientsComponent {
     void inject(AdapterRoadsToStart adapterRoadsToStart);
 
     void inject(AdapterFinishedRoads adapterFinishedRoads);
-
+  
     void inject(LocationService locationService);
-
+  
     void inject(DeliveryPointsToVisitFragment deliveryPointsToVisitFragment);
+
 }

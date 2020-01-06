@@ -45,7 +45,7 @@ public interface RoadDao {
     String GET_PLANNED_WORKER_ROADS_PATH = ROAD_PATH + "/me/planned";
     String GET_FINISHEDD_WORKER_ROADS_PATH = ROAD_PATH + "/me/finished";
     String GET_LAST_STARTED_WORKER_ROAD_PATH = ROAD_PATH + "/me/lastStarted";
-
+  
     String DELETE_ROAD_PATH = ROAD_PATH + ROAD_ID_PATH_VARIABLE;
 
     @POST(ADD_PATH)

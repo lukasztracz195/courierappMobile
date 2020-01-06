@@ -42,4 +42,7 @@ public interface WorkerDao {
     @GET(IS_BUSY_PATH)
     Single<Response<IsBusyResponse>> isBusy();
 
+    @GET(IS_BUSY_PATH)
+    Single<Response<IsBusyResponse>> isBusy();
+
 }

@@ -14,6 +14,7 @@ import com.project.courierapp.view.holders.BaseHolder;
 
 import org.joda.time.Instant;
 
+
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -49,6 +50,7 @@ public class HolderFinishedRoad extends BaseHolder {
                 .setText(roadResponse.getDeliveryPoints().size());
         double distanceInKilometers = DistanceCalculator
                 .caluculateDistanceFromListDeliveryPoints(roadResponse.getDeliveryPoints().stream()
+
                 .sorted(Comparator.comparingInt(DeliveryPointResponse::getOrder))
                 .collect(Collectors.toList()));
         Objects.requireNonNull((TextView) mapTextView.get(R.id.worker_road_distance_content))
@@ -72,6 +74,4 @@ public class HolderFinishedRoad extends BaseHolder {
                     .setText("Fastest by expected by " + traveledInHours + " h");
         }
     }
-
-
 }
