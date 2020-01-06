@@ -17,8 +17,6 @@ import com.project.courierapp.view.fragments.base_layer.LoginFragment;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
 import butterknife.BindView;
 import lombok.Getter;
 
@@ -83,7 +81,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private boolean canBack() {
-        return super.getSupportFragmentManager().getBackStackEntryCount() > 1;
+        return super.getSupportFragmentManager().getBackStackEntryCount() > 0;
     }
 
     public void changeFragment(final Fragment fragment) {
@@ -140,8 +138,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void updateCurrentFragment() {
-        List<Fragment> fragments = super.getSupportFragmentManager().getFragments();
-        currentFragment = fragments.get(fragments.size() - 1);
+        currentFragment= getSupportFragmentManager().findFragmentById(R.id.layout_on_fragments);
     }
 
 }

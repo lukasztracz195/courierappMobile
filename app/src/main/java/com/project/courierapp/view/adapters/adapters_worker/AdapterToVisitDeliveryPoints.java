@@ -1,6 +1,8 @@
 package com.project.courierapp.view.adapters.adapters_worker;
 
 import android.content.Context;
+import android.location.Location;
+
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,9 +16,11 @@ import com.project.courierapp.R;
 import com.project.courierapp.applications.CourierApplication;
 import com.project.courierapp.databinding.DeliveryPointToVisitItemBinding;
 import com.project.courierapp.model.di.clients.DeliveryPointsClient;
+import com.project.courierapp.model.dtos.request.LocationRequest;
 import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
+import com.project.courierapp.model.service.LocationService;
 import com.project.courierapp.model.store.LastStartedRoadStore;
-import com.project.courierapp.view.adapters.Adapter;
+
 import com.project.courierapp.view.adapters.AdaptersTags;
 import com.project.courierapp.view.adapters.BaseAdapter;
 import com.project.courierapp.view.holders.BaseHolder;
@@ -24,25 +28,53 @@ import com.project.courierapp.view.holders.holders_worker.HolderDeliveryPointToV
 import com.project.courierapp.view.toasts.ToastFactory;
 
 import org.jetbrains.annotations.NotNull;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
 
 import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import icepick.Icepick;
 import io.reactivex.disposables.Disposable;
+import lombok.Getter;
 
-public class AdapterToVisitDeliveryPoints extends BaseAdapter implements Adapter {
+@Getter
+public class AdapterToVisitDeliveryPoints extends BaseAdapter {
+
 
     @BindView(R.id.visite_bt)
     Button visitButton;
+  
+    Button finishRoadButton;
 
     @Inject
     DeliveryPointsClient deliveryPointsClient;
 
-    public AdapterToVisitDeliveryPoints(Context context, Bundle savedInstanceState) {
+    public AdapterToVisitDeliveryPoints(Context context, Bundle savedInstanceState, List<DeliveryPointResponse> deliveryPointResponseList, Button finishRoadButton) {
         super(context, savedInstanceState);
         CourierApplication.getClientsComponent().inject(this);
-        downloadData();
+        this.finishRoadButton = finishRoadButton;
+        if (savedInstanceState != null) {
+            Icepick.restoreInstanceState(this, savedInstanceState);
+        }
+        if(!responses.equals(deliveryPointResponseList)){
+            responses = deliveryPointResponseList;
+        }
+        if(responses.isEmpty()) {
+            downloadData();
+        }
+        responses = deliveryPointResponseList.stream().sorted(Comparator
+                .comparingInt(DeliveryPointResponse::getOrder)).collect(Collectors.toList());
+
+        if (allPointsVisited()) {
+            finishRoadButton.setEnabled(true);
+        } else {
+            finishRoadButton.setEnabled(false);
+        }
     }
 
     @NonNull
@@ -63,7 +95,7 @@ public class AdapterToVisitDeliveryPoints extends BaseAdapter implements Adapter
     public void onBindViewHolder(@NotNull BaseHolder holder, int position) {
         super.onBindViewHolder(holder, position);
         DeliveryPointResponse deliveryPointResponse = (DeliveryPointResponse) responses.get(position);
-      setActionOnVisitDeliveryPoint(deliveryPointResponse, position);
+        setActionOnVisitDeliveryPoint(deliveryPointResponse, position);
         holder.setFields((DeliveryPointResponse) responses.get(position));
     }
 
@@ -71,24 +103,57 @@ public class AdapterToVisitDeliveryPoints extends BaseAdapter implements Adapter
     public void downloadData() {
         super.downloadData();
         Long lastStartedRoadId = LastStartedRoadStore.getLastStartedRoadId();
-        Disposable disposable = deliveryPointsClient.getDeliveryPointsByRoadId(lastStartedRoadId).subscribe(
-                this::updateData, e -> Log.e(AdaptersTags.AdapterWorkersListItem,
-                        e.getMessage(), e));
-        compositeDisposable.add(disposable);
+        if (lastStartedRoadId > 0) {
+            Disposable disposable = deliveryPointsClient.getDeliveryPointsByRoadId(lastStartedRoadId).subscribe(
+                    this::updateAndSortData, e -> Log.e(AdaptersTags.AdapterWorkersListItem,
+                            e.getMessage(), e));
+            compositeDisposable.add(disposable);
+        }
     }
 
-    private void setActionOnVisitDeliveryPoint(DeliveryPointResponse deliveryPointResponse, int position){
+    private void setActionOnVisitDeliveryPoint(DeliveryPointResponse deliveryPointResponse, int position) {
         visitButton.setOnClickListener(view -> {
-            if(!((DeliveryPointResponse )responses.get(position)).isVisited()){
-                Disposable disposable = deliveryPointsClient.visitDeliveryPoint(
-                        deliveryPointResponse.getPointId()).subscribe(responseMessage ->{
-                    ((DeliveryPointResponse) responses.get(position)).setVisited(true);
-                    super.updateData(responses);
-                }, (Throwable e) -> {
-                    ToastFactory.createToast(context,e.getMessage());
-                });
+            if(LocationService.instance != null) {
+                LocationService locationService = LocationService.instance;
+                Location location = locationService.getLocation();
+                if(location != null) {
+                    if (!((DeliveryPointResponse) responses.get(position)).isVisited()) {
+                        Disposable disposable = deliveryPointsClient.visitDeliveryPoint(
+                                deliveryPointResponse.getPointId(), LocationRequest.builder()
+                                        .longitude(location.getLongitude())
+                                        .latitude(location.getLatitude())
+                                        .build()).subscribe(responseMessage -> {
+                            ((DeliveryPointResponse) responses.get(position)).setVisited(true);
+                            super.updateData(responses);
+                        }, (Throwable e) -> {
+                            ToastFactory.createToast(context, e.getMessage());
+                        });
+                    }
+                }
             }
         });
 
+    }
+
+    public boolean allPointsVisited() {
+        List<DeliveryPointResponse> deliveryPointResponseList = responses;
+        if (deliveryPointResponseList != null) {
+            return deliveryPointResponseList.stream().allMatch(DeliveryPointResponse::isVisited);
+        }
+        return false;
+    }
+
+    public void updateAndSortData(List<DeliveryPointResponse> deliveryPointResponseList) {
+        List<DeliveryPointResponse> list = deliveryPointResponseList.stream()
+                .sorted(Comparator.comparingInt(DeliveryPointResponse::getOrder))
+                .collect(Collectors.toList());
+        super.updateData(list);
+    }
+
+    public void onSaveInstanceState(Bundle outState) {
+        Optional<Bundle> bundleOptional = Optional.ofNullable(outState);
+        if(bundleOptional.isPresent()) {
+            Icepick.saveInstanceState(this, outState);
+        }
     }
 }

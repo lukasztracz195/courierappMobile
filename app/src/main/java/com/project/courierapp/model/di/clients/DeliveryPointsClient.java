@@ -3,6 +3,8 @@ package com.project.courierapp.model.di.clients;
 import com.project.courierapp.applications.CourierApplication;
 import com.project.courierapp.model.daos.DeliveryPointsDao;
 import com.project.courierapp.model.dtos.request.AddOrEditDeliveryPointRequest;
+import com.project.courierapp.model.dtos.request.LocationRequest;
+
 import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
 
 import java.util.List;
@@ -28,6 +30,7 @@ public class DeliveryPointsClient extends BaseClient {
     public DeliveryPointsClient() {
         CourierApplication.getRetrofitComponent().inject(this);
         this.deliveryPointsDao = retrofit.create(DeliveryPointsDao.class);
+        setValidators();
     }
 
     public Single<DeliveryPointResponse> addDeliveryPoint(
@@ -55,8 +58,8 @@ public class DeliveryPointsClient extends BaseClient {
                 }));
     }
 
-    public Single<String> visitDeliveryPoint(Long deliveryPointId) {
-        return async(this.deliveryPointsDao.visitDeliveryPoint(deliveryPointId)
+    public Single<String> visitDeliveryPoint(Long deliveryPointId, LocationRequest locationRequest) {
+        return async(this.deliveryPointsDao.visitDeliveryPoint(deliveryPointId, locationRequest)
                 .flatMap(response -> {
                     if (response.isSuccessful()) {
                         return just(Objects.requireNonNull(response.body()));

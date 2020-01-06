@@ -26,6 +26,6 @@ class BaseClient{
                 .addValidator(HttpURLConnection.HTTP_UNAUTHORIZED, new UnauthorizedException())
                 .addValidator(HttpURLConnection.HTTP_BAD_REQUEST, new BadRequestException())
                 .addValidator(HttpURLConnection.HTTP_NOT_FOUND, new NotFoundException())
-                .addValidator(HttpURLConnection.HTTP_SERVER_ERROR, new ServerErrorException());
+                .addValidator(HttpURLConnection.HTTP_INTERNAL_ERROR, new ServerErrorException());
     }
 }

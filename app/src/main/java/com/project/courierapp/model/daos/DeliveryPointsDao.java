@@ -1,11 +1,10 @@
 package com.project.courierapp.model.daos;
 
 import com.project.courierapp.model.dtos.request.AddOrEditDeliveryPointRequest;
+import com.project.courierapp.model.dtos.request.LocationRequest;
 import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
 
 import java.util.List;
-
-import javax.inject.Named;
 
 import io.reactivex.Single;
 import retrofit2.Response;
@@ -14,6 +13,7 @@ import retrofit2.http.DELETE;
 import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.PUT;
+import retrofit2.http.Path;
 
 public interface DeliveryPointsDao {
 
@@ -44,26 +44,26 @@ public interface DeliveryPointsDao {
             @Body List<AddOrEditDeliveryPointRequest> addOrEditDeliveryPointRequestList);
 
     @PUT(VISIT_PATH)
-    Single<Response<String>> visitDeliveryPoint(@Named(DELIVERY_POINT_ID) Long deliveryPointId);
+    Single<Response<String>> visitDeliveryPoint(@Path(DELIVERY_POINT_ID) Long deliveryPointId,
+                                                @Body LocationRequest locationRequest);
 
     @PUT(EDIT_ADDRESS_PATH)
     Single<Response<DeliveryPointResponse>> editDeliveryPoint(
-            @Named(DELIVERY_POINT_ID) Long deliveryPointId,
+            @Path(DELIVERY_POINT_ID) Long deliveryPointId,
             @Body AddOrEditDeliveryPointRequest editDeliveryPointRequest);
-
-
+  
     @GET(GET_BY_ID_PATH)
     Single<Response<DeliveryPointResponse>> getDeliveryPointById(
-            @Named(DELIVERY_POINT_ID) Long deliveryPointId);
+            @Path(DELIVERY_POINT_ID) Long deliveryPointId);
 
     @GET(GET_ALL_PATH)
     Single<Response<List<DeliveryPointResponse>>> getAllDeliveryPoints();
 
     @GET(GET_BY_ROAD_ID_PATH)
     Single<Response<List<DeliveryPointResponse>>> getDeliveryPointsByRoadId(
-            @Named(ROAD_ID) Long roadId);
+            @Path(ROAD_ID) Long roadId);
 
     @DELETE(DELETE_BY_ID_PATH)
     Single<Response<Boolean>> deleteDeliveryPointById(
-            @Named(DELIVERY_POINT_ID) Long deliveryPointId);
+            @Path(DELIVERY_POINT_ID) Long deliveryPointId);
 }

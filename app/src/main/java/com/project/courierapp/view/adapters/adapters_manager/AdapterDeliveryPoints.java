@@ -47,7 +47,7 @@ public class AdapterDeliveryPoints extends BaseAdapter {
     public AdapterDeliveryPoints(Context context, List<DeliveryPointResponse> deliveryPointsDto,
                                  Bundle savedInstanceState) {
         super(context, savedInstanceState);
-        if(!responses.equals(deliveryPointsDto)) {
+        if (!responses.equals(deliveryPointsDto)) {
             responses = deliveryPointsDto;
         }
     }
@@ -73,7 +73,7 @@ public class AdapterDeliveryPoints extends BaseAdapter {
         DeliveryPointResponse deliveryPointDto = (DeliveryPointResponse) responses.get(position);
         setActionOnEditDeliveryPoint(deliveryPointDto, position);
         setActionOnDeleteDeliveryPoint(position);
-        holder.setFields((DeliveryPointResponse)responses.get(position));
+        holder.setFields((DeliveryPointResponse) responses.get(position));
     }
 
     public void addPoint() {
@@ -95,7 +95,7 @@ public class AdapterDeliveryPoints extends BaseAdapter {
             createDeliveryPointFragment.setDeliveryPointDto(new DeliveryPointDto(deliveryPointDto));
 
             MainActivity.instance.putFragment(createDeliveryPointFragment,
-                            ManagerFragmentTags.CreateRoadFragment);
+                    ManagerFragmentTags.CreateRoadFragment);
         });
     }
 
@@ -104,23 +104,28 @@ public class AdapterDeliveryPoints extends BaseAdapter {
         deleteButton.setOnClickListener(view -> {
             if (position >= 0 && position < responses.size()) {
                 Disposable disposable = deliveryPointsClient.deleteDeliveryPointById(
-                        ((DeliveryPointResponse)responses.remove(position)).getPointId())
+                        ((DeliveryPointResponse) responses.remove(position)).getPointId())
+
                         .subscribe(deleted -> {
-                    if(deleted){
-                        ToastFactory.createToast(context,"Delivery point was deleted");
-                    }
-                });
+                            if (deleted) {
+                                ToastFactory.createToast(context, "Delivery point was deleted");
+                            }
+                        }, (Throwable e) -> {
+                            ToastFactory.createToast(context, "Delivery point was deleted");
+                        });
                 compositeDisposable.add(disposable);
                 super.notifyItemRemoved(position);
             } else {
                 if (position != responses.size() && !responses.isEmpty()) {
                     Disposable disposable = deliveryPointsClient.deleteDeliveryPointById(
-                            ((DeliveryPointResponse)responses.remove(0)).getPointId())
+                            ((DeliveryPointResponse) responses.remove(0)).getPointId())
                             .subscribe(deleted -> {
-                        if(deleted){
-                            ToastFactory.createToast(context,"Delivery point was deleted");
-                        }
-                    });
+                                if (deleted) {
+                                    ToastFactory.createToast(context, "Delivery point was deleted");
+                                }
+                            }, (Throwable e) -> {
+                                ToastFactory.createToast(context, "Delivery point was deleted");
+                            });
                     compositeDisposable.add(disposable);
                     super.notifyItemRemoved(0);
                 }
@@ -144,8 +149,4 @@ public class AdapterDeliveryPoints extends BaseAdapter {
     public List<DeliveryPointResponse> getDeliveryPointResponseList() {
         return responses;
     }
-
-
-
-
 }

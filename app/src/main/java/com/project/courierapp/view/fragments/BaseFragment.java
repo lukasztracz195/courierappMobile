@@ -18,7 +18,7 @@ public class BaseFragment extends Fragment {
     @Override
     public void onAttach(@Nonnull Context context) {
         super.onAttach(context);
-        if (activity == null && context instanceof  MainActivity) {
+        if (activity == null && context instanceof MainActivity) {
             activity = (MainActivity) context;
         }
     }
