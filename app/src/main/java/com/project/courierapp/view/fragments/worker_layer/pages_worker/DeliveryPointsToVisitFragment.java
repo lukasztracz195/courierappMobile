@@ -23,7 +23,7 @@ import butterknife.ButterKnife;
 
 public class DeliveryPointsToVisitFragment extends BaseFragment implements BackWithLogOutDialog {
 
-    @BindView(R.id.delivery_points_to_visit_recyclerview)
+    @BindView(R.id.delivery_points_to_visit_recycler_view)
     RecyclerView recyclerView;
 
     @Nullable
