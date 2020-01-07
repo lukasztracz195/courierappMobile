@@ -10,7 +10,7 @@
     <uses-permission android:name="android.permission.INTERNET" />
 
     <application
-        android:name=".applications.CourierApplication"
+        android:name="com.project.courierapp.applications.CourierApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -19,7 +19,8 @@
         android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name=".view.activities.MainActivity">
+        <activity android:name="com.project.courierapp.view.activities.MainActivity"
+            android:multiprocess="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -36,8 +37,11 @@
             </intent-filter>
         </activity>
         <service
-            android:name=".model.service.LocationService"
-            android:isolatedProcess="true" />
+            android:name="com.project.courierapp.model.service.LocationService"
+            android:exported="false"
+            android:isolatedProcess="true"
+            android:permission="android:permission.ACCESS_COARSE_LOCATION,
+            android.permission.ACCESS_FINE_LOCATION" />
     </application>
 
 </manifest>

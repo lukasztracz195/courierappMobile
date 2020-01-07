@@ -1,6 +1,7 @@
 package com.project.courierapp.model.di.components;
 
 import com.project.courierapp.model.di.modules.ClientsModule;
+import com.project.courierapp.model.service.LocationService;
 import com.project.courierapp.view.adapters.adapters_manager.AdapterDeliveryPoints;
 import com.project.courierapp.view.adapters.adapters_manager.AdapterRoadListItem;
 import com.project.courierapp.view.adapters.adapters_manager.AdapterWorkersListItem;
@@ -45,4 +46,6 @@ public interface ClientsComponent {
     void inject(AdapterRoadsToStart adapterRoadsToStart);
 
     void inject(AdapterFinishedRoads adapterFinishedRoads);
+
+    void inject(LocationService locationService);
 }
