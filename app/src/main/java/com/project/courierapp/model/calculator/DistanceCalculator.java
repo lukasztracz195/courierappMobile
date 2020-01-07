@@ -2,7 +2,10 @@ package com.project.courierapp.model.calculator;
 
 import android.location.Location;
 
+import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
 import com.project.courierapp.model.enums.DistanceUnits;
+
+import java.util.List;
 
 import static java.lang.Math.acos;
 import static java.lang.Math.cos;
@@ -71,5 +74,22 @@ public class DistanceCalculator {
         dist = acos(dist);
         dist = toDegrees(dist);
         return dist * 60 * MILE;
+    }
+
+    public static double caluculateDistanceFromListDeliveryPoints(List<DeliveryPointResponse> sortedByOrderDeliveryPoints){
+        double distance = 0.0;
+        for (int i = 1; i < sortedByOrderDeliveryPoints.size(); i++) {
+            DeliveryPointResponse sourceDeliveryPoint = sortedByOrderDeliveryPoints.get(i - 1);
+            DeliveryPointResponse destinationDeliveryPoint = sortedByOrderDeliveryPoints.get(i);
+            Point source = Point.of(
+                    sourceDeliveryPoint.getLatitude(),
+                    sourceDeliveryPoint.getLongitude());
+            Point destination = Point.of(
+                    destinationDeliveryPoint.getLatitude(),
+                    destinationDeliveryPoint.getLongitude());
+            distance += DistanceCalculator.calculateDistance(source, destination,
+                    DistanceUnits.KILOMETERS);
+        }
+        return distance;
     }
 }
