@@ -29,6 +29,7 @@ public class RoadClient extends BaseClient {
     public RoadClient() {
         CourierApplication.getRetrofitComponent().inject(this);
         this.roadDao = retrofit.create(RoadDao.class);
+        setValidators();
     }
 
 
@@ -157,6 +158,16 @@ public class RoadClient extends BaseClient {
 
     public Single<List<RoadResponse>> getAllRoads() {
         return async(this.roadDao.getAllRoads()
+                .flatMap(response -> {
+                    if (response.isSuccessful()) {
+                        return just(Objects.requireNonNull(response.body()));
+                    }
+                    return error(validatorHttpBuilder.validate(this.getClass().getName(), response));
+                }));
+    }
+
+    public Single<RoadResponse> getLastStartedRoad() {
+        return async(this.roadDao.getLastStartedRoad()
                 .flatMap(response -> {
                     if (response.isSuccessful()) {
                         return just(Objects.requireNonNull(response.body()));

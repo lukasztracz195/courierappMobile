@@ -45,15 +45,15 @@ public class DeliveryPointDto extends BaseObservable implements Request, Seriali
     }
 
     public DeliveryPointDto(DeliveryPointResponse deliveryPointResponse) {
-        String[] fields = deliveryPointResponse.getAddress().split(" ");
-        if (fields.length == 5) {
+        String[] fields = deliveryPointResponse.getAddress().split(",");
+        if (fields.length == 3) {
             editabled = false;
             saved = true;
-            address = fields[0];
-            postalCode = fields[1];
-            city = fields[2];
-            country = fields[3];
-            expendedTime = fields[4];
+            address = fields[0].trim();
+            postalCode = fields[1].trim().split(" ")[0].trim();
+            city = fields[1].trim().split(" ")[1].trim();
+            country = fields[2].trim();
+            expendedTime = deliveryPointResponse.getExpectedSpendTime();
             pointId = deliveryPointResponse.getPointId();
         }
     }

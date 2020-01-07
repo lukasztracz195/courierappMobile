@@ -21,7 +21,6 @@ import com.project.courierapp.view.adapters.AdaptersTags;
 import com.project.courierapp.view.adapters.BaseAdapter;
 import com.project.courierapp.view.holders.BaseHolder;
 import com.project.courierapp.view.holders.holders_worker.HolderDeliveryPointToVisit;
-import com.project.courierapp.view.toasts.ToastFactory;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -78,17 +77,17 @@ public class AdapterToVisitDeliveryPoints extends BaseAdapter implements Adapter
     }
 
     private void setActionOnVisitDeliveryPoint(DeliveryPointResponse deliveryPointResponse, int position){
-        visitButton.setOnClickListener(view -> {
-            if(!((DeliveryPointResponse )responses.get(position)).isVisited()){
-                Disposable disposable = deliveryPointsClient.visitDeliveryPoint(
-                        deliveryPointResponse.getPointId()).subscribe(responseMessage ->{
-                    ((DeliveryPointResponse) responses.get(position)).setVisited(true);
-                    super.updateData(responses);
-                }, (Throwable e) -> {
-                    ToastFactory.createToast(context,e.getMessage());
-                });
-            }
-        });
+//        visitButton.setOnClickListener(view -> {
+//            if(!((DeliveryPointResponse )responses.get(position)).isVisited()){
+//                Disposable disposable = deliveryPointsClient.visitDeliveryPoint(
+//                        deliveryPointResponse.getPointId()).subscribe(responseMessage ->{
+//                    ((DeliveryPointResponse) responses.get(position)).setVisited(true);
+//                    super.updateData(responses);
+//                }, (Throwable e) -> {
+//                    ToastFactory.createToast(context,e.getMessage());
+//                });
+//            }
+//        });
 
     }
 }

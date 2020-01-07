@@ -1,6 +1,7 @@
 package com.project.courierapp.model.daos;
 
 import com.project.courierapp.model.dtos.request.AddOrEditDeliveryPointRequest;
+import com.project.courierapp.model.dtos.request.LocationRequest;
 import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
 
 import java.util.List;
@@ -43,7 +44,8 @@ public interface DeliveryPointsDao {
             @Body List<AddOrEditDeliveryPointRequest> addOrEditDeliveryPointRequestList);
 
     @PUT(VISIT_PATH)
-    Single<Response<String>> visitDeliveryPoint(@Path(DELIVERY_POINT_ID) Long deliveryPointId);
+    Single<Response<String>> visitDeliveryPoint(@Path(DELIVERY_POINT_ID) Long deliveryPointId,
+                                                LocationRequest locationRequest);
 
     @PUT(EDIT_ADDRESS_PATH)
     Single<Response<DeliveryPointResponse>> editDeliveryPoint(
