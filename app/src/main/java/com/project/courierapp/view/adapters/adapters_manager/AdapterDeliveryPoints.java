@@ -106,10 +106,12 @@ public class AdapterDeliveryPoints extends BaseAdapter {
                 Disposable disposable = deliveryPointsClient.deleteDeliveryPointById(
                         ((DeliveryPointResponse)responses.remove(position)).getPointId())
                         .subscribe(deleted -> {
-                    if(deleted){
-                        ToastFactory.createToast(context,"Delivery point was deleted");
-                    }
-                });
+                            if (deleted) {
+                                ToastFactory.createToast(context, "Delivery point was deleted");
+                            }
+                        }, (Throwable e) -> {
+                            ToastFactory.createToast(context, "Delivery point was deleted");
+                        });
                 compositeDisposable.add(disposable);
                 super.notifyItemRemoved(position);
             } else {
@@ -117,10 +119,12 @@ public class AdapterDeliveryPoints extends BaseAdapter {
                     Disposable disposable = deliveryPointsClient.deleteDeliveryPointById(
                             ((DeliveryPointResponse)responses.remove(0)).getPointId())
                             .subscribe(deleted -> {
-                        if(deleted){
-                            ToastFactory.createToast(context,"Delivery point was deleted");
-                        }
-                    });
+                                if (deleted) {
+                                    ToastFactory.createToast(context, "Delivery point was deleted");
+                                }
+                            }, (Throwable e) -> {
+                                ToastFactory.createToast(context, "Delivery point was deleted");
+                            });
                     compositeDisposable.add(disposable);
                     super.notifyItemRemoved(0);
                 }
@@ -144,8 +148,4 @@ public class AdapterDeliveryPoints extends BaseAdapter {
     public List<DeliveryPointResponse> getDeliveryPointResponseList() {
         return responses;
     }
-
-
-
-
 }

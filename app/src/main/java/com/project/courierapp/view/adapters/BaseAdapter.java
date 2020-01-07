@@ -47,15 +47,11 @@ public class BaseAdapter<T extends BaseHolder> extends RecyclerView.Adapter<T> i
     @NonNull
     @Override
     public T onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        if (savedInstanceState != null) {
-            Icepick.restoreInstanceState(this, savedInstanceState);
-        }
         return null;
     }
 
     @Override
     public void onBindViewHolder(@NonNull T holder, int position) {
-
     }
 
     @Override
@@ -73,6 +69,7 @@ public class BaseAdapter<T extends BaseHolder> extends RecyclerView.Adapter<T> i
         this.response =response;
     }
 
+    @Override
     public void updateData(List<? extends Response> responses) {
         this.responses = responses;
         super.notifyDataSetChanged();
