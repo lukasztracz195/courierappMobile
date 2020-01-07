@@ -29,10 +29,10 @@ import butterknife.OnClick;
 
 public class ManagerBaseFragment extends BaseFragment implements BackWithLogOutDialog {
 
-    @BindView(R.id.managerViewPager)
+    @BindView(R.id.manager_view_pager)
     ViewPager viewPager;
 
-    @BindView(R.id.managerMagicIndicator)
+    @BindView(R.id.manager_magic_indicator)
     MagicIndicator magicIndicator;
 
     private View mainView;
