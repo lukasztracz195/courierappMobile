@@ -13,6 +13,6 @@ import lombok.NoArgsConstructor;
 @Getter
 public class IsBusyResponse {
 
-    @SerializedName("isBusy")
+    @SerializedName("busy")
     private boolean isBusy;
 }
