@@ -122,7 +122,7 @@ public class LocationService extends Service {
                             if (newLocation != null) {
                                 oldLocation = newLocation;
                                 logLocation(oldLocation);
-                                toastLocation(oldLocation);
+//                                toastLocation(oldLocation);
                             }
                         });
                 Long startedRoadId = LastStartedRoadStore.getLastStartedRoadId();
@@ -133,8 +133,8 @@ public class LocationService extends Service {
                                     .longitude(oldLocation.getLongitude())
                                     .build()).subscribe(response -> {
                         if (response != null) {
-                            ToastFactory.createToast(MainActivity.instance,
-                                    "Created trackingPoint");
+//                            ToastFactory.createToast(MainActivity.instance,
+//                                    "Created trackingPoint");
                         }
                     }, (Throwable e) -> {
                         Log.i(TAG, "Created tracking point");

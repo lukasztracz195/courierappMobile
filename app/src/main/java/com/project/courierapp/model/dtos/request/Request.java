@@ -1,4 +1,6 @@
 package com.project.courierapp.model.dtos.request;
 
-public interface Request {
+import java.io.Serializable;
+
+public interface Request extends Serializable {
 }

@@ -60,10 +60,11 @@ public class AdapterToVisitDeliveryPoints extends BaseAdapter {
         if (savedInstanceState != null) {
             Icepick.restoreInstanceState(this, savedInstanceState);
         }
-        if (!responses.equals(deliveryPointResponseList)) {
-            responses = deliveryPointResponseList;
-        }
-        if (responses.isEmpty()) {
+        if(deliveryPointResponseList != null && responses != null) {
+            if (!responses.equals(deliveryPointResponseList)) {
+                responses = deliveryPointResponseList;
+            }
+        }else if (responses == null) {
             downloadData();
         }
         responses = deliveryPointResponseList.stream().sorted(Comparator
