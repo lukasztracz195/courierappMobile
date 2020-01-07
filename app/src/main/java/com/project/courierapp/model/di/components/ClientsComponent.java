@@ -14,6 +14,7 @@ import com.project.courierapp.view.fragments.manager_layer.functional.CreateDeli
 import com.project.courierapp.view.fragments.manager_layer.functional.CreateRoadFragment;
 import com.project.courierapp.view.fragments.manager_layer.functional.EditDeliveryPointFragment;
 import com.project.courierapp.view.fragments.manager_layer.functional.RegisterWorkerFragment;
+import com.project.courierapp.view.fragments.worker_layer.pages_worker.DeliveryPointsToVisitFragment;
 
 import javax.inject.Singleton;
 
@@ -48,4 +49,6 @@ public interface ClientsComponent {
     void inject(AdapterFinishedRoads adapterFinishedRoads);
 
     void inject(LocationService locationService);
+
+    void inject(DeliveryPointsToVisitFragment deliveryPointsToVisitFragment);
 }
