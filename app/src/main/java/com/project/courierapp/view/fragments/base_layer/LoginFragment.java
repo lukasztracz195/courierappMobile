@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -30,7 +31,6 @@ import com.project.courierapp.model.validators.TextValidator;
 import com.project.courierapp.model.validators.components.WhiteCharsValidatorChain;
 import com.project.courierapp.model.watchers.WatcherEditText;
 import com.project.courierapp.view.Iback.BackWithExitDialog;
-import com.project.courierapp.view.activities.MainActivity;
 import com.project.courierapp.view.fragments.BaseFragment;
 import com.project.courierapp.view.fragments.BaseFragmentTags;
 
@@ -107,6 +107,8 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
                             TokenStore.saveToken(token);
                             CredentialsStore.saveCredentials(credentialsRequest);
                             Role role = getRoleFromTokenStore();
+                    Button loginButton = mainView.findViewById(R.id.login_button);
+                    loginButton.setEnabled(false);
                             switch (role) {
                                 case MANAGER:
                                     switchOnManagerBaseFragment();
@@ -157,13 +159,11 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
         RolesStore.saveRole(Roles.WORKER);
         Disposable disposable = workerClient.isBusy().subscribe(worker -> {
             if (worker.isBusy()) {
-                ((MainActivity) Objects.requireNonNull(getActivity()))
-                        .putFragment(new WorkerBaseFragment(true),
-                                BaseFragmentTags.ChangePasswordFragment);
+                activity.putFragment(new WorkerBaseFragment(true),
+                                BaseFragmentTags.WorkerBaseFragment);
             } else {
-                ((MainActivity) Objects.requireNonNull(getActivity()))
-                        .putFragment(new WorkerBaseFragment(false),
-                                BaseFragmentTags.ChangePasswordFragment);
+                activity.putFragment(new WorkerBaseFragment(false),
+                                BaseFragmentTags.WorkerBaseFragment);
             }
         }, (Throwable e) -> {
             errorMessage.setText(e.getMessage());
@@ -174,16 +174,14 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
     private void switchOnChangePasswordFragment() {
         Log.i(BaseFragmentTags.LoginFragment, Roles.TEMPORARY);
         RolesStore.saveRole(Roles.TEMPORARY);
-        ((MainActivity) Objects.requireNonNull(getActivity()))
-                .putFragment(new ChangePasswordFragment(),
+        activity.putFragment(new ChangePasswordFragment(),
                         BaseFragmentTags.ChangePasswordFragment);
     }
 
     private void switchOnManagerBaseFragment() {
         Log.i(BaseFragmentTags.LoginFragment, Roles.MANAGER);
         RolesStore.saveRole(Roles.MANAGER);
-        ((MainActivity) Objects.requireNonNull(getActivity()))
-                .setBaseForBackStack(new ManagerBaseFragment(),
+        activity.setBaseForBackStack(new ManagerBaseFragment(),
                         BaseFragmentTags.ManagerBaseFragment);
     }
 
