@@ -1,10 +1,10 @@
 package com.project.courierapp.model.exceptions.http;
 
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-
-@NoArgsConstructor
-@Getter
 public class ServerErrorException extends BaseHttpException {
 
+    private static final String ERROR_MESSAGE = "HTTP SERVER ERROR: 500";
+
+    public ServerErrorException() {
+        message = ERROR_MESSAGE;
+    }
 }

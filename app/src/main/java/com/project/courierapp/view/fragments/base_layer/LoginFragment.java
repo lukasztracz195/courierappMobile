@@ -27,12 +27,14 @@ import com.project.courierapp.model.interceptors.LoginInterceptor;
 import com.project.courierapp.model.store.CredentialsStore;
 import com.project.courierapp.model.store.RolesStore;
 import com.project.courierapp.model.store.TokenStore;
+import com.project.courierapp.model.validators.CredentialsValidator;
 import com.project.courierapp.model.validators.TextValidator;
 import com.project.courierapp.model.validators.components.WhiteCharsValidatorChain;
 import com.project.courierapp.model.watchers.WatcherEditText;
 import com.project.courierapp.view.Iback.BackWithExitDialog;
 import com.project.courierapp.view.fragments.BaseFragment;
 import com.project.courierapp.view.fragments.BaseFragmentTags;
+import com.project.courierapp.view.toasts.ToastFactory;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -109,30 +111,38 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
 
     @OnClick(R.id.login_button)
     void login() {
-        loginButton.setEnabled(false);
-        Disposable disposable = loginClient.login(credentialsRequest)
-                .subscribe(token -> {
-                            Log.i(BaseFragmentTags.LoginFragment, "Logged in");
-                            TokenStore.saveToken(token);
-                            CredentialsStore.saveCredentials(credentialsRequest);
-                            Role role = getRoleFromTokenStore();
-                            switch (role) {
-                                case MANAGER:
-                                    switchOnManagerBaseFragment();
-                                    break;
-                                case WORKER:
-                                    checkWorkingStatusAndSwitchOnWorkerFragment();
-                                    break;
-                                case TEMPORARY:
-                                    switchOnChangePasswordFragment();
-                                    break;
+        CredentialsValidator credentialsValidator = CredentialsValidator.of(credentialsRequest);
+        credentialsValidator.validate();
+        if(credentialsValidator.isValid()) {
+            loginButton.setEnabled(false);
+            Disposable disposable = loginClient.login(credentialsRequest)
+                    .subscribe(token -> {
+                                Log.i(BaseFragmentTags.LoginFragment, "Logged in");
+                                TokenStore.saveToken(token);
+                                CredentialsStore.saveCredentials(credentialsRequest);
+                                Role role = getRoleFromTokenStore();
+                                switch (role) {
+                                    case MANAGER:
+                                        switchOnManagerBaseFragment();
+                                        break;
+                                    case WORKER:
+                                        checkWorkingStatusAndSwitchOnWorkerFragment();
+                                        break;
+                                    case TEMPORARY:
+                                        switchOnChangePasswordFragment();
+                                        break;
+                                }
+                            }, (Throwable e) -> {
+                                LoginInterceptor.of(errorMessage).getError(e);
+                                loginButton.setEnabled(true);
                             }
-                        }, (Throwable e) -> {
-                            LoginInterceptor.of(errorMessage).getError(e);
-                            loginButton.setEnabled(true);
-                        }
-                );
-        this.compositeDisposable.add(disposable);
+                    );
+            this.compositeDisposable.add(disposable);
+        }else{
+            errorMessage.setText(credentialsValidator.getErrorMessage());
+            ToastFactory.createToast(Objects.requireNonNull(getContext()),
+                    credentialsValidator.getErrorMessage());
+        }
 
     }
 
@@ -158,6 +168,15 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
                         WhiteCharsValidatorChain.of(
                                 Objects.requireNonNull(
                                         usernameTextInputEditText.getText()
+                                ).toString())
+                ))));
+        passwordTextInputEditText.addTextChangedListener(WatcherEditText.of(
+                passwordTextInputEditText,
+                errorMessage,
+                TextValidator.of(Collections.singletonList(
+                        WhiteCharsValidatorChain.of(
+                                Objects.requireNonNull(
+                                        passwordTextInputEditText.getText()
                                 ).toString())
                 ))));
     }

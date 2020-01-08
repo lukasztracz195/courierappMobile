@@ -13,5 +13,5 @@ import lombok.Setter;
 @Getter
 public class BaseHttpException extends Exception {
 
-    private String message;
+    protected String message;
 }
