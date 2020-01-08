@@ -27,6 +27,7 @@ import com.project.courierapp.view.toasts.ToastFactory;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -41,7 +42,7 @@ import io.reactivex.disposables.Disposable;
 import lombok.Getter;
 
 @Getter
-public class AdapterToVisitDeliveryPoints extends BaseAdapter {
+public class AdapterToVisitDeliveryPoints extends BaseAdapter implements Serializable {
 
     @BindView(R.id.visite_bt)
     Button visitButton;
@@ -128,6 +129,7 @@ public class AdapterToVisitDeliveryPoints extends BaseAdapter {
                         }, (Throwable e) -> {
                             ToastFactory.createToast(context, e.getMessage());
                         });
+                        compositeDisposable.add(disposable);
                     }
                 }
             }
@@ -144,6 +146,7 @@ public class AdapterToVisitDeliveryPoints extends BaseAdapter {
     }
 
     public void updateAndSortData(List<DeliveryPointResponse> deliveryPointResponseList) {
+        deliveryPointResponseList.remove(deliveryPointResponseList.size()-1);
         List<DeliveryPointResponse> list = deliveryPointResponseList.stream()
                 .sorted(Comparator.comparingInt(DeliveryPointResponse::getOrder))
                 .collect(Collectors.toList());

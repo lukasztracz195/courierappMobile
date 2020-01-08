@@ -33,4 +33,11 @@ public class CredentialsStore {
     public static String getPassword() {
         return sharedPreferences.getString(PASSWORD_KEY, "");
     }
+
+    public static void clear() {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        editor.remove(USERNAME_KEY);
+        editor.remove(PASSWORD_KEY);
+        editor.apply();
+    }
 }

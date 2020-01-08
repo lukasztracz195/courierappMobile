@@ -6,6 +6,7 @@ import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.project.courierapp.model.constans.Roles;
+import com.project.courierapp.model.store.CredentialsStore;
 import com.project.courierapp.model.store.RolesStore;
 import com.project.courierapp.model.store.TokenStore;
 import com.project.courierapp.view.activities.MainActivity;
@@ -24,6 +25,7 @@ public class AlertDialogsFactory {
                 .setPositiveButton("Yes", (arg0, arg1) -> {
                     RolesStore.clear();
                     TokenStore.clear();
+                    CredentialsStore.clear();
                     ((MainActivity) Objects.requireNonNull(activity)).clearBackStack();
                     ((MainActivity) Objects.
                             requireNonNull(activity)).setBaseForBackStack(new LoginFragment(),

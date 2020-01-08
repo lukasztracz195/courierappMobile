@@ -66,6 +66,7 @@
     <string name="auth_preferences">auth_preferences</string>
     <string name="credentials_preferences">credentials_preferences</string>
     <string name="user_mode">user mode</string>
+    <string name="adapter_delivery_points_to_visit_delivery_points">adapterToVisitDeliveryPoints</string>
 
     //HINTS
     <string name="enter_address_hint">Enter addresss</string>

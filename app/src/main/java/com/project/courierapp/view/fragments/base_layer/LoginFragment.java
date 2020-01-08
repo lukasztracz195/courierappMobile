@@ -63,6 +63,9 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
     @BindView(R.id.passwordTextInputEditText)
     TextInputEditText passwordTextInputEditText;
 
+    @BindView(R.id.login_button)
+    Button loginButton;
+
     @Inject
     LoginClient loginClient;
 
@@ -89,6 +92,11 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
         ButterKnife.bind(this, mainView);
         setValidators();
         CourierApplication.getClientsComponent().inject(this);
+        if(!CredentialsStore.getPassword().isEmpty() && !CredentialsStore.getUsername().isEmpty()){
+            credentialsRequest.setPassword(CredentialsStore.getPassword());
+            credentialsRequest.setUsername(CredentialsStore.getUsername());
+            login();
+        }
         return mainView;
     }
 
@@ -101,14 +109,13 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
 
     @OnClick(R.id.login_button)
     void login() {
+        loginButton.setEnabled(false);
         Disposable disposable = loginClient.login(credentialsRequest)
                 .subscribe(token -> {
                             Log.i(BaseFragmentTags.LoginFragment, "Logged in");
                             TokenStore.saveToken(token);
                             CredentialsStore.saveCredentials(credentialsRequest);
                             Role role = getRoleFromTokenStore();
-                    Button loginButton = mainView.findViewById(R.id.login_button);
-                    loginButton.setEnabled(false);
                             switch (role) {
                                 case MANAGER:
                                     switchOnManagerBaseFragment();
@@ -122,6 +129,7 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
                             }
                         }, (Throwable e) -> {
                             LoginInterceptor.of(errorMessage).getError(e);
+                            loginButton.setEnabled(true);
                         }
                 );
         this.compositeDisposable.add(disposable);
@@ -142,7 +150,7 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
         errorMessage.setText("");
     }
 
-    private void setValidators(){
+    private void setValidators() {
         usernameTextInputEditText.addTextChangedListener(WatcherEditText.of(
                 usernameTextInputEditText,
                 errorMessage,
@@ -160,10 +168,10 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
         Disposable disposable = workerClient.isBusy().subscribe(worker -> {
             if (worker.isBusy()) {
                 activity.putFragment(new WorkerBaseFragment(true),
-                                BaseFragmentTags.WorkerBaseFragment);
+                        BaseFragmentTags.WorkerBaseFragment);
             } else {
                 activity.putFragment(new WorkerBaseFragment(false),
-                                BaseFragmentTags.WorkerBaseFragment);
+                        BaseFragmentTags.WorkerBaseFragment);
             }
         }, (Throwable e) -> {
             errorMessage.setText(e.getMessage());
@@ -175,14 +183,14 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
         Log.i(BaseFragmentTags.LoginFragment, Roles.TEMPORARY);
         RolesStore.saveRole(Roles.TEMPORARY);
         activity.putFragment(new ChangePasswordFragment(),
-                        BaseFragmentTags.ChangePasswordFragment);
+                BaseFragmentTags.ChangePasswordFragment);
     }
 
     private void switchOnManagerBaseFragment() {
         Log.i(BaseFragmentTags.LoginFragment, Roles.MANAGER);
         RolesStore.saveRole(Roles.MANAGER);
         activity.setBaseForBackStack(new ManagerBaseFragment(),
-                        BaseFragmentTags.ManagerBaseFragment);
+                BaseFragmentTags.ManagerBaseFragment);
     }
 
     private Role getRoleFromTokenStore() {

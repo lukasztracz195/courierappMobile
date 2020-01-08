@@ -45,7 +45,7 @@ public interface DeliveryPointsDao {
 
     @PUT(VISIT_PATH)
     Single<Response<String>> visitDeliveryPoint(@Path(DELIVERY_POINT_ID) Long deliveryPointId,
-                                                LocationRequest locationRequest);
+                                                @Body LocationRequest locationRequest);
 
     @PUT(EDIT_ADDRESS_PATH)
     Single<Response<DeliveryPointResponse>> editDeliveryPoint(

@@ -20,6 +20,7 @@ import com.project.courierapp.applications.CourierApplication;
 import com.project.courierapp.databinding.DeliveryPointsToVisitFragmentBinding;
 import com.project.courierapp.model.bundlers.ABundler;
 import com.project.courierapp.model.calculator.DistanceCalculator;
+import com.project.courierapp.model.calculator.TimeCalculator;
 import com.project.courierapp.model.di.clients.RoadClient;
 import com.project.courierapp.model.dtos.request.LocationRequest;
 import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
@@ -91,6 +92,8 @@ public class DeliveryPointsToVisitFragment extends BaseFragment implements BackW
                              @androidx.annotation.Nullable Bundle savedInstanceState) {
         if (savedInstanceState != null) {
             Icepick.restoreInstanceState(this, savedInstanceState);
+            adapterToVisitDeliveryPoints = (AdapterToVisitDeliveryPoints) savedInstanceState.getSerializable(getResources()
+                    .getString(R.string.adapter_delivery_points_to_visit_delivery_points));
         }
         if (LocationService.instance != null) {
             LocationService.instance.setSendingTrackingPointsIsActivated(true);
@@ -112,24 +115,28 @@ public class DeliveryPointsToVisitFragment extends BaseFragment implements BackW
     public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         Icepick.saveInstanceState(this, outState);
+        outState.putSerializable(getResources()
+                        .getString(R.string.adapter_delivery_points_to_visit_delivery_points)
+                , adapterToVisitDeliveryPoints);
     }
 
     private void initRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
+        roadResponse.getDeliveryPoints().remove(roadResponse.getDeliveryPoints().size() - 1);
         if (adapterToVisitDeliveryPoints == null) {
             adapterToVisitDeliveryPoints =
                     new AdapterToVisitDeliveryPoints(getContext(), savedInstanceState,
                             roadResponse.getDeliveryPoints(), finishRoadButon);
         }
-        recyclerView.setAdapter(adapterToVisitDeliveryPoints);
-        setActionOnFinishRoad(adapterToVisitDeliveryPoints);
+        recyclerView.setAdapter((RecyclerView.Adapter) adapterToVisitDeliveryPoints);
+        setActionOnFinishRoad((AdapterToVisitDeliveryPoints) adapterToVisitDeliveryPoints);
     }
 
 
     private void initTextView() {
         if (roadResponse != null) {
-            estimatedExpectedTimeContent.setText(roadResponse.getExpectedTime());
+            estimatedExpectedTimeContent.setText(TimeCalculator.getHoursFromSeconds(roadResponse.getExpectedTime()));
             if (!roadResponse.getDeliveryPoints().isEmpty()) {
                 List<DeliveryPointResponse> deliveryPointResponseList = roadResponse
                         .getDeliveryPoints().stream()

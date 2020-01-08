@@ -90,6 +90,7 @@ public class DistanceCalculator {
             distance += DistanceCalculator.calculateDistance(source, destination,
                     DistanceUnits.KILOMETERS);
         }
+        distance = Math.round(distance);
         return distance;
     }
 }

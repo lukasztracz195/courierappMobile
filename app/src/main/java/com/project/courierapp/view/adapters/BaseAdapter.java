@@ -18,7 +18,7 @@ import java.util.Optional;
 
 import io.reactivex.disposables.CompositeDisposable;
 
-public class BaseAdapter<T extends BaseHolder> extends RecyclerView.Adapter<T> implements Adapter {
+public class BaseAdapter<T extends BaseHolder> extends RecyclerView.Adapter<T> implements Adapter, Serializable {
 
     protected List<? extends Response> responses = new ArrayList<>();
 
