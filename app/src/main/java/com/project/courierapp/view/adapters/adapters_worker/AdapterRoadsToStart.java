@@ -19,6 +19,7 @@ import com.project.courierapp.model.di.clients.RoadClient;
 import com.project.courierapp.model.dtos.request.LocationRequest;
 import com.project.courierapp.model.dtos.response.RoadResponse;
 import com.project.courierapp.model.service.LocationService;
+import com.project.courierapp.model.singletons.LocationSigletone;
 import com.project.courierapp.model.store.LastStartedRoadStore;
 import com.project.courierapp.view.activities.MainActivity;
 import com.project.courierapp.view.adapters.Adapter;
@@ -100,9 +101,9 @@ public class AdapterRoadsToStart extends BaseAdapter implements Adapter {
             while (locationService == null) {
                 locationService = LocationService.instance;
             }
-            Location location = locationService.getLocation();
+            Location location = LocationSigletone.getInstance().getLocation();
             while (location == null) {
-                location = locationService.getLocation();
+                location = LocationSigletone.getInstance().getLocation();
             }
             Disposable disposable = roadClient.startRoad(roadResponse.getRoadId(),
                     LocationRequest.builder()

@@ -2,23 +2,36 @@ package com.project.courierapp.model.service;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.os.Build;
 import android.os.IBinder;
 import android.util.Log;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.ActivityCompat;
+import androidx.core.app.NotificationCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
+import com.google.android.gms.location.LocationCallback;
+import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.project.courierapp.R;
 import com.project.courierapp.applications.CourierApplication;
 import com.project.courierapp.model.calculator.DistanceCalculator;
 import com.project.courierapp.model.di.clients.TrackingPointsClient;
 import com.project.courierapp.model.dtos.request.AddTrackingPointRequest;
 import com.project.courierapp.model.enums.DistanceUnits;
+import com.project.courierapp.model.singletons.LocationSigletone;
 import com.project.courierapp.model.store.LastStartedRoadStore;
 import com.project.courierapp.view.activities.MainActivity;
 import com.project.courierapp.view.toasts.ToastFactory;
@@ -33,9 +46,12 @@ import io.reactivex.disposables.Disposable;
 
 public class LocationService extends Service {
 
+    public static final String CHANNEL_ID = "ForegroundServiceChannel";
     public static LocationService instance;
     private static final String TAG = LocationService.class.getSimpleName();
     private FusedLocationProviderClient fusedLocationClient;
+    private LocationRequest mLocationRequest;
+    private LocationCallback mLocationCallback;
     private Location oldLocation;
     private Timer timer;
     private TimerTask timerTask;
@@ -78,8 +94,19 @@ public class LocationService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         Log.i(TAG, "LocationService Started!");
+        String input = intent.getStringExtra("inputExtra");
+        createNotificationChannel();
+        Intent notificationIntent = new Intent(this, MainActivity.class);
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+
+        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                .setContentTitle("You are been followed by your employer")
+                .setContentText(input)
+                .setSmallIcon(R.drawable.you_are_been_followed_icon)
+                .build();
+        startForeground(1, notification);
         startTimer();
-        return super.onStartCommand(intent, flags, startId);
+        return START_STICKY;
     }
 
     @Override
@@ -87,10 +114,6 @@ public class LocationService extends Service {
         super.onDestroy();
         stoptimertask();
         Log.i(TAG, "LocationService Stopped!");
-    }
-
-    public Location getLocation() {
-        return oldLocation;
     }
 
     public boolean isSendingTrackingPointsIsActivated() {
@@ -117,14 +140,11 @@ public class LocationService extends Service {
         timerTask = new TimerTask() {
             @SuppressLint("CheckResult")
             public void run() {
-                fusedLocationClient.getLastLocation()
-                        .addOnSuccessListener(MainActivity.instance, newLocation -> {
-                            if (newLocation != null) {
-                                oldLocation = newLocation;
-                                logLocation(oldLocation);
+                getLastLocation();
+                if (CourierApplication.isActivityVisible()) {
+                    LocationSigletone.getInstance().setLocation(oldLocation);
+                }
 //                                toastLocation(oldLocation);
-                            }
-                        });
                 Long startedRoadId = LastStartedRoadStore.getLastStartedRoadId();
                 if (startedRoadId > 0 && oldLocation != null) {
                     Disposable disposable = trackingPointsClient.addTrackingPointResponse(startedRoadId,
@@ -174,5 +194,35 @@ public class LocationService extends Service {
                         location.getLongitude() +
                         " lat: " +
                         location.getLatitude());
+    }
+
+    private void createNotificationChannel() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            NotificationChannel serviceChannel = new NotificationChannel(
+                    CHANNEL_ID,
+                    "Foreground Service Channel",
+                    NotificationManager.IMPORTANCE_DEFAULT
+            );
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            manager.createNotificationChannel(serviceChannel);
+        }
+    }
+
+    private void getLastLocation() {
+        try {
+            fusedLocationClient.getLastLocation()
+                    .addOnCompleteListener(new OnCompleteListener<Location>() {
+                        @Override
+                        public void onComplete(@NonNull Task<Location> task) {
+                            if (task.isSuccessful() && task.getResult() != null) {
+                                oldLocation = task.getResult();
+                            } else {
+                                Log.w(TAG, "Failed to get location.");
+                            }
+                        }
+                    });
+        } catch (SecurityException unlikely) {
+            Log.e(TAG, "Lost location permission." + unlikely);
+        }
     }
 }

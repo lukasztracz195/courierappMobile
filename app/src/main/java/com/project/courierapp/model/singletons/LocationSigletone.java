@@ -2,8 +2,6 @@ package com.project.courierapp.model.singletons;
 
 import android.location.Location;
 
-import com.project.courierapp.model.service.LocationService;
-
 import lombok.Getter;
 import lombok.Setter;
 
@@ -16,9 +14,6 @@ public class LocationSigletone {
 
 
     private LocationSigletone(){
-        if(LocationService.instance != null){
-            location = LocationService.instance.getLocation();
-        }
     }
 
     public static LocationSigletone getInstance(){

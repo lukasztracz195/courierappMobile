@@ -105,6 +105,7 @@ public class CreateRoadFragment extends BaseFragment implements BackWithRemoveFr
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             Icepick.restoreInstanceState(this, savedInstanceState);
         }
@@ -114,6 +115,7 @@ public class CreateRoadFragment extends BaseFragment implements BackWithRemoveFr
         mainView = createSurveyFragmentBinding.getRoot();
         ButterKnife.bind(this, mainView);
         CourierApplication.getClientsComponent().inject(this);
+
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity());
         deliveryPointsRecyclerView.setLayoutManager(layoutManager);
         adapterDeliveryPoints = new AdapterDeliveryPoints(getContext(), deliveryPointResponseList, savedInstanceState);
@@ -131,11 +133,6 @@ public class CreateRoadFragment extends BaseFragment implements BackWithRemoveFr
     @Override
     public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
-        if (adapterDeliveryPoints == null) {
-            adapterDeliveryPoints = new AdapterDeliveryPoints(getContext(), deliveryPointResponseList, outState);
-        }
-        adapterDeliveryPoints.onSaveInstanceState(outState);
-        deliveryPointResponseList = adapterDeliveryPoints.getDeliveryPointResponseList();
         Icepick.saveInstanceState(this, outState);
     }
 

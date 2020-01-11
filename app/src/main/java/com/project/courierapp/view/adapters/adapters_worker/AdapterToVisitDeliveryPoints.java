@@ -18,6 +18,7 @@ import com.project.courierapp.model.di.clients.DeliveryPointsClient;
 import com.project.courierapp.model.dtos.request.LocationRequest;
 import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
 import com.project.courierapp.model.service.LocationService;
+import com.project.courierapp.model.singletons.LocationSigletone;
 import com.project.courierapp.model.store.LastStartedRoadStore;
 import com.project.courierapp.view.adapters.AdaptersTags;
 import com.project.courierapp.view.adapters.BaseAdapter;
@@ -27,7 +28,6 @@ import com.project.courierapp.view.toasts.ToastFactory;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -42,7 +42,7 @@ import io.reactivex.disposables.Disposable;
 import lombok.Getter;
 
 @Getter
-public class AdapterToVisitDeliveryPoints extends BaseAdapter implements Serializable {
+public class AdapterToVisitDeliveryPoints extends BaseAdapter {
 
     @BindView(R.id.visite_bt)
     Button visitButton;
@@ -116,7 +116,7 @@ public class AdapterToVisitDeliveryPoints extends BaseAdapter implements Seriali
         visitButton.setOnClickListener(view -> {
             if (LocationService.instance != null) {
                 LocationService locationService = LocationService.instance;
-                Location location = locationService.getLocation();
+                Location location = LocationSigletone.getInstance().getLocation();
                 if (location != null) {
                     if (!((DeliveryPointResponse) responses.get(position)).isVisited()) {
                         Disposable disposable = deliveryPointsClient.visitDeliveryPoint(

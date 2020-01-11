@@ -1,5 +1,6 @@
 package com.project.courierapp.view.fragments.base_layer;
 
+import android.annotation.SuppressLint;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -7,9 +8,11 @@ import android.view.ViewGroup;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ServiceCompat;
 import androidx.viewpager.widget.ViewPager;
 
 import com.project.courierapp.R;
+import com.project.courierapp.model.service.LocationService;
 import com.project.courierapp.view.Iback.BackWithLogOutDialog;
 import com.project.courierapp.view.adapters.NavigatorAdapter;
 import com.project.courierapp.view.adapters.adapters_manager.AdapterManagerTabsPages;
@@ -41,10 +44,15 @@ public class ManagerBaseFragment extends BaseFragment implements BackWithLogOutD
 
     private boolean isInitialized = false;
 
+    @SuppressLint("WrongConstant")
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
+        if(LocationService.instance != null){
+            LocationService.instance.setSendingTrackingPointsIsActivated(false);
+            LocationService.instance.stopForeground(ServiceCompat.STOP_FOREGROUND_REMOVE);
+        }
         if (!isInitialized) {
             mainView = inflater.inflate(R.layout.manager_base_fragment, container,
                     false);

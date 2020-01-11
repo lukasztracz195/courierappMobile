@@ -94,11 +94,6 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
         ButterKnife.bind(this, mainView);
         setValidators();
         CourierApplication.getClientsComponent().inject(this);
-        if(!CredentialsStore.getPassword().isEmpty() && !CredentialsStore.getUsername().isEmpty()){
-            credentialsRequest.setPassword(CredentialsStore.getPassword());
-            credentialsRequest.setUsername(CredentialsStore.getUsername());
-            login();
-        }
         return mainView;
     }
 

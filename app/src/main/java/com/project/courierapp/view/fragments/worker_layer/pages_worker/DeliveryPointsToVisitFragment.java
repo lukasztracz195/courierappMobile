@@ -26,6 +26,7 @@ import com.project.courierapp.model.dtos.request.LocationRequest;
 import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
 import com.project.courierapp.model.dtos.response.RoadResponse;
 import com.project.courierapp.model.service.LocationService;
+import com.project.courierapp.model.singletons.LocationSigletone;
 import com.project.courierapp.model.store.LastStartedRoadStore;
 import com.project.courierapp.view.Iback.BackWithLogOutDialog;
 import com.project.courierapp.view.adapters.AdaptersTags;
@@ -90,10 +91,9 @@ public class DeliveryPointsToVisitFragment extends BaseFragment implements BackW
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @androidx.annotation.Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             Icepick.restoreInstanceState(this, savedInstanceState);
-            adapterToVisitDeliveryPoints = (AdapterToVisitDeliveryPoints) savedInstanceState.getSerializable(getResources()
-                    .getString(R.string.adapter_delivery_points_to_visit_delivery_points));
         }
         if (LocationService.instance != null) {
             LocationService.instance.setSendingTrackingPointsIsActivated(true);
@@ -115,15 +115,12 @@ public class DeliveryPointsToVisitFragment extends BaseFragment implements BackW
     public void onSaveInstanceState(@NotNull Bundle outState) {
         super.onSaveInstanceState(outState);
         Icepick.saveInstanceState(this, outState);
-        outState.putSerializable(getResources()
-                        .getString(R.string.adapter_delivery_points_to_visit_delivery_points)
-                , adapterToVisitDeliveryPoints);
+
     }
 
     private void initRecyclerView() {
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
-        roadResponse.getDeliveryPoints().remove(roadResponse.getDeliveryPoints().size() - 1);
         if (adapterToVisitDeliveryPoints == null) {
             adapterToVisitDeliveryPoints =
                     new AdapterToVisitDeliveryPoints(getContext(), savedInstanceState,
@@ -155,7 +152,7 @@ public class DeliveryPointsToVisitFragment extends BaseFragment implements BackW
             if (adapterToVisitDeliveryPoints.allPointsVisited()) {
                 LocationService locationService = LocationService.instance;
                 if (locationService != null) {
-                    Location location = locationService.getLocation();
+                    Location location = LocationSigletone.getInstance().getLocation();
                     if (location != null) {
                         roadClient.finishRoad(roadResponse.getRoadId(), LocationRequest.builder()
                                 .latitude(location.getLatitude())
