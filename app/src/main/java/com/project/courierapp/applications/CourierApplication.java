@@ -15,6 +15,8 @@ public class CourierApplication extends Application {
 
     private static ClientsComponent clientsComponent;
 
+    private static boolean activityVisible;
+
     @SuppressLint("StaticFieldLeak")
     private static Context context;
 
@@ -44,5 +46,17 @@ public class CourierApplication extends Application {
 
     public static Context getContext() {
         return context;
+    }
+
+    public static boolean isActivityVisible() {
+        return activityVisible;
+    }
+
+    public static void activityResumed() {
+        activityVisible = true;
+    }
+
+    public static void activityPaused() {
+        activityVisible = false;
     }
 }

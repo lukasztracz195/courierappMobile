@@ -9,6 +9,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.project.courierapp.R;
+import com.project.courierapp.applications.CourierApplication;
 import com.project.courierapp.view.Iback.BackWithExitDialog;
 import com.project.courierapp.view.Iback.BackWithLogOutDialog;
 import com.project.courierapp.view.Iback.BackWithRemoveFromStack;
@@ -129,12 +130,14 @@ public class MainActivity extends AppCompatActivity {
     public void onResume() {
         super.onResume();
         instance = this;
+        CourierApplication.activityResumed();
     }
 
     @Override
     public void onPause() {
         super.onPause();
         instance = null;
+        CourierApplication.activityPaused();
     }
 
     private void updateCurrentFragment() {
