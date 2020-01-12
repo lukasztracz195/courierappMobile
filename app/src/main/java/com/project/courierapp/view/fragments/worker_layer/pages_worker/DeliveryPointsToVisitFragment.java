@@ -15,12 +15,15 @@ import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.mapbox.geojson.Point;
+import com.mapbox.geojson.utils.PolylineUtils;
 import com.project.courierapp.R;
 import com.project.courierapp.applications.CourierApplication;
 import com.project.courierapp.databinding.DeliveryPointsToVisitFragmentBinding;
 import com.project.courierapp.model.bundlers.ABundler;
 import com.project.courierapp.model.calculator.DistanceCalculator;
 import com.project.courierapp.model.calculator.TimeCalculator;
+import com.project.courierapp.model.converters.HexToStringConverter;
 import com.project.courierapp.model.di.clients.RoadClient;
 import com.project.courierapp.model.dtos.request.LocationRequest;
 import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
@@ -38,6 +41,7 @@ import com.project.courierapp.view.toasts.ToastFactory;
 
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -72,7 +76,7 @@ public class DeliveryPointsToVisitFragment extends BaseFragment implements BackW
     @State(ABundler.class)
     RoadResponse roadResponse = new RoadResponse();
 
-    AdapterToVisitDeliveryPoints adapterToVisitDeliveryPoints;
+    private AdapterToVisitDeliveryPoints adapterToVisitDeliveryPoints;
 
     private Bundle savedInstanceState;
 
@@ -126,8 +130,8 @@ public class DeliveryPointsToVisitFragment extends BaseFragment implements BackW
                     new AdapterToVisitDeliveryPoints(getContext(), savedInstanceState,
                             roadResponse.getDeliveryPoints(), finishRoadButon);
         }
-        recyclerView.setAdapter((RecyclerView.Adapter) adapterToVisitDeliveryPoints);
-        setActionOnFinishRoad((AdapterToVisitDeliveryPoints) adapterToVisitDeliveryPoints);
+        recyclerView.setAdapter(adapterToVisitDeliveryPoints);
+        setActionOnFinishRoad(adapterToVisitDeliveryPoints);
     }
 
 
@@ -135,13 +139,16 @@ public class DeliveryPointsToVisitFragment extends BaseFragment implements BackW
         if (roadResponse != null) {
             estimatedExpectedTimeContent.setText(TimeCalculator.getHoursFromSeconds(roadResponse.getExpectedTime()));
             if (!roadResponse.getDeliveryPoints().isEmpty()) {
-                List<DeliveryPointResponse> deliveryPointResponseList = roadResponse
-                        .getDeliveryPoints().stream()
-                        .sorted(Comparator.comparingInt(DeliveryPointResponse::getOrder))
-                        .collect(Collectors.toList());
+                String decodedPoliLine = HexToStringConverter.convert(roadResponse.getEncodedPath());
+                List<Point> points = PolylineUtils.decode(
+                        decodedPoliLine, 5);
+                List<com.project.courierapp.model.calculator.Point> pointList = new ArrayList<>();
+                for(Point point : points){
+                    pointList.add(com.project.courierapp.model.calculator.Point.of(point.latitude(),point.longitude()));
+                }
                 estimatedDistanceContent.setText(
                         String.valueOf(DistanceCalculator
-                                .caluculateDistanceFromListDeliveryPoints(deliveryPointResponseList)));
+                                .caluculateDistanceFromPoints(pointList)+" km"));
             }
         }
     }
@@ -180,6 +187,11 @@ public class DeliveryPointsToVisitFragment extends BaseFragment implements BackW
 
     private void updateData(RoadResponse roadResponse) {
         this.roadResponse = roadResponse;
+        int size = roadResponse.getDeliveryPoints().size();
+        this.roadResponse.setDeliveryPoints(roadResponse.getDeliveryPoints().stream()
+                .sorted(Comparator.comparingInt(DeliveryPointResponse::getOrder))
+                .collect(Collectors.toList()));
+        this.roadResponse.getDeliveryPoints().remove(size-1);
         LastStartedRoadStore.saveRoadId(roadResponse.getRoadId());
         initTextView();
         initRecyclerView();

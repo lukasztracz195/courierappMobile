@@ -2,17 +2,23 @@ package com.project.courierapp.model.singletons;
 
 import android.location.Location;
 
+import com.project.courierapp.model.observer.LocationObserver;
+import com.project.courierapp.model.observer.LocationSubscriber;
 import com.project.courierapp.view.activities.MainActivity;
-import com.project.courierapp.view.fragments.worker_layer.pages_worker.WorkerMapFragment;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
-public class LocationSigletone {
+public class LocationSigletone implements LocationObserver {
 
     private static LocationSigletone instance;
     private Location location;
+    private List<LocationSubscriber> subscribers;
 
 
     private LocationSigletone() {
+        subscribers = new ArrayList<>();
     }
 
     public static LocationSigletone getInstance() {
@@ -24,18 +30,30 @@ public class LocationSigletone {
 
     public void setLocation(Location location) {
         this.location = location;
-        if (WorkerMapFragment.instance != null && WorkerMapFragment.mapIsActivated) {
-            if (MainActivity.instance != null)
-                if(location != null) {
-                    MainActivity.instance.runOnUiThread(() ->
-                            WorkerMapFragment.instance.updateMap(location));
-                }
+        if (MainActivity.instance != null)
+            if (location != null) {
+                MainActivity.instance.runOnUiThread(() ->
+                        notifyAll(location));
+            }
 
-        }
     }
 
     public Location getLocation() {
         return location;
     }
 
+    @Override
+    public void notifyAll(Location location) {
+        for (LocationSubscriber subscriber : subscribers) {
+            subscriber.notifyByLocation(location);
+        }
+    }
+
+    public void addSubscriber(LocationSubscriber subscriber) {
+        subscribers.add(subscriber);
+    }
+
+    public void removeSubscriber(LocationSubscriber subscriber) {
+        subscribers.remove(subscriber);
+    }
 }

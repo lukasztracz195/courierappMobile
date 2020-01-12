@@ -17,35 +17,31 @@ import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CameraPosition;
-import com.google.android.gms.maps.model.Dash;
-import com.google.android.gms.maps.model.Dot;
-import com.google.android.gms.maps.model.Gap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 import com.mapbox.geojson.Point;
 import com.mapbox.geojson.utils.PolylineUtils;
 import com.project.courierapp.R;
 import com.project.courierapp.applications.CourierApplication;
-import com.project.courierapp.databinding.MapWorkerFragmentBinding;
+import com.project.courierapp.databinding.WorkerMapFragmentBinding;
 import com.project.courierapp.model.bundlers.ABundler;
+import com.project.courierapp.model.converters.HexToStringConverter;
 import com.project.courierapp.model.di.clients.RoadClient;
 import com.project.courierapp.model.di.clients.TrackingPointsClient;
 import com.project.courierapp.model.dtos.response.DeliveryPointResponse;
 import com.project.courierapp.model.dtos.response.RoadResponse;
 import com.project.courierapp.model.dtos.response.TrackingPointsResponse;
+import com.project.courierapp.model.observer.LocationSubscriber;
+import com.project.courierapp.model.singletons.LocationSigletone;
 import com.project.courierapp.view.Iback.BackWithLogOutDialog;
 import com.project.courierapp.view.adapters.AdaptersTags;
 import com.project.courierapp.view.fragments.BaseFragment;
 
-import org.apache.commons.codec.binary.Hex;
 import org.jetbrains.annotations.NotNull;
 
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -58,20 +54,18 @@ import javax.inject.Inject;
 
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import icepick.Icepick;
 import icepick.State;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.disposables.Disposable;
 import lombok.NoArgsConstructor;
-import lombok.SneakyThrows;
 
 @NoArgsConstructor
-public class WorkerMapFragment extends BaseFragment implements BackWithLogOutDialog, GoogleMap.OnMapClickListener, OnMapReadyCallback {
+public class WorkerMapFragment extends BaseFragment implements BackWithLogOutDialog,
+        GoogleMap.OnMapClickListener, OnMapReadyCallback, LocationSubscriber {
 
-    GoogleMap googleMap;
-
-    public static boolean mapIsActivated;
-    public static WorkerMapFragment instance;
+    private GoogleMap googleMap;
 
     @BindView(R.id.map_view_worker_map_fragment)
     MapView mapView;
@@ -89,43 +83,44 @@ public class WorkerMapFragment extends BaseFragment implements BackWithLogOutDia
     List<TrackingPointsResponse> trackingPointsResponseList = new ArrayList<>();
 
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
-    private boolean deliveryPointsMarkersVisible;
-    private boolean deliveryPointsPolilineVisible;
+    private boolean mapIsActivated;
+    private boolean deliveryPointsMarkersIsVisible;
+    private boolean deliveryPointsPolylineIsVisible;
+    private boolean cameraIsSetOnWorkerPosition;
 
-    public static final int PATTERN_DASH_LENGTH_PX = 20;
-    public static final int PATTERN_GAP_LENGTH_PX = 20;
-    public static final PatternItem DOT = new Dot();
-    public static final PatternItem DASH = new Dash(PATTERN_DASH_LENGTH_PX);
-    public static final PatternItem GAP = new Gap(PATTERN_GAP_LENGTH_PX);
-    public static final List<PatternItem> PATTERN_POLYGON_ALPHA = Arrays.asList(GAP, DASH);
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (savedInstanceState != null) {
             Icepick.restoreInstanceState(this, savedInstanceState);
             if (googleMap != null) {
-                if (!deliveryPointsMarkersVisible) {
+                if (!deliveryPointsMarkersIsVisible) {
                     setMarkersDeliveryPointsOnGoogleMap();
                 }
-                if (!deliveryPointsPolilineVisible) {
-                    setDeliveryPointsPoliline();
+                if (!deliveryPointsPolylineIsVisible) {
+                    setDeliveryPointsPolyline();
                 }
-                setPolyLineTrackingPoints();
+                setPolylineForTrackingPoints();
             }
         }
         CourierApplication.getClientsComponent().inject(this);
+        LocationSigletone.getInstance().addSubscriber(this);
         downloadRoad();
-//        downloadTrackingPoints();
     }
 
     public View onCreateView(@Nonnull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
-        MapWorkerFragmentBinding mapWorkerFragmentBinding = DataBindingUtil.inflate(inflater,
-                R.layout.map_worker_fragment,
+        WorkerMapFragmentBinding mapWorkerFragmentBinding = DataBindingUtil.inflate(inflater,
+                R.layout.worker_map_fragment,
                 container, false);
         mainView = mapWorkerFragmentBinding.getRoot();
         ButterKnife.bind(this, mainView);
         return mainView;
+    }
+
+    @OnClick(R.id.zoom_on_your_position)
+    public void zoomOnWorkerPosition(){
+        cameraIsSetOnWorkerPosition = false;
     }
 
     @Override
@@ -153,52 +148,55 @@ public class WorkerMapFragment extends BaseFragment implements BackWithLogOutDia
     public void onMapReady(GoogleMap googleMap) {
         MapsInitializer.initialize(Objects.requireNonNull(getContext()));
         mapIsActivated = true;
-        instance = this;
         this.googleMap = googleMap;
         googleMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
     }
 
-    public void updateMap(Location location) {
-        setMyPositionOnGoogleMap(location);
-        if (!deliveryPointsMarkersVisible) {
-            setMarkersDeliveryPointsOnGoogleMap();
-        }
-        if (!deliveryPointsPolilineVisible) {
-            setDeliveryPointsPoliline();
-        }
-        setPolyLineTrackingPoints();
-    }
-
-    private void setMyPositionOnGoogleMap(Location location) {
-        googleMap.addMarker(new MarkerOptions().position(new LatLng(location.getLatitude(),
-                location.getLongitude())).title("Worker position").snippet("This is my position")
-                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
-
-        CameraPosition myposition = CameraPosition.builder().target(
-                new LatLng(location.getLatitude(),
-                        location.getLongitude()))
-                .zoom(16)
-                .bearing(0)
-                .tilt(45)
-                .build();
-        googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(myposition));
+    private void setMarkerWithWorkerPositionOnMap(Location location) {
+        googleMap.addMarker(new MarkerOptions()
+                .position(new LatLng(
+                        location.getLatitude(),
+                location.getLongitude()))
+                .title("Worker position")
+                .snippet("This is your current position")
+                .icon(BitmapDescriptorFactory
+                        .defaultMarker(BitmapDescriptorFactory.HUE_YELLOW)));
+        setCameraOnWorkerPosition(location);
     }
 
 
-    private void setPolyLineTrackingPoints() {
+    private void setCameraOnWorkerPosition(Location location){
+        if(!cameraIsSetOnWorkerPosition){
+            CameraPosition workerPosition = CameraPosition.builder()
+                    .target(new LatLng(
+                            location.getLatitude(),
+                            location.getLongitude()))
+                    .zoom(16)
+                    .bearing(0)
+                    .tilt(45)
+                    .build();
+            googleMap.moveCamera(CameraUpdateFactory.newCameraPosition(workerPosition));
+            cameraIsSetOnWorkerPosition = true;
+        }
+    }
+    private void setPolylineForTrackingPoints() {
         if (trackingPointsResponseList == null || trackingPointsResponseList.isEmpty()) {
             downloadTrackingPoints();
         }
         if(!trackingPointsResponseList.isEmpty()) {
-            Collections.sort(trackingPointsResponseList);
-            PolylineOptions trackingPointPolyLineOptions = new PolylineOptions().clickable(false);
-            for (TrackingPointsResponse trackingPointsResponse : trackingPointsResponseList) {
-                trackingPointPolyLineOptions.add(new LatLng(trackingPointsResponse.getLatitude(),
-                        trackingPointsResponse.getLongitude()));
-            }
-            trackingPointPolyLineOptions.color(Color.YELLOW).width(10).pattern(PATTERN_POLYGON_ALPHA);
-            Polyline trackingPoliLine = googleMap.addPolyline(trackingPointPolyLineOptions);
-            trackingPoliLine.setTag("Your path so far");
+
+            ((Runnable) () -> {
+                Collections.sort(trackingPointsResponseList);
+                PolylineOptions trackingPointPolyLineOptions = new PolylineOptions().clickable(false);
+                for (TrackingPointsResponse trackingPointsResponse : trackingPointsResponseList) {
+                    trackingPointPolyLineOptions.add(new LatLng(trackingPointsResponse.getLatitude(),
+                            trackingPointsResponse.getLongitude()));
+                }
+                trackingPointPolyLineOptions.color(Color.YELLOW);
+                Polyline trackingPoliLine = googleMap.addPolyline(trackingPointPolyLineOptions);
+                trackingPoliLine.setTag("Your path so far");
+            }).run();
+
         }
     }
 
@@ -207,78 +205,91 @@ public class WorkerMapFragment extends BaseFragment implements BackWithLogOutDia
             downloadRoad();
         }
         if (roadResponse.getDeliveryPoints() != null) {
-            List<DeliveryPointResponse> deliveryPointResponseList = roadResponse.getDeliveryPoints()
-                    .stream()
-                    .sorted(Comparator.comparingInt(DeliveryPointResponse::getOrder))
-                    .collect(Collectors.toList());
-            for (DeliveryPointResponse deliveryPointResponse : deliveryPointResponseList) {
-                googleMap.addMarker(new MarkerOptions()
-                        .position(new LatLng(
-                                deliveryPointResponse.getLatitude(),
-                                deliveryPointResponse.getLongitude()))
-                        .title(deliveryPointResponse.getOrder() + ". "
-                                + deliveryPointResponse.getAddress())
-                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
-            }
-            deliveryPointsMarkersVisible = true;
+            ((Runnable) () -> {
+                List<DeliveryPointResponse> deliveryPointResponseList = roadResponse.getDeliveryPoints()
+                        .stream()
+                        .sorted(Comparator.comparingInt(DeliveryPointResponse::getOrder))
+                        .collect(Collectors.toList());
+                for (DeliveryPointResponse deliveryPointResponse : deliveryPointResponseList) {
+                    googleMap.addMarker(new MarkerOptions()
+                            .position(new LatLng(
+                                    deliveryPointResponse.getLatitude(),
+                                    deliveryPointResponse.getLongitude()))
+                            .title(deliveryPointResponse.getOrder() + ". "
+                                    + deliveryPointResponse.getAddress())
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                }
+                deliveryPointsMarkersIsVisible = true;
+            }).run();
+
         }
     }
 
-    private void setDeliveryPointsPoliline() {
+    private void setDeliveryPointsPolyline() {
         if (roadResponse == null || roadResponse.getDeliveryPoints() == null) {
             downloadRoad();
         }
         if (roadResponse.getEncodedPath() != null) {
-            String decodedPoliLine = decodeHEX(roadResponse.getEncodedPath());
-            List<Point> path = PolylineUtils.decode(
-                    decodedPoliLine, 5);
-            PolylineOptions deliveryPointsPolyLineOptions = new PolylineOptions()
-                    .clickable(false)
-                    .color(Color.BLUE);
-            for (Point point : path) {
-                deliveryPointsPolyLineOptions.add(new LatLng(
-                        point.latitude(),
-                        point.longitude()));
-            }
-            googleMap.addPolyline(deliveryPointsPolyLineOptions);
-            deliveryPointsPolilineVisible = true;
+            ((Runnable) () -> {
+                String decodedPoliLine = HexToStringConverter.convert(roadResponse.getEncodedPath());
+                List<Point> path = PolylineUtils.decode(
+                        decodedPoliLine, 5);
+                PolylineOptions deliveryPointsPolyLineOptions = new PolylineOptions()
+                        .clickable(false)
+                        .color(Color.BLUE);
+                for (Point point : path) {
+                    deliveryPointsPolyLineOptions.add(new LatLng(
+                            point.latitude(),
+                            point.longitude()));
+                }
+                googleMap.addPolyline(deliveryPointsPolyLineOptions);
+                deliveryPointsPolylineIsVisible = true;
+            }).run();
         }
     }
 
 
-    @SneakyThrows
-    private String decodeHEX(String hex) {
-        byte[] bytes = Hex.decodeHex(hex.toCharArray());
-        return new String(bytes, StandardCharsets.UTF_8);
-    }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mapIsActivated = false;
-        instance = null;
+        LocationSigletone.getInstance().removeSubscriber(this);
     }
 
 
-    public void downloadRoad() {
+    private void downloadRoad() {
         Disposable disposable = roadClient.getLastStartedRoad().subscribe(
                 this::updateDataRoad, e -> Log.e(AdaptersTags.AdapterWorkersListItem,
                         e.getMessage(), e));
         compositeDisposable.add(disposable);
     }
 
-    public void downloadTrackingPoints() {
+    private void downloadTrackingPoints() {
         Disposable disposable = trackingPointsClient.getTraceStartedRoadByLoggedWorker().subscribe(
                 this::updateDataTrackingPoints, e -> Log.e(AdaptersTags.AdapterWorkersListItem,
                         e.getMessage(), e));
         compositeDisposable.add(disposable);
     }
 
-    public void updateDataRoad(RoadResponse roadResponse) {
+    private void updateDataRoad(RoadResponse roadResponse) {
         this.roadResponse = roadResponse;
     }
 
-    public void updateDataTrackingPoints(List<TrackingPointsResponse> trackingPointsResponseList) {
+    private void updateDataTrackingPoints(List<TrackingPointsResponse> trackingPointsResponseList) {
         this.trackingPointsResponseList = trackingPointsResponseList;
+    }
+
+    @Override
+    public void notifyByLocation(Location location) {
+        if(mapIsActivated) {
+            setMarkerWithWorkerPositionOnMap(location);
+            if (!deliveryPointsMarkersIsVisible) {
+                setMarkersDeliveryPointsOnGoogleMap();
+            }
+            if (!deliveryPointsPolylineIsVisible) {
+                setDeliveryPointsPolyline();
+            }
+//            setPolylineForTrackingPoints();
+        }
     }
 }

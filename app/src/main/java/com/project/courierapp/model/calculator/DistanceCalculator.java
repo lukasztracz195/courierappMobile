@@ -76,6 +76,24 @@ public class DistanceCalculator {
         return dist * 60 * MILE;
     }
 
+    public static double caluculateDistanceFromPoints(List<Point> points){
+        double distance = 0.0;
+        for (int i = 1; i < points.size(); i++) {
+            Point sourceDeliveryPoint = points.get(i - 1);
+            Point destinationDeliveryPoint = points.get(i);
+            Point source = Point.of(
+                    sourceDeliveryPoint.getLatitude(),
+                    sourceDeliveryPoint.getLongitude());
+            Point destination = Point.of(
+                    destinationDeliveryPoint.getLatitude(),
+                    destinationDeliveryPoint.getLongitude());
+            distance += DistanceCalculator.calculateDistance(source, destination,
+                    DistanceUnits.KILOMETERS);
+        }
+        distance = Math.round(distance);
+        return distance;
+    }
+
     public static double caluculateDistanceFromListDeliveryPoints(List<DeliveryPointResponse> sortedByOrderDeliveryPoints){
         double distance = 0.0;
         for (int i = 1; i < sortedByOrderDeliveryPoints.size(); i++) {

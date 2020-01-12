@@ -1,11 +1,13 @@
 package com.project.courierapp.view.dialogs;
 
 import android.app.Activity;
+import android.app.Service;
 
 import androidx.appcompat.app.AlertDialog;
 
 import com.google.android.material.dialog.MaterialAlertDialogBuilder;
 import com.project.courierapp.model.constans.Roles;
+import com.project.courierapp.model.service.LocationService;
 import com.project.courierapp.model.store.CredentialsStore;
 import com.project.courierapp.model.store.RolesStore;
 import com.project.courierapp.model.store.TokenStore;
@@ -26,6 +28,9 @@ public class AlertDialogsFactory {
                     RolesStore.clear();
                     TokenStore.clear();
                     CredentialsStore.clear();
+                    if(LocationService.instance != null) {
+                        LocationService.instance.stopForeground(Service.STOP_FOREGROUND_REMOVE);
+                    }
                     ((MainActivity) Objects.requireNonNull(activity)).clearBackStack();
                     ((MainActivity) Objects.
                             requireNonNull(activity)).setBaseForBackStack(new LoginFragment(),

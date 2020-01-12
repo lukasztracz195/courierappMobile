@@ -21,4 +21,6 @@ public class Point {
     public static Point of(double latitude, double longitude) {
         return new Point(latitude, longitude);
     }
+
+
 }

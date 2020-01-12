@@ -36,9 +36,9 @@
     <string name="visited_label">Visited points:</string>
     <string name="saved_and_validated">Saved and validated</string>
     <string name="points_to_visit_label">Points to visit:</string>
-    <string name="distance_estimated_label">Estimated distance (km):</string>
-    <string name="estimated_time_travel_label">Estimated travel time (h):</string>
-    <string name="time_traveled_label">Time traveled (h):</string>
+    <string name="distance_estimated_label">Estimated distance:</string>
+    <string name="estimated_time_travel_label">Estimated travel time:</string>
+    <string name="time_traveled_label">Time traveled:</string>
     <string name="performance_opinion_label">Performance opinion:</string>
 
 
