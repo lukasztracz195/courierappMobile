@@ -2,10 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     package="com.project.courierapp">
-
+<!--    TUTORIAL 4:28-->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!--Internet Permission-->
     <uses-permission android:name="android.permission.INTERNET" />
 
@@ -19,7 +19,13 @@
         android:theme="@style/Theme.MaterialComponents.DayNight.NoActionBar"
         android:usesCleartextTraffic="true"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning">
-        <activity android:name="com.project.courierapp.view.activities.MainActivity"
+        <!--Maps Android Key-->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyA0uuin9nYzqrjc9ZwcP_2ggsI5yw1r_bg" />
+        <!--Maps-->
+        <activity
+            android:name="com.project.courierapp.view.activities.MainActivity"
             android:multiprocess="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -43,5 +49,8 @@
             android:permission="android:permission.ACCESS_COARSE_LOCATION,
             android.permission.ACCESS_FINE_LOCATION" />
     </application>
+    <uses-feature
+        android:glEsVersion="0x00020000"
+        android:required="true" />
 
 </manifest>

@@ -17,7 +17,7 @@ import lombok.Setter;
 @Setter
 @Parcel
 @Getter
-public class TrackingPointsResponse implements Response {
+public class TrackingPointsResponse implements Response, Comparable<TrackingPointsResponse> {
 
     @SerializedName("trackingPointId")
     Long trackingPointId;
@@ -33,4 +33,12 @@ public class TrackingPointsResponse implements Response {
 
     @SerializedName("latitude")
     double latitude;
+
+    @Override
+    public int compareTo(TrackingPointsResponse trackingPointResponse) {
+        if (this.getVisitTime().isBefore(trackingPointResponse.getVisitTime())) {
+            return -1;
+        }
+        return 1;
+    }
 }

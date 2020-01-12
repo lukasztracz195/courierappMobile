@@ -120,13 +120,16 @@ dependencies {
 
     //DATA BINDING
     implementation 'com.android.databinding:compiler:3.2.0-alpha10'
-    // FUSED LOCATION PROVIDER CLIENT
-    implementation 'com.google.android.gms:play-services-location:17.0.0'
 
     // YODA TIME
     implementation group: 'com.fatboyindustrial.gson-jodatime-serialisers',
             name: 'gson-jodatime-serialisers', version: '1.8.0'
     implementation 'org.apache.commons:commons-lang3:3.9'
 
+    //GOOGLE MAPS
+    //noinspection UseOfBundledGooglePlayServices
+    implementation 'com.google.android.gms:play-services:12.0.1'
 
+    //MAP BOX
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:8.6.0'
 }

@@ -20,8 +20,6 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -50,17 +48,13 @@ public class LocationService extends Service {
     public static LocationService instance;
     private static final String TAG = LocationService.class.getSimpleName();
     private FusedLocationProviderClient fusedLocationClient;
-    private LocationRequest mLocationRequest;
-    private LocationCallback mLocationCallback;
     private Location oldLocation;
     private Timer timer;
     private TimerTask timerTask;
     private boolean sendingTrackingPointsIsActivated = false;
-    private static final long PERIOD = 1000 * 60; // 1min
-    private static final long DELAY = 0; // 1s
-    private static final double RANGE_IN_METERS = 50;
-    private int locationRequestCode = 1000;
-    private double wayLatitude = 0.0, wayLongitude = 0.0;
+    private static final long PERIOD = 1000; // 1 sec
+    private static final long DELAY = 0; // 0s
+    private static final double RANGE_IN_METERS = 5;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
 
@@ -75,6 +69,7 @@ public class LocationService extends Service {
                 != PackageManager.PERMISSION_GRANTED
                 && ActivityCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            int locationRequestCode = 1000;
             ActivityCompat.requestPermissions(MainActivity.instance,
                     new String[]{Manifest.permission.ACCESS_FINE_LOCATION,
                             Manifest.permission.ACCESS_COARSE_LOCATION},
@@ -140,6 +135,7 @@ public class LocationService extends Service {
         timerTask = new TimerTask() {
             @SuppressLint("CheckResult")
             public void run() {
+                Location latestLOcation = oldLocation;
                 getLastLocation();
                 if (CourierApplication.isActivityVisible()) {
                     LocationSigletone.getInstance().setLocation(oldLocation);
@@ -147,19 +143,21 @@ public class LocationService extends Service {
 //                                toastLocation(oldLocation);
                 Long startedRoadId = LastStartedRoadStore.getLastStartedRoadId();
                 if (startedRoadId > 0 && oldLocation != null) {
-                    Disposable disposable = trackingPointsClient.addTrackingPointResponse(startedRoadId,
-                            AddTrackingPointRequest.builder()
-                                    .latitude(oldLocation.getLatitude())
-                                    .longitude(oldLocation.getLongitude())
-                                    .build()).subscribe(response -> {
-                        if (response != null) {
+                    if (toFar(latestLOcation, oldLocation)) {
+                        Disposable disposable = trackingPointsClient.addTrackingPointResponse(startedRoadId,
+                                AddTrackingPointRequest.builder()
+                                        .latitude(oldLocation.getLatitude())
+                                        .longitude(oldLocation.getLongitude())
+                                        .build()).subscribe(response -> {
+                            if (response != null) {
                             ToastFactory.createToast(MainActivity.instance,
                                     "Created trackingPoint");
-                        }
-                    }, (Throwable e) -> {
-                        Log.i(TAG, "Created tracking point");
-                    });
-                    compositeDisposable.add(disposable);
+                            }
+                        }, (Throwable e) -> {
+                            Log.i(TAG, "Created tracking point");
+                        });
+                        compositeDisposable.add(disposable);
+                    }
                 }
             }
         };
