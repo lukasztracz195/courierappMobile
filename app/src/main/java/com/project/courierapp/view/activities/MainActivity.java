@@ -48,6 +48,7 @@ public class MainActivity extends AppCompatActivity {
         }
         this.setSdkPolicy();
         instance = this;
+        CourierApplication.activityResumed();
     }
 
     @Override

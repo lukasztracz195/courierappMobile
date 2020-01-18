@@ -2,6 +2,7 @@ package com.project.courierapp.view.dialogs;
 
 import android.app.Activity;
 import android.app.Service;
+import android.content.Intent;
 
 import androidx.appcompat.app.AlertDialog;
 
@@ -30,6 +31,8 @@ public class AlertDialogsFactory {
                     CredentialsStore.clear();
                     if(LocationService.instance != null) {
                         LocationService.instance.stopForeground(Service.STOP_FOREGROUND_REMOVE);
+                        Intent intent = new Intent(activity, LocationService.class);
+                        activity.stopService(intent);
                     }
                     ((MainActivity) Objects.requireNonNull(activity)).clearBackStack();
                     ((MainActivity) Objects.

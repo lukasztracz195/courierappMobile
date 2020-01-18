@@ -38,6 +38,7 @@ import com.project.courierapp.model.singletons.LocationSigletone;
 import com.project.courierapp.view.Iback.BackWithLogOutDialog;
 import com.project.courierapp.view.adapters.AdaptersTags;
 import com.project.courierapp.view.fragments.BaseFragment;
+import com.project.courierapp.view.fragments.worker_layer.WorkerFragmentTags;
 
 import org.jetbrains.annotations.NotNull;
 
@@ -282,6 +283,7 @@ public class WorkerMapFragment extends BaseFragment implements BackWithLogOutDia
     @Override
     public void notifyByLocation(Location location) {
         if(mapIsActivated) {
+            Log.i(WorkerFragmentTags.WorkerMapFragment,"Update location on Map");
             setMarkerWithWorkerPositionOnMap(location);
             if (!deliveryPointsMarkersIsVisible) {
                 setMarkersDeliveryPointsOnGoogleMap();

@@ -48,13 +48,14 @@ public class LocationService extends Service {
     public static LocationService instance;
     private static final String TAG = LocationService.class.getSimpleName();
     private FusedLocationProviderClient fusedLocationClient;
-    private Location oldLocation;
+    private Location currentLocation;
     private Timer timer;
     private TimerTask timerTask;
     private boolean sendingTrackingPointsIsActivated = false;
     private static final long PERIOD = 1000; // 1 sec
+    private static final long PERIOD_FOR_TRACKING_POINTS = 1000 * 60;
     private static final long DELAY = 0; // 0s
-    private static final double RANGE_IN_METERS = 5;
+    private static final double RANGE_IN_METERS = 1;
     private CompositeDisposable compositeDisposable = new CompositeDisposable();
 
 
@@ -135,26 +136,26 @@ public class LocationService extends Service {
         timerTask = new TimerTask() {
             @SuppressLint("CheckResult")
             public void run() {
-                Location latestLOcation = oldLocation;
+                Location latestLocation = currentLocation;
                 getLastLocation();
                 if (CourierApplication.isActivityVisible()) {
-                    LocationSigletone.getInstance().setLocation(oldLocation);
+                    LocationSigletone.getInstance().setLocation(currentLocation);
+                    logLocation(currentLocation);
                 }
-//                                toastLocation(oldLocation);
                 Long startedRoadId = LastStartedRoadStore.getLastStartedRoadId();
-                if (startedRoadId > 0 && oldLocation != null) {
-                    if (toFar(latestLOcation, oldLocation)) {
+                if (startedRoadId > 0 && currentLocation != null) {
+                    if (toFar(latestLocation, currentLocation)) {
                         Disposable disposable = trackingPointsClient.addTrackingPointResponse(startedRoadId,
                                 AddTrackingPointRequest.builder()
-                                        .latitude(oldLocation.getLatitude())
-                                        .longitude(oldLocation.getLongitude())
+                                        .latitude(currentLocation.getLatitude())
+                                        .longitude(currentLocation.getLongitude())
                                         .build()).subscribe(response -> {
-                            if (response != null) {
-                            ToastFactory.createToast(MainActivity.instance,
-                                    "Created trackingPoint");
-                            }
+//                            if (response != null) {
+////                            ToastFactory.createToast(MainActivity.instance,
+////                                    "Created trackingPoint");
+//                            }
                         }, (Throwable e) -> {
-                            Log.i(TAG, "Created tracking point");
+                            Log.i(TAG, "Not created tracking point");
                         });
                         compositeDisposable.add(disposable);
                     }
@@ -173,25 +174,30 @@ public class LocationService extends Service {
     }
 
     private void logLocation(Location location) {
-        Log.i(TAG,
-                "Current location lng: " +
-                        location.getLongitude() +
-                        " lat: " +
-                        location.getLatitude());
+        if(location != null) {
+            Log.i(TAG,
+                    "Current location lng: " +
+                            location.getLongitude() +
+                            " lat: " +
+                            location.getLatitude());
+        }
     }
 
     private static boolean toFar(Location source, Location destination) {
         double distance = DistanceCalculator
                 .calculateDistance(source, destination, DistanceUnits.METERS);
+        Log.i(TAG, "Distance beetwen last locations = "+ distance+" m");
         return (distance >= RANGE_IN_METERS);
     }
 
     private void toastLocation(Location location) {
-        ToastFactory.createToast(MainActivity.instance,
-                "Current location lng: " +
-                        location.getLongitude() +
-                        " lat: " +
-                        location.getLatitude());
+        if(location != null) {
+            ToastFactory.createToast(MainActivity.instance,
+                    "Current location lng: " +
+                            location.getLongitude() +
+                            " lat: " +
+                            location.getLatitude());
+        }
     }
 
     private void createNotificationChannel() {
@@ -213,7 +219,7 @@ public class LocationService extends Service {
                         @Override
                         public void onComplete(@NonNull Task<Location> task) {
                             if (task.isSuccessful() && task.getResult() != null) {
-                                oldLocation = task.getResult();
+                                currentLocation = task.getResult();
                             } else {
                                 Log.w(TAG, "Failed to get location.");
                             }
