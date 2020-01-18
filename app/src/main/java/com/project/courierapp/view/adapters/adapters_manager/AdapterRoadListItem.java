@@ -57,4 +57,6 @@ public class AdapterRoadListItem extends BaseAdapter {
                         e.getMessage(), e));
         compositeDisposable.add(disposable);
     }
+
+
 }

@@ -8,4 +8,5 @@ public interface ManagerFragmentTags {
     String CreateDeliveryPointFragment = "CreateDeliveryPointFragment";
     String CreateRoadFragment = "CreateRoadFragment";
     String EditDeliveryPointFragment = "EditDeliveryPointFragment";
+    String MapWithWorkingWorkerFragment = "MapWithWorkingWorkerFragment";
 }

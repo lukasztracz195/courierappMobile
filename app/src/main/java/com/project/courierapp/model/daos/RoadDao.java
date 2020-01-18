@@ -34,13 +34,13 @@ public interface RoadDao {
     String FINISHED_TIME_ID_PATH = ROAD_PATH + "/" + ROAD_ID_PATH_VARIABLE + "/finishedTime";
 
     String GET_PLANNED_ROADS_PATH = ROAD_PATH + "/plannedTime";
-    String GET_PLANNED_ROADS_BY_WORKER_PATH = ROAD_PATH + GET_BY_WORKER_ID_PATH + "/plannedTime";
+    String GET_PLANNED_ROADS_BY_WORKER_PATH = ROAD_PATH + "/" + WORKER_ID_PATH_VARIABLE + "/plannedTime";
 
     String GET_STARTED_ROADS_PATH = ROAD_PATH + "/startedTime";
-    String GET_STARTED_ROADS_BY_WORKER_PATH = ROAD_PATH + GET_BY_WORKER_ID_PATH + "/startedTime";
+    String GET_STARTED_ROADS_BY_WORKER_PATH = ROAD_PATH + "/" + WORKER_ID_PATH_VARIABLE + "/startedTime";
 
     String GET_FINISHED_ROADS_PATH = "/finishedTime";
-    String GET_FINISHED_ROADS_BY_WORKER_PATH = ROAD_PATH + GET_BY_WORKER_ID_PATH + "/finishedTime";
+    String GET_FINISHED_ROADS_BY_WORKER_PATH = ROAD_PATH + "/" + WORKER_ID_PATH_VARIABLE + "/finishedTime";
 
     String GET_PLANNED_WORKER_ROADS_PATH = ROAD_PATH + "/me/planned";
     String GET_FINISHEDD_WORKER_ROADS_PATH = ROAD_PATH + "/me/finished";
