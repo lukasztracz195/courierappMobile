@@ -1,6 +1,5 @@
 package com.project.courierapp.view.holders.holders_worker;
 
-import android.annotation.SuppressLint;
 import android.widget.TextView;
 
 import com.project.courierapp.R;
@@ -18,8 +17,8 @@ public class HolderRoadToStart extends BaseHolder {
     public HolderRoadToStart(RoadToStartItemBinding roadToStartItemBinding) {
         super(roadToStartItemBinding.getRoot());
         List<Integer> idsList = Arrays.asList(
-                R.id.worker_points_to_visit_content,
-                R.id.worker_road_status_content);
+                R.id.worker_points_to_visit_contents,
+                R.id.worker_road_status_contents);
         initTextViews(idsList);
     }
 
@@ -29,14 +28,13 @@ public class HolderRoadToStart extends BaseHolder {
     }
 
 
-    @SuppressLint("SetTextI18n")
     @Override
     public void setFields(Response object) {
         super.setFields(object);
         RoadResponse roadResponse = (RoadResponse) super.dataObject;
-        Objects.requireNonNull((TextView) mapTextView.get(R.id.worker_points_to_visit_content))
-                .setText(roadResponse.getDeliveryPoints().size());
-        Objects.requireNonNull((TextView) mapTextView.get(R.id.worker_road_status_content))
+        Objects.requireNonNull((TextView) mapTextView.get(R.id.worker_points_to_visit_contents))
+                .setText(String.valueOf(roadResponse.getDeliveryPoints().size()));
+        Objects.requireNonNull((TextView) mapTextView.get(R.id.worker_road_status_contents))
                 .setText(roadResponse.getState().toString());
     }
 }

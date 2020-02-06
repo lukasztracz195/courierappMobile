@@ -1,4 +1,4 @@
-package com.project.courierapp.view.fragments.manager_layer.pages_manager;
+package com.project.courierapp.view.fragments.manager_layer.functional;
 
 import android.graphics.Color;
 import android.location.Location;

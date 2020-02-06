@@ -30,6 +30,7 @@ import com.project.courierapp.model.di.clients.TrackingPointsClient;
 import com.project.courierapp.model.dtos.request.AddTrackingPointRequest;
 import com.project.courierapp.model.enums.DistanceUnits;
 import com.project.courierapp.model.singletons.LocationSigletone;
+import com.project.courierapp.model.store.BusyStore;
 import com.project.courierapp.model.store.LastStartedRoadStore;
 import com.project.courierapp.view.activities.MainActivity;
 import com.project.courierapp.view.toasts.ToastFactory;
@@ -89,20 +90,23 @@ public class LocationService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.i(TAG, "LocationService Started!");
-        String input = intent.getStringExtra("inputExtra");
-        createNotificationChannel();
-        Intent notificationIntent = new Intent(this, MainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+        if(BusyStore.isBuys()) {
+            Log.i(TAG, "LocationService Started!");
+            String input = intent.getStringExtra("inputExtra");
+            createNotificationChannel();
+            Intent notificationIntent = new Intent(this, MainActivity.class);
+            PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
 
-        Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
-                .setContentTitle("You are been followed by your employer")
-                .setContentText(input)
-                .setSmallIcon(R.drawable.you_are_been_followed_icon)
-                .build();
-        startForeground(1, notification);
-        startTimer();
-        return START_STICKY;
+            Notification notification = new NotificationCompat.Builder(this, CHANNEL_ID)
+                    .setContentTitle("You are been followed by your employer")
+                    .setContentText(input)
+                    .setSmallIcon(R.drawable.you_are_been_followed_icon)
+                    .build();
+            startForeground(1, notification);
+            startTimer();
+            return START_STICKY;
+        }
+        return START_NOT_STICKY;
     }
 
     @Override

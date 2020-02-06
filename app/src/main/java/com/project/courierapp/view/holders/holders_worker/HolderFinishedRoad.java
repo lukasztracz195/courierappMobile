@@ -12,8 +12,6 @@ import com.project.courierapp.model.dtos.response.Response;
 import com.project.courierapp.model.dtos.response.RoadResponse;
 import com.project.courierapp.view.holders.BaseHolder;
 
-import org.joda.time.Instant;
-
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -45,7 +43,7 @@ public class HolderFinishedRoad extends BaseHolder {
     public void setFields(Response object) {
         super.setFields(object);
         RoadResponse roadResponse = (RoadResponse) super.dataObject;
-        Objects.requireNonNull((TextView) mapTextView.get(R.id.worker_points_to_visit_content))
+        Objects.requireNonNull((TextView) mapTextView.get(R.id.worker_points_visited_content))
                 .setText(String.valueOf(roadResponse.getDeliveryPoints().size()));
         double distanceInKilometers = DistanceCalculator
                 .caluculateDistanceFromListDeliveryPoints(roadResponse.getDeliveryPoints().stream()
@@ -59,8 +57,7 @@ public class HolderFinishedRoad extends BaseHolder {
         Objects.requireNonNull((TextView) mapTextView.get(R.id.worker_road_time_traveled_content))
                 .setText(String.valueOf(traveledInHours));
 
-        double expectedHours = Instant.parse(roadResponse.getExpectedTime())
-                .getMillis() / MILISS_IN_HOUR;
+        double expectedHours = Double.parseDouble(roadResponse.getExpectedTime()) / MILISS_IN_HOUR;
         double difference = expectedHours - traveledInHours;
         if (difference < 0) {
             Objects.requireNonNull((TextView) mapTextView.get(

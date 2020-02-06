@@ -24,6 +24,7 @@ import com.project.courierapp.model.di.clients.WorkerClient;
 import com.project.courierapp.model.dtos.request.CredentialsRequest;
 import com.project.courierapp.model.enums.Role;
 import com.project.courierapp.model.interceptors.LoginInterceptor;
+import com.project.courierapp.model.store.BusyStore;
 import com.project.courierapp.model.store.CredentialsStore;
 import com.project.courierapp.model.store.RolesStore;
 import com.project.courierapp.model.store.TokenStore;
@@ -181,9 +182,11 @@ public class LoginFragment extends BaseFragment implements BackWithExitDialog {
         RolesStore.saveRole(Roles.WORKER);
         Disposable disposable = workerClient.isBusy().subscribe(worker -> {
             if (worker.isBusy()) {
+                BusyStore.saveBusy(true);
                 activity.putFragment(new WorkerBaseFragment(true),
                         BaseFragmentTags.WorkerBaseFragment);
             } else {
+                BusyStore.saveBusy(false);
                 activity.putFragment(new WorkerBaseFragment(false),
                         BaseFragmentTags.WorkerBaseFragment);
             }

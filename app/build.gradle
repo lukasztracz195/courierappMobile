@@ -132,4 +132,8 @@ dependencies {
 
     //MAP BOX
     implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:8.6.0'
+
+    //ANY CHARTS
+    implementation 'com.github.AnyChart:AnyChart-Android:1.1.2'
+    implementation 'com.fasterxml.jackson.core:com.springsource.com.fasterxml.jackson.core.jackson-annotations:2.0.2'
 }

@@ -17,7 +17,7 @@ import com.project.courierapp.view.activities.MainActivity;
 import com.project.courierapp.view.adapters.AdaptersTags;
 import com.project.courierapp.view.adapters.BaseAdapter;
 import com.project.courierapp.view.fragments.manager_layer.ManagerFragmentTags;
-import com.project.courierapp.view.fragments.manager_layer.pages_manager.MapWithWorkingWorkerFragment;
+import com.project.courierapp.view.fragments.manager_layer.functional.MapWithWorkingWorkerFragment;
 import com.project.courierapp.view.holders.BaseHolder;
 import com.project.courierapp.view.holders.holders_manager.HolderWorkerItemView;
 

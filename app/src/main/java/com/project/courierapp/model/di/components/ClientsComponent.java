@@ -14,7 +14,8 @@ import com.project.courierapp.view.fragments.manager_layer.functional.CreateDeli
 import com.project.courierapp.view.fragments.manager_layer.functional.CreateRoadFragment;
 import com.project.courierapp.view.fragments.manager_layer.functional.EditDeliveryPointFragment;
 import com.project.courierapp.view.fragments.manager_layer.functional.RegisterWorkerFragment;
-import com.project.courierapp.view.fragments.manager_layer.pages_manager.MapWithWorkingWorkerFragment;
+import com.project.courierapp.view.fragments.manager_layer.functional.StatsWorkerFragment;
+import com.project.courierapp.view.fragments.manager_layer.functional.MapWithWorkingWorkerFragment;
 import com.project.courierapp.view.fragments.worker_layer.pages_worker.DeliveryPointsToVisitFragment;
 import com.project.courierapp.view.fragments.worker_layer.pages_worker.WorkerMapFragment;
 
@@ -57,4 +58,6 @@ public interface ClientsComponent {
     void inject(WorkerMapFragment workerMapFragment);
 
     void inject(MapWithWorkingWorkerFragment mapWithWorkingWorkerFragment);
+
+    void inject(StatsWorkerFragment statsWorkerFragment);
 }
