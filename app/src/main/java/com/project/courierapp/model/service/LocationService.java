@@ -30,7 +30,6 @@ import com.project.courierapp.model.di.clients.TrackingPointsClient;
 import com.project.courierapp.model.dtos.request.AddTrackingPointRequest;
 import com.project.courierapp.model.enums.DistanceUnits;
 import com.project.courierapp.model.singletons.LocationSigletone;
-import com.project.courierapp.model.store.BusyStore;
 import com.project.courierapp.model.store.LastStartedRoadStore;
 import com.project.courierapp.view.activities.MainActivity;
 import com.project.courierapp.view.toasts.ToastFactory;
@@ -78,6 +77,7 @@ public class LocationService extends Service {
                     locationRequestCode);
         } else {
             fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
+            onStartCommand();
             instance = this;
         }
     }
@@ -88,11 +88,9 @@ public class LocationService extends Service {
         return null;
     }
 
-    @Override
-    public int onStartCommand(Intent intent, int flags, int startId) {
-        if(BusyStore.isBuys()) {
+    public int onStartCommand() {
             Log.i(TAG, "LocationService Started!");
-            String input = intent.getStringExtra("inputExtra");
+            String input = "";
             createNotificationChannel();
             Intent notificationIntent = new Intent(this, MainActivity.class);
             PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
@@ -104,9 +102,8 @@ public class LocationService extends Service {
                     .build();
             startForeground(1, notification);
             startTimer();
+            instance = this;
             return START_STICKY;
-        }
-        return START_NOT_STICKY;
     }
 
     @Override

@@ -94,7 +94,6 @@ public class WorkerBaseFragment extends BaseFragment implements BackWithLogOutDi
             initViewPager();
             isInitialized = true;
         }
-        if(workerIsBusy) {
             final Runnable r = () -> {
                 if (LocationService.instance == null) {
                     Intent intent = new Intent(activity, LocationService.class);
@@ -102,7 +101,6 @@ public class WorkerBaseFragment extends BaseFragment implements BackWithLogOutDi
                 }
             };
             r.run();
-        }
         return mainView;
     }
 

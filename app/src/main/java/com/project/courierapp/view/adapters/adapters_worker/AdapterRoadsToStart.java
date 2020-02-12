@@ -20,6 +20,7 @@ import com.project.courierapp.model.dtos.request.LocationRequest;
 import com.project.courierapp.model.dtos.response.RoadResponse;
 import com.project.courierapp.model.service.LocationService;
 import com.project.courierapp.model.singletons.LocationSigletone;
+import com.project.courierapp.model.store.BusyStore;
 import com.project.courierapp.model.store.LastStartedRoadStore;
 import com.project.courierapp.view.activities.MainActivity;
 import com.project.courierapp.view.adapters.Adapter;
@@ -96,11 +97,24 @@ public class AdapterRoadsToStart extends BaseAdapter implements Adapter {
     private void setActionOnStartRoad(RoadResponse roadResponse, int position) {
         startRoadButton.setOnClickListener(view -> {
             LastStartedRoadStore.saveRoadId(roadResponse.getRoadId());
-            LastStartedRoadStore.saveRoadId(roadResponse.getRoadId());
             LocationService locationService = LocationService.instance;
-            while (locationService == null) {
+            BusyStore.saveBusy(true);
+            if (LocationService.instance == null) {
+                Intent intent = new Intent(context, LocationService.class);
+                context.startService(intent);
+                locationService.onStartCommand();
+            }
+                final Runnable r = () -> {
+                    if (LocationService.instance == null) {
+                        Intent intent = new Intent(context, LocationService.class);
+                        context.startService(intent);
+                    }
+                };
+                r.run();
+            if (locationService == null) {
                 locationService = LocationService.instance;
             }
+
             Location location = LocationSigletone.getInstance().getLocation();
             while (location == null) {
                 location = LocationSigletone.getInstance().getLocation();
